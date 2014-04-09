@@ -24,7 +24,7 @@ echo "<p>This is a demonstration file generator. Reference documentation can be 
 echo <<<HTML
 <h1>Measurements</h1>
 <form>
-<fieldset style='width:32%; float:left;'>
+<fieldset style='width:25%; float:left;'>
   <legend>Left arm</legend>
    1 <input type="number" step="any" min="0" name="Left1" value='{$_REQUEST['Left1']}'  placeholder="Length of Elbow Joint"><br>
    2 <input type="number" step="any" min="0" name="Left2" value='{$_REQUEST['Left2']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the elbow joint"><br>
@@ -38,19 +38,7 @@ echo <<<HTML
   10<input type="number" step="any" min="0" name="Left10" value='{$_REQUEST['Left10']}'  placeholder="Length of Elbow to wrist joint"><br>
   <input type="submit" name='submit' value="Preview">
 </fieldset>
-<ul>
-<li>Length of Elbow Joint</li>
-<li>Distance between lateral and medial side of the forearm proximal to the elbow joint</li>
-<li>Distance between lateral and medial side of the middle forearm</li>
-<li>Distance between lateral and medial side of the forearm proximal to the wrist</li>
-<li>Wrist Joint distance from lateral to medial side</li>
-<li>Distance from wrist to distal end on thumb side (Lateral)</li>
-<li>Distance from wrist to distal middle end of effected hand</li>
-<li>Distance from Lateral and Medial sides of the distal part of the hand</li>
-<li>Distance from wrist to distal end on thumb side (Medial)</li>
-<li>Length of Elbow to wrist joint</li>
-</ul>
-<fieldset style='width:32%; float:right;'>
+<fieldset style='width:25%; float:right;'>
   <legend>Right arm</legend>
    1 <input type="number" step="any" min="0" name="Right1" value='{$_REQUEST['Right1']}'  placeholder="Length of Elbow Joint"><br>
    2 <input type="number" step="any" min="0" name="Right2" value='{$_REQUEST['Right2']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the elbow joint"><br>
@@ -62,6 +50,21 @@ echo <<<HTML
    8 <input type="number" step="any" min="0" name="Right8" value='{$_REQUEST['Right8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand"><br>
    9 <input type="number" step="any" min="0" name="Right9" value='{$_REQUEST['Right9']}'  placeholder="Distance from wrist to distal end on thumb side (Medial)"><br>
   10<input type="number" step="any" min="0" name="Right10" value='{$_REQUEST['Right10']}'  placeholder="Length of Elbow to wrist joint"><br>
+</fieldset>
+<fieldset style='width:40%; font-size:.9em;'>
+  <legend> </legend>
+<ol>
+<li>Length of Elbow Joint</li>
+<li>Distance between lateral and medial side of the forearm proximal to the elbow joint</li>
+<li>Distance between lateral and medial side of the middle forearm</li>
+<li>Distance between lateral and medial side of the forearm proximal to the wrist</li>
+<li>Wrist Joint distance from lateral to medial side</li>
+<li>Distance from wrist to distal end on thumb side (Lateral)</li>
+<li>Distance from wrist to distal middle end of effected hand</li>
+<li>Distance from Lateral and Medial sides of the distal part of the hand</li>
+<li>Distance from wrist to distal end on thumb side (Medial)</li>
+<li>Length of Elbow to wrist joint</li>
+</ol>
 </fieldset>
   <input type="submit" name='submit' value="Preview">
 </form>
