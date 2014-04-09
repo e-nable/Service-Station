@@ -22,8 +22,9 @@ echo "<p>This is a demonstration file generator. Reference documentation can be 
 
 
 echo <<<HTML
-<h1>Measurements</h1>
 <form>
+<fieldset>
+<legend>Arm Measurements</legend>
 <fieldset style='width:25%; float:left;'>
   <legend>Left arm</legend>
    1 <input type="number" step="any" min="0" name="Left1" value='{$_REQUEST['Left1']}'  placeholder="Length of Elbow Joint"><br>
@@ -36,7 +37,6 @@ echo <<<HTML
    8 <input type="number" step="any" min="0" name="Left8" value='{$_REQUEST['Left8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand"><br>
    9 <input type="number" step="any" min="0" name="Left9" value='{$_REQUEST['Left9']}'  placeholder="Distance from wrist to distal end on thumb side (Medial)"><br>
   10<input type="number" step="any" min="0" name="Left10" value='{$_REQUEST['Left10']}'  placeholder="Length of Elbow to wrist joint"><br>
-  <input type="submit" name='submit' value="Preview">
 </fieldset>
 <fieldset style='width:25%; float:right;'>
   <legend>Right arm</legend>
@@ -66,6 +66,19 @@ echo <<<HTML
 <li>Length of Elbow to wrist joint</li>
 </ol>
 </fieldset>
+</fieldset>
+<fieldset>
+<legend>Model Selection</legend>
+<select name='part'>
+<option value='0'>Assembled Model</option>
+<option value='1'>Gauntlet</option>
+<option value='2'>Palm</option>
+<option value='3'>Finger Proximal (Near knuckle)</option>
+<option value='4'>Finger Distal (Fingertip)</option>
+<option value='5'>Thumb Proximal (Near knuckle)</option>
+<option value='6'>Thumb Distal (Thumbtip)</option>
+</select>
+</fieldset>
   <input type="submit" name='submit' value="Preview">
 </form>
 HTML;
@@ -78,7 +91,7 @@ if(isset($_REQUEST['submit']) && $_REQUEST['submit'] == 'Preview')
 	$assemblypath = "e-NABLE/Assembly/";
 	$leftsidevars = "-D Left1={$_REQUEST['Left1']} -D Left2={$_REQUEST['Left2']} -D  Left3={$_REQUEST['Left3']} -D  Left4={$_REQUEST['Left4']} -D  Left5={$_REQUEST['Left5']} -D  Left6={$_REQUEST['Left6']} -D  Left7={$_REQUEST['Left7']} -D  Left8={$_REQUEST['Left8']} -D  Left9={$_REQUEST['Left9']} -D  Left10={$_REQUEST['Left10']}";
 	$rightsidevars = "-D Right1={$_REQUEST['Right1']} -D Right2={$_REQUEST['Right2']} -D  Right3={$_REQUEST['Right3']} -D  Right4={$_REQUEST['Right4']} -D  Right5={$_REQUEST['Right5']} -D  Right6={$_REQUEST['Right6']} -D  Right7={$_REQUEST['Right7']} -D  Right8={$_REQUEST['Right8']} -D  Right9={$_REQUEST['Right9']} -D  Right10={$_REQUEST['Right10']}";
-        $command = " openscad -o imagecache/{$userid}preview.png {$leftsidevars} {$rightsidevars} {$assemblypath}Assembly.scad ";
+        $command = " openscad -o imagecache/{$userid}preview.png {$leftsidevars} {$rightsidevars} -D  part={$_REQUEST['part']} {$assemblypath}Assembly.scad ";
         echo "<p>{$command}</p>\n";
 
         $time_start = microtime(true);
