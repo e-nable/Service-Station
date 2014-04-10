@@ -70,7 +70,9 @@ echo <<<HTML
 <fieldset>
 <legend>Model Selection</legend>
 
-<label for='part'>Part to generate</label>
+<fieldset style='width:40%; float:left;'>
+<legend>Options</legend>
+<label for='part'>Generate</label>
 <select name='part'>
 <option value='0'>Assembled Model</option>
 <option value='1'>Gauntlet</option>
@@ -95,50 +97,62 @@ echo <<<HTML
 <option value='1'>Cyborg Beast Parametric</option>
 </select>
 <br />
+</fieldset>
+
+<fieldset style='width:40%; float:right;'>
+<legend>Connections</legend>
+<label for='WristBolt'>Wrist Bolt Holes (mm)</label><input type="number" step="any" min="0" name="WristBolt" value="5.5"><br>
+<label for='KnuckleBolt'>Knuckle Bolt Holes (mm)</label><input type="number" step="any" min="0" name="KnuckleBolt" value="3.3"><br>
+<label for='JointBolt'>Finger Bolt Holes (mm)<label><input type="number" step="any" min="0" name="JointBolt"  value="3.3"><br>
+<label for='ThumbBolt'>Thumb Bolt Holes (mm)</label><input type="number" step="any" min="0" name="ThumbBolt" value="3.3"><br>
+</fieldset>
 
 </fieldset>
   <input type="submit" name='submit' value="Preview">
-</form>
+<p>The Preview process can take a while, please be patient and don't click multiple times or you will break my 3d Printer!</p>
 HTML;
 
-/*
-// MM diameter of wrist bolt. M5=5.5, M3=3.3, etc.
-WristBolt = 5.5;
-// MM diameter of knuckle bolt. M5=5.5, M3=3.3, etc.
-KnuckleBolt = 3.3;
-// MM diameter of finger joint bolt. M5=5.5, M3=3.3, etc.
-JointBolt = 3.3;
-// MM diameter of thumb bolt. M5=5.5, M3=3.3, etc.
-ThumbBolt = 3.3;
-*/
 
 
 // need to do some sanity checking here
 
-if(isset($_REQUEST['submit']) && $_REQUEST['submit'] == 'Preview')
+if(isset($_REQUEST['submit']) )
 {
+	$previewimage = "imagecache/{$userid}preview.png";
+	$exportfile = "imagecache/{$userid}.stl";
+
+	if($_REQUEST['submit'] == 'Create .STL')
+	{
+		$thingtodo = $exportfile;
+		$downloadlink = "<p><a href='{$exportfile}'>Download .stl file.</a></p>\n";
+	}else{
+		$thingtodo = $previewimage;
+	}
+
 	$assemblypath = "e-NABLE/Assembly/";
 	$leftsidevars = "-D Left1={$_REQUEST['Left1']} -D Left2={$_REQUEST['Left2']} -D  Left3={$_REQUEST['Left3']} -D  Left4={$_REQUEST['Left4']} -D  Left5={$_REQUEST['Left5']} -D  Left6={$_REQUEST['Left6']} -D  Left7={$_REQUEST['Left7']} -D  Left8={$_REQUEST['Left8']} -D  Left9={$_REQUEST['Left9']} -D  Left10={$_REQUEST['Left10']}";
 	$rightsidevars = "-D Right1={$_REQUEST['Right1']} -D Right2={$_REQUEST['Right2']} -D  Right3={$_REQUEST['Right3']} -D  Right4={$_REQUEST['Right4']} -D  Right5={$_REQUEST['Right5']} -D  Right6={$_REQUEST['Right6']} -D  Right7={$_REQUEST['Right7']} -D  Right8={$_REQUEST['Right8']} -D  Right9={$_REQUEST['Right9']} -D  Right10={$_REQUEST['Right10']}";
-        $command = " openscad -o imagecache/{$userid}preview.png {$leftsidevars} {$rightsidevars} -D  part={$_REQUEST['part']} -D fingerSelect={$_REQUEST['fingerSelect']} -D palmSelect={$_REQUEST['palmSelect']} {$assemblypath}Assembly.scad ";
-        echo "<p>{$command}</p>\n";
+	$command = " openscad -o {$thingtodo} {$leftsidevars} {$rightsidevars} -D  part={$_REQUEST['part']} -D fingerSelect={$_REQUEST['fingerSelect']} -D palmSelect={$_REQUEST['palmSelect']} -D WristBolt={$_REQUEST['WristBolt']} -D KnuckleBolt={$_REQUEST['KnuckleBolt']} -D JointBolt={$_REQUEST['JointBolt']} -D ThumbBolt={$_REQUEST['ThumbBolt']} {$assemblypath}Assembly.scad ";
 
-        $time_start = microtime(true);
-        $results = exec( "export DISPLAY=:5; " . escapeshellcmd($command));
-        $time_end = microtime(true);
-        $execution_time = ($time_end - $time_start);
-
-
-        echo "<img src='imagecache/{$userid}preview.png' />";
-        echo "<p>Created preview in {$execution_time} seconds.</p>\n";
+	$time_start = microtime(true);
+	$results = exec( "export DISPLAY=:5; " . escapeshellcmd($command));
+	$time_end = microtime(true);
+	$execution_time = ($time_end - $time_start);
 
 
-        echo "<p>Computer Stats - for performance considerations</p>\n";
-        echo "<pre>\n";
-        echo `cat /proc/cpuinfo`;
-        echo `cat /proc/meminfo`;
-        echo "</pre>";
+	echo "<img src='imagecache/{$userid}preview.png' />";
+	echo "<input type='submit' name='submit' value='Create .STL'> {$downloadlink}";
+	echo "<p>Created preview in {$execution_time} seconds using the following command.</p>\n";
+	echo "<p>{$command}</p>\n";
+
+
+	echo "<p>Computer Stats - for performance considerations</p>\n";
+	echo "<pre>\n";
+	echo `cat /proc/cpuinfo`;
+	echo `cat /proc/meminfo`;
+	echo "</pre>";
 }
 ?>
+</form>
 </body>
 </html>
