@@ -15,11 +15,21 @@
 <?php
 
 // this starts the session
- session_start();
+session_start();
 $userid = session_id();
+load_session_data(
+	array(
+	'Left1', 'Left2', 'Left3', 'Left4', 'Left5', 'Left6', 'Left7', 'Left8', 'Left9', 'Left10',
+	'Right1', 'Right2', 'Right3', 'Right4', 'Right5', 'Right6', 'Right7', 'Right8', 'Right9', 'Right10',
+	'part', 'fingerSelect', 'palmSelect'
+	)
+);
 
 echo "<p>This is a demonstration file generator. Reference documentation can be found <a href='https://docs.google.com/document/d/1LX3tBpio-6IsMMo3aaUdR-mLwWdv1jS4ooeEHb79JYo/edit?pli=1' target='_blank'>here</a>. Generator code can be found on <a href='https://github.com/laird/e-NABLE' target='_blank'>GitHub</a> and the code for this web interface can be found an <a href='https://github.com/creuzerm/e-NABLE-Web-Generator' target='_blank'>GitHub</a>.</p>";
 
+$part_options = part_options();
+$fingerSelect_options = fingerSelect_options();
+$palmSelect_options = palmSelect_options();
 
 echo <<<HTML
 <form>
@@ -27,29 +37,29 @@ echo <<<HTML
 <legend>Arm Measurements</legend>
 <fieldset style='width:25%; float:left;'>
   <legend>Left arm</legend>
-   1 <input type="number" step="any" min="0" name="Left1" value='{$_REQUEST['Left1']}'  placeholder="Length of Elbow Joint"><br>
-   2 <input type="number" step="any" min="0" name="Left2" value='{$_REQUEST['Left2']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the elbow joint"><br>
-   3 <input type="number" step="any" min="0" name="Left3" value='{$_REQUEST['Left3']}'  placeholder="Distance between lateral and medial side of the middle forearm"><br>
-   4 <input type="number" step="any" min="0" name="Left4" value='{$_REQUEST['Left4']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the wrist"><br>
-   5 <input type="number" step="any" min="0" name="Left5" value='{$_REQUEST['Left5']}'  placeholder="Wrist Joint distance from lateral to medial side"><br>
-   6 <input type="number" step="any" min="0" name="Left6" value='{$_REQUEST['Left6']}'  placeholder="Distance from wrist to distal end on thumb side (Lateral)"><br>
-   7 <input type="number" step="any" min="0" name="Left7" value='{$_REQUEST['Left7']}'  placeholder="Distance from wrist to distal middle end of effected hand"><br>
-   8 <input type="number" step="any" min="0" name="Left8" value='{$_REQUEST['Left8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand"><br>
-   9 <input type="number" step="any" min="0" name="Left9" value='{$_REQUEST['Left9']}'  placeholder="Distance from wrist to distal end on thumb side (Medial)"><br>
-  10<input type="number" step="any" min="0" name="Left10" value='{$_REQUEST['Left10']}'  placeholder="Length of Elbow to wrist joint"><br>
+   1 <input type="number" step="any" min="0" name="Left1" value='{$_SESSION['Left1']}'  placeholder="Length of Elbow Joint"><br>
+   2 <input type="number" step="any" min="0" name="Left2" value='{$_SESSION['Left2']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the elbow joint"><br>
+   3 <input type="number" step="any" min="0" name="Left3" value='{$_SESSION['Left3']}'  placeholder="Distance between lateral and medial side of the middle forearm"><br>
+   4 <input type="number" step="any" min="0" name="Left4" value='{$_SESSION['Left4']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the wrist"><br>
+   5 <input type="number" step="any" min="0" name="Left5" value='{$_SESSION['Left5']}'  placeholder="Wrist Joint distance from lateral to medial side"><br>
+   6 <input type="number" step="any" min="0" name="Left6" value='{$_SESSION['Left6']}'  placeholder="Distance from wrist to distal end on thumb side (Lateral)"><br>
+   7 <input type="number" step="any" min="0" name="Left7" value='{$_SESSION['Left7']}'  placeholder="Distance from wrist to distal middle end of effected hand"><br>
+   8 <input type="number" step="any" min="0" name="Left8" value='{$_SESSION['Left8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand"><br>
+   9 <input type="number" step="any" min="0" name="Left9" value='{$_SESSION['Left9']}'  placeholder="Distance from wrist to distal end on thumb side (Medial)"><br>
+  10<input type="number" step="any" min="0" name="Left10" value='{$_SESSION['Left10']}'  placeholder="Length of Elbow to wrist joint"><br>
 </fieldset>
 <fieldset style='width:25%; float:right;'>
   <legend>Right arm</legend>
-   1 <input type="number" step="any" min="0" name="Right1" value='{$_REQUEST['Right1']}'  placeholder="Length of Elbow Joint"><br>
-   2 <input type="number" step="any" min="0" name="Right2" value='{$_REQUEST['Right2']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the elbow joint"><br>
-   3 <input type="number" step="any" min="0" name="Right3" value='{$_REQUEST['Right3']}'  placeholder="Distance between lateral and medial side of the middle forearm"><br>
-   4 <input type="number" step="any" min="0" name="Right4" value='{$_REQUEST['Right4']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the wrist"><br>
-   5 <input type="number" step="any" min="0" name="Right5" value='{$_REQUEST['Right5']}'  placeholder="Wrist Joint distance from lateral to medial side"><br>
-   6 <input type="number" step="any" min="0" name="Right6" value='{$_REQUEST['Right6']}'  placeholder="Distance from wrist to distal end on thumb side (Lateral)"><br>
-   7 <input type="number" step="any" min="0" name="Right7" value='{$_REQUEST['Right7']}'  placeholder="Distance from wrist to distal middle end of effected hand"><br>
-   8 <input type="number" step="any" min="0" name="Right8" value='{$_REQUEST['Right8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand"><br>
-   9 <input type="number" step="any" min="0" name="Right9" value='{$_REQUEST['Right9']}'  placeholder="Distance from wrist to distal end on thumb side (Medial)"><br>
-  10<input type="number" step="any" min="0" name="Right10" value='{$_REQUEST['Right10']}'  placeholder="Length of Elbow to wrist joint"><br>
+   1 <input type="number" step="any" min="0" name="Right1" value='{$_SESSION['Right1']}'  placeholder="Length of Elbow Joint"><br>
+   2 <input type="number" step="any" min="0" name="Right2" value='{$_SESSION['Right2']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the elbow joint"><br>
+   3 <input type="number" step="any" min="0" name="Right3" value='{$_SESSION['Right3']}'  placeholder="Distance between lateral and medial side of the middle forearm"><br>
+   4 <input type="number" step="any" min="0" name="Right4" value='{$_SESSION['Right4']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the wrist"><br>
+   5 <input type="number" step="any" min="0" name="Right5" value='{$_SESSION['Right5']}'  placeholder="Wrist Joint distance from lateral to medial side"><br>
+   6 <input type="number" step="any" min="0" name="Right6" value='{$_SESSION['Right6']}'  placeholder="Distance from wrist to distal end on thumb side (Lateral)"><br>
+   7 <input type="number" step="any" min="0" name="Right7" value='{$_SESSION['Right7']}'  placeholder="Distance from wrist to distal middle end of effected hand"><br>
+   8 <input type="number" step="any" min="0" name="Right8" value='{$_SESSION['Right8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand"><br>
+   9 <input type="number" step="any" min="0" name="Right9" value='{$_SESSION['Right9']}'  placeholder="Distance from wrist to distal end on thumb side (Medial)"><br>
+  10<input type="number" step="any" min="0" name="Right10" value='{$_SESSION['Right10']}'  placeholder="Length of Elbow to wrist joint"><br>
 </fieldset>
 <fieldset style='width:40%; font-size:.9em;'>
   <legend>Measurement Locations</legend>
@@ -74,27 +84,19 @@ echo <<<HTML
 <legend>Options</legend>
 <label for='part'>Generate</label>
 <select name='part'>
-<option value='0'>Assembled Model</option>
-<option value='1'>Gauntlet</option>
-<option value='2'>Palm</option>
-<option value='3'>Finger Proximal (Near knuckle)</option>
-<option value='4'>Finger Distal (Fingertip)</option>
-<option value='5'>Thumb Proximal (Near knuckle)</option>
-<option value='6'>Thumb Distal (Thumbtip)</option>
+{$part_options}
 </select>
 <br />
 
 <label for='fingerSelect'>Finger Style</label>
 <select name='fingerSelect'>
-<option value='0'>Cyborg Beast</option>
-<option value='1'>David</option>
+{$fingerSelect_options}
 </select>
 <br />
 
 <label for='palmSelect'>Palm Style</label>
 <select name='palmSelect'>
-<option value='0'>Cyborg Beast</option>
-<option value='1'>Cyborg Beast Parametric</option>
+{$palmSelect_options}
 </select>
 <br />
 </fieldset>
@@ -151,8 +153,61 @@ if(isset($_REQUEST['submit']) )
 	echo `cat /proc/cpuinfo`;
 	echo `cat /proc/meminfo`;
 	echo "</pre>";
+}else
+{
+	echo "<p>A sample data set can be loaded by <a href='?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0&Right8=72.52&Right9=72.23&Right10=230.6&part=0&fingerSelect=1&palmSelect=1&WristBolt=5.5&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview'>Clicking here</a>.</p>\n";
 }
 ?>
 </form>
 </body>
 </html>
+<?php
+
+// Load the session data from the form, if available
+// Loop through an array of options provided and set the session
+function load_session_data($options)
+{
+	foreach($options AS $option)
+	{
+		if(isset($_REQUEST[$option]))
+		{ 
+			$_SESSION[$option] = $_REQUEST[$option]; 
+		} 
+		elseif( !isset($_SESSION[$option]))
+		{ 
+			$_SESSION[$option] = '';
+		}
+
+	}
+}
+
+// Create menu select options for the different parts
+function part_options()
+{
+	$return  = "\t<option value='0'" . ($_SESSION['part'] == 0 ? " selected='selected' " : '') . ">Assembled Model</option>\n";
+	$return .= "\t<option value='1'" . ($_SESSION['part'] == 1 ? " selected='selected' " : '') . ">Gauntlet</option>\n";
+	$return .= "\t<option value='2'" . ($_SESSION['part'] == 2 ? " selected='selected' " : '') . ">Palm</option>\n";
+	$return .= "\t<option value='3'" . ($_SESSION['part'] == 3 ? " selected='selected' " : '') . ">Finger Proximal (Near knuckle)</option>\n";
+	$return .= "\t<option value='4'" . ($_SESSION['part'] == 4 ? " selected='selected' " : '') . ">Finger Distal (Fingertip)</option>\n";
+	$return .= "\t<option value='5'" . ($_SESSION['part'] == 5 ? " selected='selected' " : '') . ">Thumb Proximal (Near knuckle)</option>\n";
+	$return .= "\t<option value='6'" . ($_SESSION['part'] == 6 ? " selected='selected' " : '') . ">Thumb Distal (Thumbtip)</option>\n";
+	return $return;
+}
+
+
+// Create menu select options for the different finger options
+function fingerSelect_options()
+{
+	$return  = "\t<option value='1'" . ($_SESSION['fingerSelect'] == 1 ? " selected='selected' " : '') . ">Cyborg Beast</option>\n";
+	$return .= "\t<option value='2'" . ($_SESSION['fingerSelect'] == 2 ? " selected='selected' " : '') . ">David</option>\n";
+	return $return;
+}
+
+// Create menu select options for the different Palm Options
+function palmSelect_options()
+{
+	$return  = "\t<option value='1'" . ($_SESSION['palmSelect'] == 1 ? " selected='selected' " : '') . ">Cyborg Beast</option>\n";
+	$return .= "\t<option value='2'" . ($_SESSION['palmSelect'] == 2 ? " selected='selected' " : '') . ">Cyborg Beast Parametric</option>\n";
+	return $return;
+}
+?>
