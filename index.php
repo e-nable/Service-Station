@@ -49,6 +49,7 @@
 <body id="index" class="home">
 
 <?php
+include(backend.php);
 
 // this starts the session
 start_user_session();
