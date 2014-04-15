@@ -79,7 +79,7 @@ echo <<<HTML
     <span class="icon-bar"></span>
     <span class="icon-bar"></span>
    </button>
-   <a href="#" class="navbar-brand">e-Nable Generator</a>
+   <a href="#" class="navbar-brand">e-NABLE Generator</a>
   </div>
   <div class="navbar-collapse collapse">
    <div class="navbar-form navbar-right">
