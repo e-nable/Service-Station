@@ -51,15 +51,13 @@ load_session_data(
 	'part', 'fingerSelect', 'palmSelect'
 	)
 );
-echo <<<HTML
-
-HTML;
 
 #echo "<p>This is a demonstration file generator. Reference documentation can be found <a href='https://docs.google.com/document/d/1LX3tBpio-6IsMMo3aaUdR-mLwWdv1jS4ooeEHb79JYo/edit?pli=1' target='_blank'>here</a>. Generator code can be found on <a href='https://github.com/laird/e-NABLE' target='_blank'>GitHub</a> and the code for this web interface can be found an <a href='https://github.com/creuzerm/e-NABLE-Web-Generator' target='_blank'>GitHub</a>.</p>";
 
 $part_options = part_options();
 $fingerSelect_options = fingerSelect_options();
 $palmSelect_options = palmSelect_options();
+$render = render();
 
 echo <<<HTML
 <form>
@@ -76,8 +74,8 @@ echo <<<HTML
   </div>
   <div class="navbar-collapse collapse">
    <div class="navbar-form navbar-right">
-    <button class="btn btn-success" type="submit">Preview</button>
-    <button class="btn btn-danger" type="submit">Create STL</button>
+    <button class="btn btn-success" type="submit" name='submit' value='Preview'>Preview</button>
+    <button class="btn btn-danger" type="submit" name='submit' value='stl'>Create STL</button>
    </div>
   </div>
  </div>
@@ -130,6 +128,7 @@ echo <<<HTML
   <ul class="nav nav-tabs">
    <li class="active"><a href="#image" data-toggle="tab">Reference</a></li>
    <li><a href="#descriptions" data-toggle="tab">Descriptions</a></li>  
+   <li><a href="#preview" data-toggle="tab">Preview</a></li>  
   </ul>
   <!-- Tab panes -->
   <div class="tab-content">
@@ -149,6 +148,7 @@ echo <<<HTML
     <li>Length of Elbow to wrist joint</li>
     </ol>
    </div>
+   <div class="tab-pane" id="preview">{$render}</div>
   </div>
  </div>
 
@@ -193,17 +193,10 @@ echo <<<HTML
 
 <div class="container">
 
-<!--
-  <input type="submit" name='submit' value="Preview">
-<p>The Preview process can take a while, please be patient and don't click multiple times or you will break my 3d Printer!</p>
--->
-
 HTML;
 
-
-
 // need to do some sanity checking here
-
+/*
 if(isset($_REQUEST['submit']) )
 {
 	$previewimage = "imagecache/{$userid}preview.png";
@@ -243,6 +236,7 @@ if(isset($_REQUEST['submit']) )
 {
 	echo "<p>A sample data set can be loaded by <a href='?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0&Right8=72.52&Right9=72.23&Right10=230.6&part=0&fingerSelect=1&palmSelect=1&WristBolt=5.5&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview'>Clicking here</a>.</p>\n";
 }
+*/
 ?>
 
 </div>
@@ -250,6 +244,53 @@ if(isset($_REQUEST['submit']) )
 </body>
 </html>
 <?php
+
+
+function render()
+{
+$return = '';
+if(isset($_REQUEST['submit']) )
+{
+	$previewimage = "imagecache/{$userid}preview.png";
+	$exportfile = "imagecache/{$userid}.stl";
+
+	if($_REQUEST['submit'] == 'stl')
+	{
+		$thingtodo = $exportfile;
+		$downloadlink = "<p><a href='{$exportfile}'>Download .stl file.</a></p>\n";
+	}else{
+		$thingtodo = $previewimage;
+	}
+
+	$assemblypath = "e-NABLE/Assembly/";
+	$leftsidevars = "-D Left1={$_REQUEST['Left1']} -D Left2={$_REQUEST['Left2']} -D  Left3={$_REQUEST['Left3']} -D  Left4={$_REQUEST['Left4']} -D  Left5={$_REQUEST['Left5']} -D  Left6={$_REQUEST['Left6']} -D  Left7={$_REQUEST['Left7']} -D  Left8={$_REQUEST['Left8']} -D  Left9={$_REQUEST['Left9']} -D  Left10={$_REQUEST['Left10']}";
+	$rightsidevars = "-D Right1={$_REQUEST['Right1']} -D Right2={$_REQUEST['Right2']} -D  Right3={$_REQUEST['Right3']} -D  Right4={$_REQUEST['Right4']} -D  Right5={$_REQUEST['Right5']} -D  Right6={$_REQUEST['Right6']} -D  Right7={$_REQUEST['Right7']} -D  Right8={$_REQUEST['Right8']} -D  Right9={$_REQUEST['Right9']} -D  Right10={$_REQUEST['Right10']}";
+	$command = " openscad -o {$thingtodo} {$leftsidevars} {$rightsidevars} -D  part={$_REQUEST['part']} -D fingerSelect={$_REQUEST['fingerSelect']} -D palmSelect={$_REQUEST['palmSelect']} -D WristBolt={$_REQUEST['WristBolt']} -D KnuckleBolt={$_REQUEST['KnuckleBolt']} -D JointBolt={$_REQUEST['JointBolt']} -D ThumbBolt={$_REQUEST['ThumbBolt']} {$assemblypath}Assembly.scad ";
+
+	$time_start = microtime(true);
+	$results = exec( "export DISPLAY=:5; " . escapeshellcmd($command));
+	$time_end = microtime(true);
+	$execution_time = ($time_end - $time_start);
+
+
+	$return =  "<img src='imagecache/{$userid}preview.png' style='width:100%;' /> {$downloadlink}";
+
+//	echo "<input type='submit' name='submit' value='Create .STL'> {$downloadlink}";
+//	echo "<p>Created preview in {$execution_time} seconds using the following command.</p>\n";
+//	echo "<p>{$command}</p>\n";
+
+
+//	echo "<p>Computer Stats - for performance considerations</p>\n";
+//	echo "<pre>\n";
+//	echo `cat /proc/cpuinfo`;
+//	echo `cat /proc/meminfo`;
+//	echo "</pre>";
+}else
+{
+	$return = "<p>A sample data set can be loaded by <a href='?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0&Right8=72.52&Right9=72.23&Right10=230.6&part=0&fingerSelect=1&palmSelect=1&WristBolt=5.5&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview'>Clicking here</a>.</p>\n";
+}
+return $return;
+}
 
 // Load the session data from the form, if available
 // Loop through an array of options provided and set the session
