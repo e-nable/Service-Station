@@ -135,9 +135,9 @@ $html = <<<HTML
 <div class="navbar  navbar-inverse navbar-fixed-bottom">
  <div class="container">
 	&copy; e-NABLE 2014
-    <button id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
+    <button id="help" class="disabled help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
       <span class="fa fa-question-circle"></span> Help</button>
-    <button id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
+    <button id="help" class="disabled help btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
       Disclaimer</button>
  </div>
 </div>
