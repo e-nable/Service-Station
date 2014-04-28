@@ -56,22 +56,19 @@
 	.navbar-brand img {
 		vertical-align: baseline;
 	}
-	#help {
-		margin-top: -3px;
-		p-osition: absolute;
-		margin-left: 14px ;
-	}
-	#help  span{
+	.help span, .disclaimer span{
 		font-size: 18px;
 	}
-	.help {
+	.help,.disclaimer {
+		margin-left: 14px ;
+		margin-top: -5px;
 		color:white;
 		background-image: linear-gradient(to bottom, #666666 0px, #222222 100%);
     		background-color: #666666;
 		border-color: #666666;
 		float:right;
 	}
-	.help:hover, .help:focus {
+	.help:hover, .help:focus, .disclaimer:hover, .disclaimer:hover  {
 		color:white;
 		background-image: linear-gradient(to bottom, #aaa 0px, #444 100%);
 	}
@@ -135,10 +132,10 @@ $html = <<<HTML
 <div class="navbar  navbar-inverse navbar-fixed-bottom">
  <div class="container">
 	&copy; e-NABLE 2014
-    <button id="help" class="disabled help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
-      <span class="fa fa-question-circle"></span> Help</button>
-    <button id="help" class="disabled help btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
-      Disclaimer</button>
+    <span id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
+      <span class="fa fa-question-circle"></span> Help</span>
+    <span id="disclaimer" class="disclaimer btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
+      Disclaimer</span>
  </div>
 </div>
 
@@ -162,10 +159,10 @@ $html = <<<HTML
      <div class="input-group"><span class="input-group-addon">L3</span> <input type="number" step="any" min="0" name="Left3" value='{$_SESSION['Left3']}'  placeholder="Distance between lateral and medial side of the middle forearm" class="form-control"><span class="input-group-addon">cm</span></div>
      <div class="input-group"><span class="input-group-addon">L4</span> <input type="number" step="any" min="0" name="Left4" value='{$_SESSION['Left4']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the wrist" class="form-control"><span class="input-group-addon">cm</span></div>
      <div class="input-group"><span class="input-group-addon">L5</span> <input type="number" step="any" min="0" name="Left5" value='{$_SESSION['Left5']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">L6</span> <input type="number" step="any" min="0" name="Left6" value='{$_SESSION['Left6']}'  placeholder="Distance from wrist to distal end on thumb side (Lateral)" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">L6</span> <input type="number" step="any" min="0" name="Left6" value='{$_SESSION['Left6']}'  placeholder="Distance from wrist to distal end of finger on thumb side (Lateral)" class="form-control"><span class="input-group-addon">cm</span></div>
      <div class="input-group"><span class="input-group-addon">L7</span> <input type="number" step="any" min="0" name="Left7" value='{$_SESSION['Left7']}'  placeholder="Distance from wrist to distal middle end of effected hand" class="form-control"><span class="input-group-addon">cm</span></div>
      <div class="input-group"><span class="input-group-addon">L8</span> <input type="number" step="any" min="0" name="Left8" value='{$_SESSION['Left8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">L9</span> <input type="number" step="any" min="0" name="Left9" value='{$_SESSION['Left9']}'  placeholder="Distance from wrist to distal end on thumb side (Medial)" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">L9</span> <input type="number" step="any" min="0" name="Left9" value='{$_SESSION['Left9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">cm</span></div>
      <div class="input-group"><span class="input-group-addon">L10</span> <input type="number" step="any" min="0" name="Left10" value='{$_SESSION['Left10']}'  placeholder="Length of Elbow to wrist joint" class="form-control"><span class="input-group-addon">cm</span></div>
     </fieldset>
    </div>
@@ -176,10 +173,10 @@ $html = <<<HTML
      <div class="input-group"><span class="input-group-addon">R3</span> <input type="number" step="any" min="0" name="Right3" value='{$_SESSION['Right3']}'  placeholder="Distance between lateral and medial side of the middle forearm" class="form-control"><span class="input-group-addon">cm</span></div>
      <div class="input-group"><span class="input-group-addon">R4</span> <input type="number" step="any" min="0" name="Right4" value='{$_SESSION['Right4']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the wrist" class="form-control"><span class="input-group-addon">cm</span></div>
       <div class="input-group"><span class="input-group-addon">R5</span> <input type="number" step="any" min="0" name="Right5" value='{$_SESSION['Right5']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">cm</span></div>
-      <div class="input-group"><span class="input-group-addon">R6</span> <input type="number" step="any" min="0" name="Right6" value='{$_SESSION['Right6']}'  placeholder="Distance from wrist to distal end on thumb side (Lateral)" class="form-control"><span class="input-group-addon">cm</span></div>
+      <div class="input-group"><span class="input-group-addon">R6</span> <input type="number" step="any" min="0" name="Right6" value='{$_SESSION['Right6']}'  placeholder="Distance from wrist to distal end of finger on thumb side (Lateral)" class="form-control"><span class="input-group-addon">cm</span></div>
       <div class="input-group"><span class="input-group-addon">R7</span> <input type="number" step="any" min="0" name="Right7" value='{$_SESSION['Right7']}'  placeholder="Distance from wrist to distal middle end of effected hand" class="form-control"><span class="input-group-addon">cm</span></div>
       <div class="input-group"><span class="input-group-addon">R8</span> <input type="number" step="any" min="0" name="Right8" value='{$_SESSION['Right8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">cm</span></div>
-      <div class="input-group"><span class="input-group-addon">R9</span> <input type="number" step="any" min="0" name="Right9" value='{$_SESSION['Right9']}'  placeholder="Distance from wrist to distal end on thumb side (Medial)" class="form-control"><span class="input-group-addon">cm</span></div>
+      <div class="input-group"><span class="input-group-addon">R9</span> <input type="number" step="any" min="0" name="Right9" value='{$_SESSION['Right9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">cm</span></div>
      <div class="input-group"><span class="input-group-addon">R10</span> <input type="number" step="any" min="0" name="Right10" value='{$_SESSION['Right10']}'  placeholder="Length of Elbow to wrist joint" class="form-control"><span class="input-group-addon">cm</span></div>
     </fieldset>
    </div>
@@ -208,10 +205,10 @@ $html = <<<HTML
     <li>Distance between lateral and medial side of the middle forearm</li>
     <li>Distance between lateral and medial side of the forearm proximal to the wrist</li>
     <li>Wrist Joint distance from lateral to medial side</li>
-    <li>Distance from wrist to distal end on thumb side (Lateral)</li>
+    <li>Distance from wrist to distal end of finger on thumb side (Lateral)</li>
     <li>Distance from wrist to distal middle end of effected hand</li>
     <li>Distance from Lateral and Medial sides of the distal part of the hand</li>
-    <li>Distance from wrist to distal end on thumb side (Medial)</li>
+    <li>Distance from wrist to proximal end of 1st phalange on pinky side (Medial)</li>
     <li>Length of Elbow to wrist joint</li>
     </ol>
    </div>
