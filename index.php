@@ -11,16 +11,18 @@
 
 <!--[if IE]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 <!-- Latest compiled and minified CSS -->
+
+<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="./lib/font-awesome-4.0.3/css/font-awesome.min.css">
+
 <!--
-<link rel="stylesheet" href="/eNable/bootstrap-3.1.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="/eNable/bootstrap-3.1.1/css/bootstrap-theme.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="/eNable/bootstrap-3.1.1p/3.1.1/js/bootstrap.min.js"></script>
--->
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+-->
 <style>
 	.nav-tabs li a, .tab-content div {
 		background-color: #DDD;
@@ -43,11 +45,52 @@
 	.tab-pane {
 		height: 400px;
 	}
+	.navbar-brand {
+		margin-top: -5px;
+		text-size: 20px;
+		font-size: 2.4em;
+	}
+	.navbar-brand span{
+		color: #ECECEC !important;
+	}
+	.navbar-brand img {
+		vertical-align: baseline;
+	}
+	#help {
+		margin-top: -3px;
+		p-osition: absolute;
+		margin-left: 14px ;
+	}
+	#help  span{
+		font-size: 18px;
+	}
+	.help {
+		color:white;
+		background-image: linear-gradient(to bottom, #666666 0px, #222222 100%);
+    		background-color: #666666;
+		border-color: #666666;
+		float:right;
+	}
+	.help:hover, .help:focus {
+		color:white;
+		background-image: linear-gradient(to bottom, #aaa 0px, #444 100%);
+	}
+	.download, .preview  {
+		float:right;
+		margin-left: 14px ;
+	}
+	.navbar-fixed-bottom .container {
+		margin-top:12px;
+		font-size:20px;
+		color: #ECECEC;
+	}
 </style>
 </head>
 
 <body id="index" class="home">
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="./lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
+<form>
 <?php
 require_once('backend.php');
 
@@ -61,8 +104,7 @@ $fingerSelect_options = fingerSelect_options();
 $palmSelect_options = palmSelect_options();
 $render = render();
 
-echo <<<HTML
-<form>
+$html = <<<HTML
 <div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
  <div class="container">
   <div class="navbar-header">
@@ -72,14 +114,31 @@ echo <<<HTML
     <span class="icon-bar"></span>
     <span class="icon-bar"></span>
    </button>
-   <a href="#" class="navbar-brand">e-NABLE Generator</a>
+   <a href="#" class="navbar-brand"><img src="imgs/eNable_dark_bg.png"/> - <span>Generator</span></a>
   </div>
   <div class="navbar-collapse collapse">
    <div class="navbar-form navbar-right">
-    <button class="btn btn-success" type="submit" name='submit' value='Preview'>Preview</button>
-    <button class="btn btn-danger" type="submit" name='submit' value='stl'>Create STL</button>
+    <button class="download btn btn-danger" type="submit" name='submit' value='stl'>
+      <span class="glyphicon glyphicon-download"></span> Download</button>
+    <button class="preview btn btn-success" type="submit" name='submit' value='Preview'
+      title="Preview" data-toggle="tooltip" data-placement="bottom">
+      <span class="glyphicon glyphicon-picture"></span> Preview</button>
+    <button class="email btn btn-info" type="button" name='submit' value='email'>
+      <span class="glyphicon glyphicon-envelope"></span> Email</button>
+    </div>
    </div>
   </div>
+ </div>
+</div>
+
+
+<div class="navbar  navbar-inverse navbar-fixed-bottom">
+ <div class="container">
+	&copy; e-NABLE 2014
+    <button id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
+      <span class="fa fa-question-circle"></span> Help</button>
+    <button id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
+      Disclaimer</button>
  </div>
 </div>
 
@@ -96,6 +155,7 @@ echo <<<HTML
   <!-- Tab panes -->
   <div class="tab-content">
    <div class="tab-pane active" id="left">
+
      <fieldset>
      <div class="input-group"><span class="input-group-addon">L1</span> <input type="number" step="any" min="0" name="Left1" value='{$_SESSION['Left1']}' id="a1" placeholder="Length of Elbow Joint" class="form-control"><span class="input-group-addon">cm</span></div>
      <div class="input-group"><span class="input-group-addon">L2</span> <input type="number" step="any" min="0" name="Left2" value='{$_SESSION['Left2']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the elbow joint" class="form-control"><span class="input-group-addon">cm</span></div>
@@ -139,7 +199,7 @@ echo <<<HTML
   </ul>
   <!-- Tab panes -->
   <div class="tab-content">
-   <div class="tab-pane active" id="image"><img src="./imgs/referece.png"/></div>
+   <div class="tab-pane active" id="image"><span class="thumbnail"><img src="./imgs/reference.png"/></span></div>
    <div class="tab-pane" id="descriptions">
     <br>
     <ol>
@@ -203,17 +263,59 @@ echo <<<HTML
 </div>
 </div>
 
-
 <br />
 <br />
-<br />
-<br />
-
+<!-- 
 <div class="container">
+  <div class="well">
+    <p>Disclaimer: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. </p>
+</div>
+-->
+
+<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="help-modal modal fade in" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="fa fa-times-circle"></i></button>
+          <h4 id="myModalLabel" class="modal-title">Help</h4>
+        </div>
+	<div class="modal-body">
+		Please have a look at the <a href="https://docs.google.com/file/d/0B9uusfrN9RdDX3E4anlWTW01bm8">current generic intake form</a> for more details.
+        </div>
+        <div class="modal-footer">
+          <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+        </div>
+
+      </div>
+    </div>
+</div>
+
+
+<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="disclaimer-modal modal fade in" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="fa fa-times-circle"></i></button>
+          <h4 id="myModalLabel" class="modal-title">Disclaimer</h4>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+        </div>
+
+      </div>
+    </div>
+</div>
 
 </div>
+HTML;
+echo $html;
+?>
+
+
+</form>
 </body>
 </html>
-HTML;
-
-?>
