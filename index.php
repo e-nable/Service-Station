@@ -123,7 +123,7 @@ $html = <<<HTML
     <button class="preview btn btn-success" type="submit" name='submit' value='Preview'
       title="Preview" data-toggle="tooltip" data-placement="bottom">
       <span class="glyphicon glyphicon-picture"></span> Preview</button>
-    <button class="email btn btn-info" type="button" name='submit' value='email'>
+    <button class="disabled email btn btn-info" type="button" name='submit' value='email'>
       <span class="glyphicon glyphicon-envelope"></span> Email</button>
     </div>
    </div>
