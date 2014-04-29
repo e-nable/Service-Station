@@ -301,7 +301,7 @@ $html = <<<HTML
           <h4 id="myModalLabel" class="modal-title">Help</h4>
         </div>
 	<div class="modal-body">
-		The purpose of this project is to allow an advanced user to preview and build STL files associated with a <b>e-NABLE</b> Gauntlet or any associated part to it while assuring that the scaling factors used do not affect the bolting components and that other fittings remain proportionately scaled.
+		The purpose of this project is to allow an advanced user to preview and build STL files associated with an <b>e-NABLE</b> Gauntlet or any associated part to it while assuring that the scaling factors used do not affect the bolting components and that other fittings remain proportionately scaled.
 	<BR/>
 	<BR/>
 		In order to provide a proper fitting, several measurements are required which are detailed by the image. These are required. Please tab between Left and Right arm tabs to provide all data points, select the proper bolts sizes and other configurable selections before choosing to request a preview or generate an STL build.
