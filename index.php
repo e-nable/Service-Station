@@ -81,6 +81,29 @@
 		font-size:20px;
 		color: #ECECEC;
 	}
+	.loading-modal .modal-dialog {
+		width: 337px;
+	}
+	.loading-modal .modal-content {
+		border-radius: 80px;
+		margin: 90px auto;
+		background-color:transparent;
+	}
+	.loading-modal .modal-content div{
+		border-radius: 70px;
+		margin:12px 16px;;
+		background-color:white;
+		color:#A00;
+		font-size:1.2em;
+	}
+	.modal-footer {
+		margin-top: 0;
+		padding: 10px 24px 13px;
+	}
+	.modal-header {
+		padding: 12px;
+	}
+
 </style>
 </head>
 
@@ -115,9 +138,9 @@ $html = <<<HTML
   </div>
   <div class="navbar-collapse collapse">
    <div class="navbar-form navbar-right">
-    <button class="download btn btn-danger" type="submit" name='submit' value='stl'>
+    <button id="stl-btn" data-loading-text="Loading STL ..." class="download btn btn-danger" type="submit" name='submit' value='stl' onClick="javascript:goModal('stl');">
       <span class="glyphicon glyphicon-download"></span> Download</button>
-    <button class="preview btn btn-success" type="submit" name='submit' value='Preview'
+    <button id="preview-btn"  data-loading-text="Loading Preview..." class="preview btn btn-success" type="submit" name='submit' value='Preview' onClick="javascript:goModal('preview');"
       title="Preview" data-toggle="tooltip" data-placement="bottom">
       <span class="glyphicon glyphicon-picture"></span> Preview</button>
     <button class="disabled email btn btn-info" type="button" name='submit' value='email'>
@@ -269,7 +292,7 @@ $html = <<<HTML
 </div>
 -->
 
-<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="help-modal modal fade in" id="myModal">
+<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="help-modal modal fade in" id="helpModal">
     <div class="modal-dialog">
       <div class="modal-content">
 
@@ -278,6 +301,23 @@ $html = <<<HTML
           <h4 id="myModalLabel" class="modal-title">Help</h4>
         </div>
 	<div class="modal-body">
+		The purpose of this project is to allow an advanced user to preview and build STL files associated with a <b>e-NABLE</b> Gauntlet or any associated part to it while assuring that the scaling factors used do not affect the bolting components and that other fittings remain proportionately scaled.
+	<BR/>
+	<BR/>
+		In order to provide a proper fitting, several measurements are required which are detailed by the image. These are required. Please tab between Left and Right arm tabs to provide all data points, select the proper bolts sizes and other configurable selections before choosing to request a preview or generate an STL build.
+	<BR/>
+	<BR/>
+	This product allows you to:
+	<UL>
+		<LI>Preview a component build</LI>
+		<LI>Generate downloadable associated STL files</LI>
+	</UL>
+	This product does NOT:
+	<UL>
+		<LI>Generate a request to order manufacturing of this product</LI>
+		<LI>Talk to a 3D printer</LI>
+	</UL>
+
 		Please have a look at the <a href="https://docs.google.com/file/d/0B9uusfrN9RdDX3E4anlWTW01bm8">current generic intake form</a> for more details.
         </div>
         <div class="modal-footer">
@@ -289,7 +329,7 @@ $html = <<<HTML
 </div>
 
 
-<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="disclaimer-modal modal fade in" id="myModal">
+<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="disclaimer-modal modal fade in" id="disclaimerModal">
     <div class="modal-dialog">
       <div class="modal-content">
 
@@ -297,7 +337,7 @@ $html = <<<HTML
           <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="fa fa-times-circle"></i></button>
           <h4 id="myModalLabel" class="modal-title">Disclaimer</h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body">e-NABLE does not in any way, shape or form, guarantee the use the of this application.
         </div>
         <div class="modal-footer">
           <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
@@ -307,11 +347,31 @@ $html = <<<HTML
     </div>
 </div>
 
+
+<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="loading-modal modal fade" id="loadingModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+	<div class="modal-body">
+		<div>Please wait while the content renders...</div>
+        </div>
+      </div>
+    </div>
+</div>
+
 </div>
 HTML;
 echo $html;
 ?>
-
+<script>
+function goModal(v){
+	$("#loadingModal").modal({backdrop:'static', keyboard: false, show:true});
+	if (v == 'preview'){
+		$('#stl-btn').addClass('disabled');
+	} else if ( v == 'stl'){
+		$('#preview-btn').addClass('disabled');
+	}
+}
+</script>
 
 </form>
 </body>
