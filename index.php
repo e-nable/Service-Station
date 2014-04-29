@@ -123,6 +123,17 @@ $part_options = part_options();
 $fingerSelect_options = fingerSelect_options();
 $palmSelect_options = palmSelect_options();
 $render = render();
+$tabselect = "";
+
+if(isset($_GET["submit"]) && (strtolower(trim($_GET["submit"])) == 'preview' || strtolower(trim($_GET["submit"])) == 'stl'))
+$tabselect = <<<TABSELECT
+<script>
+	$("#render_tab a:last").tab("show");
+</script>
+TABSELECT;
+
+
+
 
 $html = <<<HTML
 <div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
@@ -139,7 +150,7 @@ $html = <<<HTML
   <div class="navbar-collapse collapse">
    <div class="navbar-form navbar-right">
     <button id="stl-btn" data-loading-text="Loading STL ..." class="download btn btn-danger" type="submit" name='submit' value='stl' onClick="javascript:goModal('stl');">
-      <span class="glyphicon glyphicon-download"></span> Download</button>
+      <span class="glyphicon glyphicon-download"></span> Generate STL</button>
     <button id="preview-btn"  data-loading-text="Loading Preview..." class="preview btn btn-success" type="submit" name='submit' value='Preview' onClick="javascript:goModal('preview');"
       title="Preview" data-toggle="tooltip" data-placement="bottom">
       <span class="glyphicon glyphicon-picture"></span> Preview</button>
@@ -207,7 +218,7 @@ $html = <<<HTML
  </div>
 
  <div class="col-md-4">
-  <ul class="nav nav-tabs">
+  <ul class="nav nav-tabs" id="render_tab">
    <li class="dropdown">
     <a data-toggle="dropdown" class="dropdown-toggle" id="myTabDrop1" href="#">Reference <b class="caret"></b></a>
     <ul aria-labelledby="myTabDrop1" role="menu" class="dropdown-menu">
@@ -238,6 +249,8 @@ $html = <<<HTML
    <div class="tab-pane" id="preview">{$render}</div>
   </div>
  </div>
+
+{$tabselect}
 
  <div class="col-md-4">
   <fieldset>
