@@ -56,10 +56,18 @@
 	.navbar-brand img {
 		vertical-align: baseline;
 	}
-	.help span, .disclaimer span{
+	.help span{
+		font-size: 20px;
+	}
+	.disclaimer span{
 		font-size: 18px;
 	}
-	.help,.disclaimer {
+	.help {
+		margin-left: 14px ;
+		color:white;
+		float:right;
+	}
+	.disclaimer {
 		margin-left: 14px ;
 		margin-top: -5px;
 		color:white;
@@ -68,7 +76,11 @@
 		border-color: #666666;
 		float:right;
 	}
-	.help:hover, .help:focus, .disclaimer:hover, .disclaimer:hover  {
+	.help:hover, .help:focus {
+		color:white;
+		background-image: linear-gradient(to bottom, #444 0px, #000 100%);
+	}
+	.disclaimer:hover, .disclaimer:hover  {
 		color:white;
 		background-image: linear-gradient(to bottom, #aaa 0px, #444 100%);
 	}
@@ -124,14 +136,17 @@ $fingerSelect_options = fingerSelect_options();
 $palmSelect_options = palmSelect_options();
 $render = render();
 $tabselect = "";
+$stateClass = "";
 
-if(isset($_GET["submit"]) && (strtolower(trim($_GET["submit"])) == 'preview' || strtolower(trim($_GET["submit"])) == 'stl'))
-$tabselect = <<<TABSELECT
-<script>
-	$("#render_tab a:last").tab("show");
-</script>
+if(isset($_GET["submit"]) && (strtolower(trim($_GET["submit"])) == 'preview' || strtolower(trim($_GET["submit"])) == 'stl')){
+	$tabselect = <<<TABSELECT
+	<script>
+		$("#render_tab a:last").tab("show");
+	</script>
 TABSELECT;
-
+} else {
+	$stateClass = "hidden";
+}
 
 
 
@@ -149,13 +164,15 @@ $html = <<<HTML
   </div>
   <div class="navbar-collapse collapse">
    <div class="navbar-form navbar-right">
+    <span id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
+      <span class="fa fa-question-circle"></span> </span>
     <button id="stl-btn" data-loading-text="Loading STL ..." class="download btn btn-danger" type="submit" name='submit' value='stl' onClick="javascript:goModal('stl');">
       <span class="glyphicon glyphicon-download"></span> Generate STL</button>
     <button id="preview-btn"  data-loading-text="Loading Preview..." class="preview btn btn-success" type="submit" name='submit' value='Preview' onClick="javascript:goModal('preview');"
       title="Preview" data-toggle="tooltip" data-placement="bottom">
       <span class="glyphicon glyphicon-picture"></span> Preview</button>
-    <button class="disabled email btn btn-info" type="button" name='submit' value='email'>
-      <span class="glyphicon glyphicon-envelope"></span> Email</button>
+    <!--<button class="disabled email btn btn-info" type="button" name='submit' value='email'>
+      <span class="glyphicon glyphicon-envelope"></span> Email</button>-->
     </div>
    </div>
   </div>
@@ -166,10 +183,9 @@ $html = <<<HTML
 <div class="navbar  navbar-inverse navbar-fixed-bottom">
  <div class="container">
 	&copy; e-NABLE 2014
-    <span id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
-      <span class="fa fa-question-circle"></span> Help</span>
     <span id="disclaimer" class="disclaimer btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
       Disclaimer</span>
+    <a class="disclaimer btn btn-help" href="./?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0&Right8=72.52&Right9=72.23&Right10=230.6&part=0&fingerSelect=1&palmSelect=1&WristBolt=5.5&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview">Load Sample Data</a>
  </div>
 </div>
 
@@ -226,7 +242,7 @@ $html = <<<HTML
      <li><a data-toggle="tab" tabindex="-1"  href="#descriptions" data-toggle="tab">Descriptions</a></li>
     </ul>
    </li>
-   <li><a href="#preview" data-toggle="tab">Preview</a></li>  
+   <li class="{$stateClass}"><a href="#preview" data-toggle="tab">Preview</a></li>  
   </ul>
   <!-- Tab panes -->
   <div class="tab-content">
@@ -317,10 +333,10 @@ $html = <<<HTML
 		The purpose of this project is to allow an advanced user to preview and build STL files associated with an <b>e-NABLE</b> Gauntlet or any associated part to it while assuring that the scaling factors used do not affect the bolting components and that other fittings remain proportionately scaled.
 	<BR/>
 	<BR/>
-		In order to provide a proper fitting, several measurements are required which are detailed by the image. These are required. Please tab between Left and Right arm tabs to provide all data points, select the proper bolts sizes and other configurable selections before choosing to request a preview or generate an STL build.
+		In order to provide a proper fitting, several measurements are required which are detailed by the image in the center visual pane. Please provide all lengths for both left (L#) and right (R#) arm measurements by tabbing through the left pane, select the proper bolts sizes and other configurable selections before choosing to request a preview or generate an STL file. The preview image will only populate in a tab within the center pane when either preview or generate buttons are clicked.
 	<BR/>
 	<BR/>
-	This product allows you to:
+	This product allows the user to:
 	<UL>
 		<LI>Preview a component build</LI>
 		<LI>Generate downloadable associated STL files</LI>
@@ -331,7 +347,7 @@ $html = <<<HTML
 		<LI>Talk to a 3D printer</LI>
 	</UL>
 
-		Please have a look at the <a href="https://docs.google.com/file/d/0B9uusfrN9RdDX3E4anlWTW01bm8">current generic intake form</a> for more details.
+		Please reference the <a href="https://docs.google.com/file/d/0B9uusfrN9RdDX3E4anlWTW01bm8">current generic intake form</a> for more details on measurements.
         </div>
         <div class="modal-footer">
           <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
