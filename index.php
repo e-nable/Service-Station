@@ -115,8 +115,12 @@
 	.modal-header {
 		padding: 12px;
 	}
-	div#preview p {
+	div#preview {
+		background-color: #FFFFEB;
+	}
+	div#preview p.download_stl {
 		text-align: center;
+		background-color: #DDD;
 	}
 
 </style>

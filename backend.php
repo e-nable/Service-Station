@@ -34,7 +34,7 @@ if(isset($_REQUEST['submit']) )
 	if($_REQUEST['submit'] == 'stl')
 	{
 		$thingtodo = $exportfile;
-		$downloadlink = "<p><a class='btn btn-success' href='{$exportfile}'>Download .STL file</a></p>\n";
+		$downloadlink = "<p class='download_stl'><a class='btn btn-success' href='{$exportfile}'>Download .STL file</a></p>\n";
 	}else{
 		$thingtodo = $previewimage;
 		$downloadlink = '';
