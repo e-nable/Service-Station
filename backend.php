@@ -38,6 +38,12 @@ if(isset($_REQUEST['submit']) )
 	}else{
 		$thingtodo = $previewimage;
 		$downloadlink = '';
+		if($_REQUEST['part'] >= 1) // we are previewing a part, lets render it as well
+		{		
+			$otherthingtodo = $exportfile;
+			//$othercommand = "nohup openscad -o {$otherthingtodo} {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad ";
+			$othercommand = "echo \" openscad -o {$otherthingtodo} {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad  \" | batch ";
+		}
 	}
 
 	$command = " openscad -o {$thingtodo} {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad ";
@@ -50,6 +56,17 @@ if(isset($_REQUEST['submit']) )
 		$time_end = microtime(true);
 		$execution_time = ($time_end - $time_start);
 	}
+// See if we should p[re-render the .sto as well
+	if(isset($othercommand) && !file_exists($otherthingtodo))
+	{
+		//die( "pre-generating file");
+		$result = exec( escapeshellcmd($othercommand));
+		//die( $result . $othercommand );
+	}else
+	{
+		//die( "file exists: " . file_exists($otherthingtodo) );
+	}
+
 	$return =  "<img src='imagecache/{$scalehash}.png' style='width:100%;' /> {$downloadlink}";
 
 	//	echo "<input type='submit' name='submit' value='Create .STL'> {$downloadlink}";
