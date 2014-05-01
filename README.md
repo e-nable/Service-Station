@@ -17,3 +17,4 @@ TODO
 - [x] Remote file uploads to services that want the .stl files
 - [x] Email of rendered link after rendering
 - [x] Create 'local render' module 
+- [x] give files a sensible name
