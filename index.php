@@ -115,6 +115,9 @@
 	.modal-header {
 		padding: 12px;
 	}
+	div#preview p {
+		text-align: center;
+	}
 
 </style>
 </head>
