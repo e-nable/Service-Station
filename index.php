@@ -373,7 +373,7 @@ $html = <<<HTML
           <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="fa fa-times-circle"></i></button>
           <h4 id="myModalLabel" class="modal-title">Disclaimer</h4>
         </div>
-        <div class="modal-body">e-NABLE does not in any way, shape or form, guarantee the use the of this application.
+        <div class="modal-body">By accepting any design, plan, component or assembly related to the so called “e-NABLE Hand” , I understand and agree that any such information or material furnished by any individual associated with the design team is furnished as is without representation or warranties of any kind, express or implied, and is intended to be a gift  for the sole purpose of evaluating various design iterations, ideas and modifications. I understand that such improvements are intended to benefit individuals having specific disabilities and are not intended, and shall not be used,  for commercial use. I further understand and agree that any individual associated with e-NABLE organization shall not be liable for any injuries or damages resulting from the use of any of the materials related to the e-NABLE hand.
         </div>
         <div class="modal-footer">
           <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
