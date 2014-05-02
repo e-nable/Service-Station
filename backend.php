@@ -1,4 +1,10 @@
 <?php
+/*
+May need to run something like 
+    Xvfb :5 -screen 0 800x600x24 &
+    export DISPLAY=:5
+after a reboot to get openscad to run correctly*/
+
 
 
 function start_user_session()
@@ -28,8 +34,33 @@ if(isset($_REQUEST['submit']) )
 
 	$scalehash = md5($leftsidevars.$rightsidevars.$options) .'.'. crc32($leftsidevars.$rightsidevars.$options);
 
-	$previewimage = "imagecache/{$scalehash}.png";
-	$exportfile   = "imagecache/{$scalehash}.stl";
+$partname='';
+switch($_REQUEST['part']){
+case 0:
+$partname='AssembledModel';
+break;
+case 1:
+$partname='Gauntlet';
+break;
+case 2:
+$partname='Palm';
+break;
+case 3:
+$partname='FingerProximal';
+break;
+case 4:
+$partname='FingerDistal';
+break;
+case 5:
+$partname='ThumbProximal';
+break;
+case 6:
+$partname='ThumbDistal';
+break;
+}
+
+	$previewimage = "imagecache/{$scalehash}.{$partname}.png";
+	$exportfile   = "imagecache/{$scalehash}.{$partname}.stl";
 
 	if($_REQUEST['submit'] == 'stl')
 	{
@@ -67,7 +98,7 @@ if(isset($_REQUEST['submit']) )
 		//die( "file exists: " . file_exists($otherthingtodo) );
 	}
 
-	$return =  "<img src='imagecache/{$scalehash}.png' style='width:100%;' /> {$downloadlink}";
+	$return =  "<img src='imagecache/{$scalehash}.{$partname}.png' style='width:100%;' /> {$downloadlink}";
 
 	//	echo "<input type='submit' name='submit' value='Create .STL'> {$downloadlink}";
 	//	echo "<p>Created preview in {$execution_time} seconds using the following command.</p>\n";
