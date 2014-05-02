@@ -96,7 +96,7 @@ if(isset($_REQUEST['submit']) )
 	$command = " openscad -o {$thingtodo} {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad ";
 
 	// Lets do some disk caching. If we have already rendered this, lets use the pre-rendering
-	if(!file_exists($thingtodo))
+	if(!file_exists($thingtodo) || filesize($thingtodo) == 0)
 	{
 		$time_start = microtime(true);
 		$results = exec( "export DISPLAY=:5; " . escapeshellcmd($command));
