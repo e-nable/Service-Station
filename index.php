@@ -138,6 +138,7 @@ start_user_session();
 
 #echo "<p>This is a demonstration file generator. Reference documentation can be found <a href='https://docs.google.com/document/d/1LX3tBpio-6IsMMo3aaUdR-mLwWdv1jS4ooeEHb79JYo/edit?pli=1' target='_blank'>here</a>. Generator code can be found on <a href='https://github.com/laird/e-NABLE' target='_blank'>GitHub</a> and the code for this web interface can be found an <a href='https://github.com/creuzerm/e-NABLE-Web-Generator' target='_blank'>GitHub</a>.</p>";
 
+$prostheticHand_options = prostheticHand_options();
 $part_options = part_options();
 $fingerSelect_options = fingerSelect_options();
 $palmSelect_options = palmSelect_options();
@@ -192,7 +193,7 @@ $html = <<<HTML
 	&copy; e-NABLE 2014
     <span id="disclaimer" class="disclaimer btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
       Disclaimer</span>
-    <a class="disclaimer btn btn-help" href="./?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0&Right8=72.52&Right9=72.23&Right10=230.6&part=0&fingerSelect=1&palmSelect=2&WristBolt=5.5&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview" onClick="javascript:goModal('preview');">Load Sample Data</a>
+    <a class="disclaimer btn btn-help" href="./?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0&Right8=72.52&Right9=72.23&Right10=230.6&part=0&fingerSelect=1&palmSelect=2&prostheticHand=0&WristBolt=5.5&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview" onClick="javascript:goModal('preview');">Load Sample Data</a>
  </div>
 </div>
 
@@ -279,6 +280,11 @@ $html = <<<HTML
   <fieldset>
    <fieldset>
     <legend>Model Selection</legend>
+    <label for='prostheticHand'>Hand</label>
+    <select name='prostheticHand' class="form-control">
+     {$prostheticHand_options}
+    </select>
+    
     <label for='part'>Generate</label>
     <select name='part' class="form-control">
      {$part_options}

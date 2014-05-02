@@ -16,7 +16,7 @@ function start_user_session()
 			array(
 				'Left1', 'Left2', 'Left3', 'Left4', 'Left5', 'Left6', 'Left7', 'Left8', 'Left9', 'Left10',
 				'Right1', 'Right2', 'Right3', 'Right4', 'Right5', 'Right6', 'Right7', 'Right8', 'Right9', 'Right10',
-				'part', 'fingerSelect', 'palmSelect'
+				'part', 'fingerSelect', 'palmSelect', 'prostheticHand'
 			     )
 			);
 }
@@ -30,34 +30,50 @@ if(isset($_REQUEST['submit']) )
 	$assemblypath = "e-NABLE/Assembly/";
 	$leftsidevars = "-D Left1={$_REQUEST['Left1']} -D Left2={$_REQUEST['Left2']} -D  Left3={$_REQUEST['Left3']} -D  Left4={$_REQUEST['Left4']} -D  Left5={$_REQUEST['Left5']} -D  Left6={$_REQUEST['Left6']} -D  Left7={$_REQUEST['Left7']} -D  Left8={$_REQUEST['Left8']} -D  Left9={$_REQUEST['Left9']} -D  Left10={$_REQUEST['Left10']}";
 	$rightsidevars = "-D Right1={$_REQUEST['Right1']} -D Right2={$_REQUEST['Right2']} -D  Right3={$_REQUEST['Right3']} -D  Right4={$_REQUEST['Right4']} -D  Right5={$_REQUEST['Right5']} -D  Right6={$_REQUEST['Right6']} -D  Right7={$_REQUEST['Right7']} -D  Right8={$_REQUEST['Right8']} -D  Right9={$_REQUEST['Right9']} -D  Right10={$_REQUEST['Right10']}";
-	$options = " -D part={$_REQUEST['part']} -D fingerSelect={$_REQUEST['fingerSelect']} -D palmSelect={$_REQUEST['palmSelect']} -D WristBolt={$_REQUEST['WristBolt']} -D KnuckleBolt={$_REQUEST['KnuckleBolt']} -D JointBolt={$_REQUEST['JointBolt']} -D ThumbBolt={$_REQUEST['ThumbBolt']}  ";
+	$options = " -D part={$_REQUEST['part']} -D prostheticHand={$_REQUEST['prostheticHand']} -D fingerSelect={$_REQUEST['fingerSelect']} -D palmSelect={$_REQUEST['palmSelect']} -D WristBolt={$_REQUEST['WristBolt']} -D KnuckleBolt={$_REQUEST['KnuckleBolt']} -D JointBolt={$_REQUEST['JointBolt']} -D ThumbBolt={$_REQUEST['ThumbBolt']}  ";
 
 	$scalehash = md5($leftsidevars.$rightsidevars.$options) .'.'. crc32($leftsidevars.$rightsidevars.$options);
 
-$partname='';
-switch($_REQUEST['part']){
-case 0:
-$partname='AssembledModel';
-break;
-case 1:
-$partname='Gauntlet';
-break;
-case 2:
-$partname='Palm';
-break;
-case 3:
-$partname='FingerProximal';
-break;
-case 4:
-$partname='FingerDistal';
-break;
-case 5:
-$partname='ThumbProximal';
-break;
-case 6:
-$partname='ThumbDistal';
-break;
-}
+	// Give the file a human readable name
+	$partname='';
+	switch($_REQUEST['part']){
+		case 0:
+			$partname='AssembledModel';
+			break;
+		case 1:
+			$partname='Gauntlet';
+			break;
+		case 2:
+			$partname='Palm';
+			break;
+		case 3:
+			$partname='FingerProximal';
+			break;
+		case 4:
+			$partname='FingerDistal';
+			break;
+		case 5:
+			$partname='ThumbProximal';
+			break;
+		case 6:
+			$partname='ThumbDistal';
+			break;
+	}
+
+	// add handidness to the human reaale file name
+	switch($_REQUEST['part']){
+		case 0:
+		case 2:
+			if($_REQUEST['prostheticHand'] = 0)
+			{
+				$partname='Left'.$partname;
+			}elseif($_REQUEST['prostheticHand'] = 1)
+			{
+				$partname='Right'.$partname;
+			}
+			break;
+
+	}
 
 	$previewimage = "imagecache/{$scalehash}.{$partname}.png";
 	$exportfile   = "imagecache/{$scalehash}.{$partname}.stl";
@@ -133,6 +149,14 @@ function load_session_data($options)
 		}
 
 	}
+}
+
+// Create menu select options for the different finger options
+function prostheticHand_options()
+{
+	$return  = "\t<option value='0'" . ($_SESSION['prostheticHand'] == 0 ? " selected='selected' " : '') . ">Left</option>\n";
+	$return .= "\t<option value='1'" . ($_SESSION['prostheticHand'] == 1 ? " selected='selected' " : '') . ">Right</option>\n";
+	return $return;
 }
 
 // Create menu select options for the different parts
