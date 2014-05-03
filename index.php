@@ -135,6 +135,10 @@
 	.config-col fieldset fieldset :last-child{
 		margin-bottom: 8px;
 	}
+	#left-tab span, #right-tab span {
+		font-size: 1.1em;
+		margin-right:2px;
+	}
 </style>
 </head>
 
@@ -215,8 +219,8 @@ $html = <<<HTML
  <div class="col-md-4">
 
   <ul class="nav nav-tabs">
-   <li class="active"><a href="#left" data-toggle="tab">Left Arm</a></li>
-   <li><a href="#right" data-toggle="tab">Right Arm</a></li>  
+   <li class="active"><a href="#left" data-toggle="tab" id="left-tab"><span class="fa fa-wrench green"></span> Left Arm</a></li>
+   <li><a href="#right" data-toggle="tab" id="right-tab"><span class="fa fa-wrench green hidden"></span> Right Arm</a></li>  
   </ul>
 
   <!-- Tab panes -->
@@ -293,7 +297,7 @@ $html = <<<HTML
    <fieldset>
     <legend>Model Selection</legend>
     <label for='prostheticHand'>Hand</label>
-    <select name='prostheticHand' class="form-control">
+    <select id="prostheticHand" name='prostheticHand' class="form-control">
      {$prostheticHand_options}
     </select>
     
@@ -424,6 +428,27 @@ function goModal(v){
 		$('#preview-btn').addClass('disabled');
 	}
 }
+
+
+function handSelect(){
+	var hand_selected = $("#prostheticHand").val();
+	if (!hand_selected){
+		console.log('selection returned empty');
+	} else if (hand_selected == 0){
+		$('#left-tab span').removeClass('hidden');
+		$('#right-tab span').addClass('hidden');
+	} else if (hand_selected == 1){ ;
+		$('#left-tab span').addClass('hidden');
+		$('#right-tab span').removeClass('hidden');
+	}
+	console.log('changed');
+}
+
+$(function(){
+	handSelect();
+	$('#prostheticHand').change(function(){handSelect();});
+	console.log('doing it');
+});
 </script>
 
 </form>
