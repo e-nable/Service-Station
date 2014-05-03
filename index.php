@@ -122,7 +122,19 @@
 		text-align: center;
 		background-color: #DDD;
 	}
-
+	.config-col select, .config-col input{
+		height:32px;
+	}
+	.config-col label{
+		margin-top:3px;
+		margin-bottom:0px;
+	}
+	.config-col legend{
+		margin-bottom: 0px;
+	}
+	.config-col fieldset fieldset :last-child{
+		margin-bottom: 8px;
+	}
 </style>
 </head>
 
@@ -276,7 +288,7 @@ $html = <<<HTML
 
 {$tabselect}
 
- <div class="col-md-4">
+ <div class="col-md-4 config-col">
   <fieldset>
    <fieldset>
     <legend>Model Selection</legend>
@@ -299,7 +311,6 @@ $html = <<<HTML
     <select name='palmSelect' class="form-control">
      {$palmSelect_options}
     </select>
-    <br />
    </fieldset>
    <fieldset>
    <legend>Connector Holes</legend>
