@@ -78,7 +78,7 @@
 	}
 	.help:hover, .help:focus {
 		color:white;
-		background-image: linear-gradient(to bottom, #444 0px, #000 100%);
+		border: 1px solid #555;
 	}
 	.disclaimer:hover, .disclaimer:hover  {
 		color:white;
