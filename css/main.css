@@ -184,11 +184,10 @@
 		top: 251px;
 	}
 	#r1 {
-    		background: url("../imgs/arrows.png") repeat scroll -189px -315px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -189px -315px rgba(0, 0, 0, 0) !important;
     		margin-left: 189px;
     		top: 406px;
     		width: 90px;
-
 	}
 	#r2 {
 		background:url("../imgs/arrows.png") repeat scroll -185px -278px rgba(0, 0, 0, 0) !important;
@@ -246,7 +245,24 @@
 		margin-left: auto;
 		margin-right: auto;
 	}
-.focus .input-group-addon {
-    background-color: yellow;
-    }
+	.focus .input-group-addon {
+		background-color: yellow;
+	}
+	.image_hover {
+		background-color: rgba(0, 0, 0, 0.5);
+		/* For IE 8*/
+		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+		color: #FFFFFF;
+		font-size: 1.3em;
+		font-weight: bold;
+		height: 122px !important;
+		padding: 20px;
+		position: absolute;
+		top: 46px;
+		vertical-align: middle;
+		width: 306px !important;
+	}
+	.bottom {
+		top: 320px;
+	}
 	

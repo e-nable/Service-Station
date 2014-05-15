@@ -110,30 +110,30 @@ $html = <<<HTML
    <div class="tab-pane active" id="left">
 
      <fieldset>
-     <div class="input-group"><span class="input-group-addon">L1</span> <input type="number" step="any" min="0" name="Left1" value='{$_SESSION['Left1']}' id="a1" placeholder="Length of Elbow Joint" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">L2</span> <input type="number" step="any" min="0" name="Left2" value='{$_SESSION['Left2']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the elbow joint" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">L3</span> <input type="number" step="any" min="0" name="Left3" value='{$_SESSION['Left3']}'  placeholder="Distance between lateral and medial side of the middle forearm" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">L4</span> <input type="number" step="any" min="0" name="Left4" value='{$_SESSION['Left4']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the wrist" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">L5</span> <input type="number" step="any" min="0" name="Left5" value='{$_SESSION['Left5']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">L6</span> <input type="number" step="any" min="0" name="Left6" value='{$_SESSION['Left6']}'  placeholder="Distance from wrist to distal end of finger on thumb side (Lateral)" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">L7</span> <input type="number" step="any" min="0" name="Left7" value='{$_SESSION['Left7']}'  placeholder="Distance from wrist to distal middle end of effected hand" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">L8</span> <input type="number" step="any" min="0" name="Left8" value='{$_SESSION['Left8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">L9</span> <input type="number" step="any" min="0" name="Left9" value='{$_SESSION['Left9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">L10</span> <input type="number" step="any" min="0" name="Left10" value='{$_SESSION['Left10']}'  placeholder="Length of Elbow to wrist joint" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">L1</span> <input id="v_l1" type="number" step="any" min="0" name="Left1" value='{$_SESSION['Left1']}' id="a1" placeholder="Length of Elbow Joint" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">L2</span> <input id="v_l2" type="number" step="any" min="0" name="Left2" value='{$_SESSION['Left2']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the elbow joint" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">L3</span> <input id="v_l3" type="number" step="any" min="0" name="Left3" value='{$_SESSION['Left3']}'  placeholder="Distance between lateral and medial side of the middle forearm" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">L4</span> <input id="v_l4" type="number" step="any" min="0" name="Left4" value='{$_SESSION['Left4']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the wrist" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">L5</span> <input id="v_l5" type="number" step="any" min="0" name="Left5" value='{$_SESSION['Left5']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">L6</span> <input id="v_l6" type="number" step="any" min="0" name="Left6" value='{$_SESSION['Left6']}'  placeholder="Distance from wrist to distal end of finger on thumb side (Lateral)" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">L7</span> <input id="v_l7" type="number" step="any" min="0" name="Left7" value='{$_SESSION['Left7']}'  placeholder="Distance from wrist to distal middle end of effected hand" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">L8</span> <input id="v_l8" type="number" step="any" min="0" name="Left8" value='{$_SESSION['Left8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">L9</span> <input id="v_l9" type="number" step="any" min="0" name="Left9" value='{$_SESSION['Left9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">L10</span> <input id="v_l10" type="number" step="any" min="0" name="Left10" value='{$_SESSION['Left10']}'  placeholder="Length of Elbow to wrist joint" class="form-control"><span class="input-group-addon">cm</span></div>
     </fieldset>
    </div>
    <div class="tab-pane" id="right">
     <fieldset>
-     <div class="input-group"><span class="input-group-addon">R1</span> <input type="number" step="any" min="0" name="Right1" value='{$_SESSION['Right1']}'  placeholder="Length of Elbow Joint" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">R2</span> <input type="number" step="any" min="0" name="Right2" value='{$_SESSION['Right2']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the elbow joint" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">R3</span> <input type="number" step="any" min="0" name="Right3" value='{$_SESSION['Right3']}'  placeholder="Distance between lateral and medial side of the middle forearm" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">R4</span> <input type="number" step="any" min="0" name="Right4" value='{$_SESSION['Right4']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the wrist" class="form-control"><span class="input-group-addon">cm</span></div>
-      <div class="input-group"><span class="input-group-addon">R5</span> <input type="number" step="any" min="0" name="Right5" value='{$_SESSION['Right5']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">cm</span></div>
-      <div class="input-group"><span class="input-group-addon">R6</span> <input type="number" step="any" min="0" name="Right6" value='{$_SESSION['Right6']}'  placeholder="Distance from wrist to distal end of finger on thumb side (Lateral)" class="form-control"><span class="input-group-addon">cm</span></div>
-      <div class="input-group"><span class="input-group-addon">R7</span> <input type="number" step="any" min="0" name="Right7" value='{$_SESSION['Right7']}'  placeholder="Distance from wrist to distal middle end of effected hand" class="form-control"><span class="input-group-addon">cm</span></div>
-      <div class="input-group"><span class="input-group-addon">R8</span> <input type="number" step="any" min="0" name="Right8" value='{$_SESSION['Right8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">cm</span></div>
-      <div class="input-group"><span class="input-group-addon">R9</span> <input type="number" step="any" min="0" name="Right9" value='{$_SESSION['Right9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">cm</span></div>
-     <div class="input-group"><span class="input-group-addon">R10</span> <input type="number" step="any" min="0" name="Right10" value='{$_SESSION['Right10']}'  placeholder="Length of Elbow to wrist joint" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">R1</span> <input id="v_r1" type="number" step="any" min="0" name="Right1" value='{$_SESSION['Right1']}'  placeholder="Length of Elbow Joint" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">R2</span> <input id="v_r2" type="number" step="any" min="0" name="Right2" value='{$_SESSION['Right2']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the elbow joint" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">R3</span> <input id="v_r3" type="number" step="any" min="0" name="Right3" value='{$_SESSION['Right3']}'  placeholder="Distance between lateral and medial side of the middle forearm" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">R4</span> <input id="v_r4" type="number" step="any" min="0" name="Right4" value='{$_SESSION['Right4']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the wrist" class="form-control"><span class="input-group-addon">cm</span></div>
+      <div class="input-group"><span class="input-group-addon">R5</span> <input id="v_r5" type="number" step="any" min="0" name="Right5" value='{$_SESSION['Right5']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">cm</span></div>
+      <div class="input-group"><span class="input-group-addon">R6</span> <input id="v_r6" type="number" step="any" min="0" name="Right6" value='{$_SESSION['Right6']}'  placeholder="Distance from wrist to distal end of finger on thumb side (Lateral)" class="form-control"><span class="input-group-addon">cm</span></div>
+      <div class="input-group"><span class="input-group-addon">R7</span> <input id="v_r7" type="number" step="any" min="0" name="Right7" value='{$_SESSION['Right7']}'  placeholder="Distance from wrist to distal middle end of effected hand" class="form-control"><span class="input-group-addon">cm</span></div>
+      <div class="input-group"><span class="input-group-addon">R8</span> <input id="v_r8" type="number" step="any" min="0" name="Right8" value='{$_SESSION['Right8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">cm</span></div>
+      <div class="input-group"><span class="input-group-addon">R9</span> <input id="v_r9" type="number" step="any" min="0" name="Right9" value='{$_SESSION['Right9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">R10</span> <input id="v_r10" type="number" step="any" min="0" name="Right10" value='{$_SESSION['Right10']}'  placeholder="Length of Elbow to wrist joint" class="form-control"><span class="input-group-addon">cm</span></div>
     </fieldset>
    </div>
   </div>
@@ -174,6 +174,7 @@ $html = <<<HTML
 	><span id="r8" class="fancy"></span
 	><span id="r9" class="fancy"></span
 	><span id="r10" class="fancy"></span
+	><span id="top_hover" class="image_hover"></span
 	></div></div>
    <div class="tab-pane" id="descriptions">
     <br>
@@ -345,7 +346,6 @@ function handSelect(){
 		$('#left-tab span').addClass('hidden');
 		$('#right-tab span').removeClass('hidden');
 	}
-	console.log('changed');
 }
 
 function resetVisibility(){
@@ -355,17 +355,34 @@ function resetVisibility(){
 			$("#"+y.side+" input").each(
 				function(a,b){
 					var element = $(b);
-					$("#"+y.code+element.mCount).hide();
+					var parent = element.parent();
+					parent.removeClass("focus");
+					$("#"+y.code+(a+1)).hide();
 				}
 			);
 		}
 	);					
 }
+var descriptions =[
+	"Length of Elbow Joint",
+	"Distance between lateral and medial side of the forearm proximal to the elbow joint",
+	"Distance between lateral and medial side of the middle forearm",
+	"Distance between lateral and medial side of the forearm proximal to the wrist",
+	"Wrist Joint distance from lateral to medial side",
+	"Distance from wrist to distal end of finger on thumb side (Lateral)",
+	"Distance from wrist to distal middle end of effected hand",
+	"Distance from Lateral and Medial sides of the distal part of the hand",
+	"Distance from wrist to proximal end of 1st phalange on pinky side (Medial)",
+	"Length of Elbow to wrist joint"
+    ];
+
 
 $(function(){
 	handSelect();
 	$('#prostheticHand').change(function(){handSelect();});
 	var counter= 1;
+	$("#top_hover").hide();
+	$("#top_hover").click(function(){$("#top_hover").hide()});
 	$.each([{side:'left',code:'l'},{side:'right',code:'r'}],
 		function(x,y){
 			counter= 1;
@@ -373,6 +390,7 @@ $(function(){
 				function(a,b){
 					var element = $(b);
 					var parent = element.parent();
+					var mssg = $("#top_hover");
 					element.mCount=counter++;
 					$("#"+y.code+element.mCount).hide();
 					element.mouseenter( function(){
@@ -383,13 +401,19 @@ $(function(){
 						resetVisibility();
 						c.show();
 						parent.addClass("focus");
+						mssg.html(element.mCount+". "+ descriptions[element.mCount-1]);
+						$("#top_hover").show();
+						if (element.mCount > 5 && element.mCount != 10){
+							mssg.addClass('bottom');
+						} else {
+							mssg.removeClass('bottom');
+						}
 					}).mouseleave( function(){
 						var c = $("#"+y.code+element.mCount);
 						if (!element.is(":focus")){
 							c.hide();
 						}
 					}).focusout( function(){
-						console.log('focus out');
 						var c = $("#"+y.code+element.mCount);
 						c.hide();
 						parent.removeClass("focus");
