@@ -7,8 +7,6 @@
 
 <title>eNable Web-Creator Demonstration</title>
 
-<link rel="stylesheet" href="css/main.css" type="text/css" />
-
 <!--[if IE]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 <!-- Latest compiled and minified CSS -->
 
@@ -23,123 +21,7 @@
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
 -->
-<style>
-	.nav-tabs li a, .tab-content div {
-		background-color: #DDD;
-	}
-	.nav-tabs li.active a{
-		background-color: white;
-	}
-	.tab-content div.active {
-		background-color: white;
-		border-right: 1px solid #DDD;
-		border-left: 1px solid #DDD;
-		border-bottom: 1px solid #DDD;
-	}
-	.input-group {
-		margin-top: 6px;
-	}
-	legend {
-		margin-bottom: 10px;
-	}
-	.tab-pane {
-		height: 400px;
-	}
-	.navbar-brand {
-		margin-top: -5px;
-		text-size: 20px;
-		font-size: 2.4em;
-	}
-	.navbar-brand span{
-		color: #ECECEC !important;
-	}
-	.navbar-brand img {
-		vertical-align: baseline;
-	}
-	.help span{
-		font-size: 20px;
-	}
-	.disclaimer span{
-		font-size: 18px;
-	}
-	.help {
-		margin-left: 14px ;
-		color:white;
-		float:right;
-	}
-	.disclaimer {
-		margin-left: 14px ;
-		margin-top: -5px;
-		color:white;
-		background-image: linear-gradient(to bottom, #666666 0px, #222222 100%);
-    		background-color: #666666;
-		border-color: #666666;
-		float:right;
-	}
-	.help:hover, .help:focus {
-		color:white;
-		border: 1px solid #555;
-	}
-	.disclaimer:hover, .disclaimer:hover  {
-		color:white;
-		background-image: linear-gradient(to bottom, #aaa 0px, #444 100%);
-	}
-	.download, .preview  {
-		float:right;
-		margin-left: 14px ;
-	}
-	.navbar-fixed-bottom .container {
-		margin-top:12px;
-		font-size:20px;
-		color: #ECECEC;
-	}
-	.loading-modal .modal-dialog {
-		width: 337px;
-	}
-	.loading-modal .modal-content {
-		border-radius: 80px;
-		margin: 90px auto;
-		background-color:transparent;
-	}
-	.loading-modal .modal-content div{
-		border-radius: 70px;
-		margin:12px 16px;;
-		background-color:white;
-		color:#A00;
-		font-size:1.2em;
-	}
-	.modal-footer {
-		margin-top: 0;
-		padding: 10px 24px 13px;
-	}
-	.modal-header {
-		padding: 12px;
-	}
-	div#preview {
-		background-color: #FFFFEB;
-	}
-	div#preview p.download_stl {
-		text-align: center;
-		background-color: #DDD;
-	}
-	.config-col select, .config-col input{
-		height:32px;
-	}
-	.config-col label{
-		margin-top:3px;
-		margin-bottom:0px;
-	}
-	.config-col legend{
-		margin-bottom: 0px;
-	}
-	.config-col fieldset fieldset :last-child{
-		margin-bottom: 8px;
-	}
-	#left-tab span, #right-tab span {
-		font-size: 1.1em;
-		margin-right:2px;
-	}
-</style>
+<link rel="stylesheet" href="css/main.css" type="text/css" />
 </head>
 
 <body id="index" class="home">
@@ -270,7 +152,29 @@ $html = <<<HTML
   </ul>
   <!-- Tab panes -->
   <div class="tab-content">
-   <div class="tab-pane active" id="image"><span class="thumbnail"><img src="./imgs/reference.png"/></span></div>
+   <div class="tab-pane active" id="image"
+	><div class="thumbnail"><img src="./imgs/reference.png"/
+	><span id="l1" class="fancy"></span
+	><span id="l2" class="fancy"></span
+	><span id="l3" class="fancy"></span
+	><span id="l4" class="fancy"></span
+	><span id="l5" class="fancy"></span
+	><span id="l6" class="fancy"></span
+	><span id="l7" class="fancy"></span
+	><span id="l8" class="fancy"></span
+	><span id="l9" class="fancy"></span
+	><span id="l10" class="fancy"></span
+	><span id="r1" class="fancy"></span
+	><span id="r2" class="fancy"></span
+	><span id="r3" class="fancy"></span
+	><span id="r4" class="fancy"></span
+	><span id="r5" class="fancy"></span
+	><span id="r6" class="fancy"></span
+	><span id="r7" class="fancy"></span
+	><span id="r8" class="fancy"></span
+	><span id="r9" class="fancy"></span
+	><span id="r10" class="fancy"></span
+	></div></div>
    <div class="tab-pane" id="descriptions">
     <br>
     <ol>
@@ -444,10 +348,56 @@ function handSelect(){
 	console.log('changed');
 }
 
+function resetVisibility(){
+	$.each([{side:'left',code:'l'},{side:'right',code:'r'}],
+		function(x,y){
+			counter= 1;
+			$("#"+y.side+" input").each(
+				function(a,b){
+					var element = $(b);
+					$("#"+y.code+element.mCount).hide();
+				}
+			);
+		}
+	);					
+}
+
 $(function(){
 	handSelect();
 	$('#prostheticHand').change(function(){handSelect();});
-	console.log('doing it');
+	var counter= 1;
+	$.each([{side:'left',code:'l'},{side:'right',code:'r'}],
+		function(x,y){
+			counter= 1;
+			$("#"+y.side+" input").each(
+				function(a,b){
+					var element = $(b);
+					var parent = element.parent();
+					element.mCount=counter++;
+					$("#"+y.code+element.mCount).hide();
+					element.mouseenter( function(){
+						var c = $("#"+y.code+element.mCount);
+						c.show();
+					}).focus(function(){
+						var c = $("#"+y.code+element.mCount);
+						resetVisibility();
+						c.show();
+						parent.addClass("focus");
+					}).mouseleave( function(){
+						var c = $("#"+y.code+element.mCount);
+						if (!element.is(":focus")){
+							c.hide();
+						}
+					}).focusout( function(){
+						console.log('focus out');
+						var c = $("#"+y.code+element.mCount);
+						c.hide();
+						parent.removeClass("focus");
+					});
+				}
+			);
+		}
+	);
 });
 </script>
 
