@@ -107,7 +107,7 @@ if(isset($_REQUEST['submit']) )
 	if(isset($othercommand) && !file_exists($otherthingtodo))
 	{
 		//die( "pre-generating file");
-		$result = exec( escapeshellcmd($othercommand));
+		$result = exec( "export DISPLAY=:5; " . escapeshellcmd($othercommand));
 		//die( $result . $othercommand );
 	}else
 	{
