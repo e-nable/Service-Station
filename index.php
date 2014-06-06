@@ -297,6 +297,7 @@
 <script src="./lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
 <form>
 <?php
+
 require_once('backend.php');
 
 // this starts the session
@@ -322,7 +323,8 @@ TABSELECT;
 	$stateClass = "hidden";
 }
 
-
+$renderedButtons = renderButtons();
+$renderedSampleLoader = renderSampleLoader();
 
 $html = <<<HTML
 <div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
@@ -340,13 +342,7 @@ $html = <<<HTML
    <div class="navbar-form navbar-right">
     <span id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
       <span class="fa fa-question-circle"></span> </span>
-    <button id="stl-btn" data-loading-text="Loading STL ..." class="download btn btn-danger" type="submit" name='submit' value='stl' onClick="javascript:goModal('stl');">
-      <span class="glyphicon glyphicon-download"></span> Generate STL</button>
-    <button id="preview-btn"  data-loading-text="Loading Preview..." class="preview btn btn-success" type="submit" name='submit' value='Preview' onClick="javascript:goModal('preview');"
-      title="Preview" data-toggle="tooltip" data-placement="bottom">
-      <span class="glyphicon glyphicon-picture"></span> Preview</button>
-    <!--<button class="disabled email btn btn-info" type="button" name='submit' value='email'>
-      <span class="glyphicon glyphicon-envelope"></span> Email</button>-->
+      $renderedButtons
     </div>
    </div>
   </div>
@@ -359,7 +355,7 @@ $html = <<<HTML
 	&copy; e-NABLE 2014
     <span id="disclaimer" class="disclaimer btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
       Disclaimer</span>
-    <a class="disclaimer btn btn-help" href="./?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0&Right8=72.52&Right9=72.23&Right10=230.6&part=0&fingerSelect=2&palmSelect=2&prostheticHand=0&WristBolt=5.5&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview" onClick="javascript:goModal('preview');">Load Sample Data</a>
+      $renderedSampleLoader
  </div>
 </div>
 

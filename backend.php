@@ -5,7 +5,10 @@ May need to run something like
     export DISPLAY=:5
 after a reboot to get openscad to run correctly*/
 
-
+$processCountLimit = 2;
+$processCount = 0;
+$isUnderProcessLimit = false;
+processCount();
 
 function start_user_session()
 {
@@ -99,7 +102,8 @@ if(isset($_REQUEST['submit']) )
 	if(!file_exists($thingtodo) || filesize($thingtodo) == 0)
 	{
 		$time_start = microtime(true);
-		$results = exec( "export DISPLAY=:5; " . escapeshellcmd($command));
+		exec( "echo '\n\n A: " . escapeshellcmd($command) . "' >> log.txt");
+		$results = exec( "export DISPLAY=:5; time nice -n 0 " . escapeshellcmd($command) . " >> log.txt 2>&1");
 		$time_end = microtime(true);
 		$execution_time = ($time_end - $time_start);
 	}
@@ -107,7 +111,8 @@ if(isset($_REQUEST['submit']) )
 	if(isset($othercommand) && !file_exists($otherthingtodo))
 	{
 		//die( "pre-generating file");
-		$result = exec( "export DISPLAY=:5; " . escapeshellcmd($othercommand));
+		exec( "echo '\n\n B: " . escapeshellcmd($othercommand) . "' >> log.txt");
+		$result = exec( "export DISPLAY=:5; time nice -n 0 " . escapeshellcmd($othercommand) . " >> log.txt 2>&1");
 		//die( $result . $othercommand );
 	}else
 	{
@@ -187,6 +192,40 @@ function palmSelect_options()
 	$return  = "\t<option value='1'" . ($_SESSION['palmSelect'] == 1 ? " selected='selected' " : '') . ">Cyborg Beast</option>\n";
 	$return .= "\t<option value='2'" . ($_SESSION['palmSelect'] == 2 ? " selected='selected' " : '') . ">Cyborg Beast Parametric</option>\n";
 	return $return;
+}
+
+function processCount(){
+	global $processCount, $isUnderProcessLimit, $processCountLimit;
+	$processCount = exec("ps aux  | grep 'openscad' | grep time | grep -v sh | grep -c -v 'grep'");
+	$isUnderProcessLimit = ($processCount < $processCountLimit);
+}
+
+function renderButtons(){
+  global $isUnderProcessLimit;
+  if($isUnderProcessLimit){
+	return <<<HTML
+    <button id="stl-btn" data-loading-text="Loading STL ..." class="download btn btn-danger" type="submit" name='submit' value='stl' onClick="javascript:goModal('stl');">
+      <span class="glyphicon glyphicon-download"></span> Generate STL</button>
+
+    <button id="preview-btn"  data-loading-text="Loading Preview..." class="preview btn btn-success" type="submit" name='submit' value='Preview' onClick="javascript:goModal('preview');"
+      title="Preview" data-toggle="tooltip" data-placement="bottom">
+      <span class="glyphicon glyphicon-picture"></span> Preview</button>
+HTML;
+  } else {
+	return <<<HTML
+	<h5 style="color:white; font-weight:bold;">Processing limit reached. Please try again in a few minutes</h5>
+HTML;
+  }
+}
+
+function renderSampleLoader(){
+  global $isUnderProcessLimit, $isUnderProcessLimit, $processCount;
+
+  if($isUnderProcessLimit){
+	return <<<HTML
+	<a class="disclaimer btn btn-help" href="./?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0&Right8=72.52&Right9=72.23&Right10=230.6&part=0&fingerSelect=2&palmSelect=2&prostheticHand=0&WristBolt=5.5&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview" onClick="javascript:goModal('preview');">Load Sample Data</a>
+HTML;
+  }
 }
 
 ?>
