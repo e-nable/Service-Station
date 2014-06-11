@@ -342,6 +342,8 @@ $html = <<<HTML
    <div class="navbar-form navbar-right">
     <span id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
       <span class="fa fa-question-circle"></span> </span>
+    <a id="feedback" class="help btn btn-help" value='feedback' target='_blank' href="https://docs.google.com/forms/d/1hqjed1x9NuTdLt5qNfGwx-YoK3H3JSgnu30vaF47mKs/viewform?edit_requested=true#">
+      <span class="fa fa-comments"></span> </a>
       $renderedButtons
     </div>
    </div>
@@ -365,8 +367,8 @@ $html = <<<HTML
  <div class="col-md-4">
 
   <ul class="nav nav-tabs">
-   <li class="active"><a href="#left" data-toggle="tab" id="left-tab"><span class="fa fa-wrench green"></span> Left Arm</a></li>
-   <li><a href="#right" data-toggle="tab" id="right-tab"><span class="fa fa-wrench green hidden"></span> Right Arm</a></li>  
+   <li class="active"><a href="#left" data-toggle="tab" id="left-tab"><span class="fa fa-print green"></span> Left Arm</a></li>
+   <li><a href="#right" data-toggle="tab" id="right-tab"><span class="fa fa-print green hidden"></span> Right Arm</a></li>  
   </ul>
 
   <!-- Tab panes -->
