@@ -18,3 +18,9 @@ TODO
 - [x] Email of rendered link after rendering
 - [x] Create 'local render' module 
 
+Installation
+========
+Install this package on a PHP server. Also install the e-Nable Assembler package along with OpenScad from openscad.org.
+
+PHP needs to be able to write to the imagecache folder for storing images.
+   chmod 777 imagecache
