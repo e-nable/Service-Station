@@ -307,6 +307,7 @@ start_user_session();
 
 $prostheticHand_options = prostheticHand_options();
 $part_options = part_options();
+$gauntletSelect_options = gauntletSelect_options();
 $fingerSelect_options = fingerSelect_options();
 $palmSelect_options = palmSelect_options();
 $render = render();
@@ -477,6 +478,11 @@ $html = <<<HTML
      {$part_options}
     </select>
 
+    <label for='gauntletSelect'>Gauntlet Style</label>
+     <select name='gauntletSelect' class="form-control">
+     {$gauntletSelect_options}
+    </select>
+
     <label for='fingerSelect'>Finger Style</label>
      <select name='fingerSelect' class="form-control">
      {$fingerSelect_options}
@@ -487,6 +493,16 @@ $html = <<<HTML
      {$palmSelect_options}
     </select>
    </fieldset>
+
+   <fieldset>
+   <legend>Spacing</legend>
+    <div class="input-group"><span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
+     <input type="number" step="any" min="0" name="Padding" value="5" class="form-control">
+     <span class="input-group-addon">mm</span>
+    </div>
+   </fieldset>
+
+<!--
    <fieldset>
    <legend>Connector Holes</legend>
     <div class="input-group"><span class="input-group-addon">Wrist Bolt &nbsp;&nbsp;&nbsp;</span>
@@ -506,6 +522,7 @@ $html = <<<HTML
      <span class="input-group-addon">mm</span>
     </div>
    </fieldset>
+-->
   </fieldset>
  </div>
 </div>
