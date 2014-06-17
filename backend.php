@@ -10,26 +10,39 @@ $processCount = 0;
 $isUnderProcessLimit = false;
 processCount();
 
-function start_user_session()
+$assemblervars = array(
+	'Left1', 'Left2', 'Left3', 'Left4', 'Left5', 'Left6', 'Left7', 'Left8', 'Left9', 'Left10',
+	'Right1', 'Right2', 'Right3', 'Right4', 'Right5', 'Right6', 'Right7', 'Right8', 'Right9', 'Right10',
+	'part', 'gauntletSelect', 'fingerSelect', 'palmSelect', 'prostheticHand', 'Padding',
+	'WristBolt', 'KnuckleBolt', 'JointBolt', 'ThumbBolt'
+     );
+
+function start_user_session( $assemblervars)
 {
 	// this starts the session
 	session_start();
 	$userid = session_id();
-	load_session_data(
-			array(
-				'Left1', 'Left2', 'Left3', 'Left4', 'Left5', 'Left6', 'Left7', 'Left8', 'Left9', 'Left10',
-				'Right1', 'Right2', 'Right3', 'Right4', 'Right5', 'Right6', 'Right7', 'Right8', 'Right9', 'Right10',
-				'part', 'gauntletSelect', 'fingerSelect', 'palmSelect', 'prostheticHand', 'Padding'
-			     )
-			);
+	load_session_data( $assemblervars);
 }
 
 
-function render()
+function render( $assemblervars)
 {
 $return = '';
 if(isset($_REQUEST['submit']) )
 {
+
+	// Clean up the passed in $_REQUEST vars to make sure everything is set.
+	foreach($assemblervars AS $a)
+	{
+		if(!isset($_REQUEST[$a]) || empty($_REQUEST[$a]))
+		{
+			$_REQUEST[$a] = 0;
+		}
+	}
+	
+
+
 	$assemblypath = "e-NABLE/Assembly/";
 	$leftsidevars = "-D Left1={$_REQUEST['Left1']} -D Left2={$_REQUEST['Left2']} -D  Left3={$_REQUEST['Left3']} -D  Left4={$_REQUEST['Left4']} -D  Left5={$_REQUEST['Left5']} -D  Left6={$_REQUEST['Left6']} -D  Left7={$_REQUEST['Left7']} -D  Left8={$_REQUEST['Left8']} -D  Left9={$_REQUEST['Left9']} -D  Left10={$_REQUEST['Left10']}";
 	$rightsidevars = "-D Right1={$_REQUEST['Right1']} -D Right2={$_REQUEST['Right2']} -D  Right3={$_REQUEST['Right3']} -D  Right4={$_REQUEST['Right4']} -D  Right5={$_REQUEST['Right5']} -D  Right6={$_REQUEST['Right6']} -D  Right7={$_REQUEST['Right7']} -D  Right8={$_REQUEST['Right8']} -D  Right9={$_REQUEST['Right9']} -D  Right10={$_REQUEST['Right10']}";

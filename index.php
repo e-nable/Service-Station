@@ -1,3 +1,11 @@
+<?php
+
+require_once('backend.php');
+
+// this starts the session
+start_user_session( $assemblervars);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -298,19 +306,12 @@
 <form>
 <?php
 
-require_once('backend.php');
-
-// this starts the session
-start_user_session();
-
-#echo "<p>This is a demonstration file generator. Reference documentation can be found <a href='https://docs.google.com/document/d/1LX3tBpio-6IsMMo3aaUdR-mLwWdv1jS4ooeEHb79JYo/edit?pli=1' target='_blank'>here</a>. Generator code can be found on <a href='https://github.com/laird/e-NABLE' target='_blank'>GitHub</a> and the code for this web interface can be found an <a href='https://github.com/creuzerm/e-NABLE-Web-Generator' target='_blank'>GitHub</a>.</p>";
-
 $prostheticHand_options = prostheticHand_options();
 $part_options = part_options();
 $gauntletSelect_options = gauntletSelect_options();
 $fingerSelect_options = fingerSelect_options();
 $palmSelect_options = palmSelect_options();
-$render = render();
+$render = render( $assemblervars);
 $tabselect = "";
 $stateClass = "";
 
