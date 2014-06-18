@@ -498,7 +498,7 @@ $html = <<<HTML
    <fieldset>
    <legend>Spacing</legend>
     <div class="input-group"><span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
-     <input type="number" step="any" min="0" name="Padding" value="5" class="form-control">
+     <input type="number" step="any" min="0" name="Padding" value="{$_SESSION['Padding']}" class="form-control">
      <span class="input-group-addon">mm</span>
     </div>
    </fieldset>
