@@ -231,12 +231,12 @@ function renderButtons(){
 
   if($isUnderProcessLimit){
 	return <<<HTML
-    <button id="stl-btn" data-loading-text="Loading STL ..." class="download btn btn-danger $class" type="submit" name='submit' value='stl' onClick="javascript:goModal('stl');">
-      <span class="glyphicon glyphicon-download"></span> Generate STL</button>
+    <div id="stl-btn" data-loading-text="Loading STL ..." class="download btn btn-danger $class" type="button" name='submit' value='stl' onClick="javascript:goModal('stl');">
+      <span class="glyphicon glyphicon-download"></span> Generate STL</div>
 
-    <button id="preview-btn"  data-loading-text="Loading Preview..." class="preview btn btn-success" type="submit" name='submit' value='Preview' onClick="javascript:goModal('preview');"
+    <div id="preview-btn"  data-loading-text="Loading Preview..." class="preview btn btn-success" type="button" name='submit' value='Preview' onClick="javascript:goModal('preview');"
       title="Preview" data-toggle="tooltip" data-placement="bottom">
-      <span class="glyphicon glyphicon-picture"></span> Preview</button>
+      <span class="glyphicon glyphicon-picture"></span> Preview</div>
 HTML;
   } else {
 	return <<<HTML
