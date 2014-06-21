@@ -280,6 +280,9 @@ start_user_session( $assemblervars);
 	.focus .input-group-addon {
 		background-color: yellow;
 	}
+	.broke .input-group-addon {
+		background-color: red;
+	}
 	.image_hover {
 		background-color: rgba(0, 0, 0, 0.5);
 		/* For IE 8*/
@@ -314,7 +317,7 @@ $palmSelect_options = palmSelect_options();
 $render = render( $assemblervars);
 $tabselect = "";
 $stateClass = "";
-
+$paddingValue = !empty($_SESSION['Padding']) ? $_SESSION['Padding']: 5;
 if(isset($_GET["submit"]) && (strtolower(trim($_GET["submit"])) == 'preview' || strtolower(trim($_GET["submit"])) == 'stl')){
 	$tabselect = <<<TABSELECT
 	<script>
@@ -475,7 +478,7 @@ $html = <<<HTML
     </select>
     
     <label for='part'>Generate</label>
-    <select name='part' class="form-control">
+    <select name='part' class="form-control" id="generateSelect">
      {$part_options}
     </select>
 
@@ -498,7 +501,7 @@ $html = <<<HTML
    <fieldset>
    <legend>Spacing</legend>
     <div class="input-group"><span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
-     <input type="number" step="any" min="0" name="Padding" value="{$_SESSION['Padding']}" class="form-control">
+     <input type="number" step="any" min="0" name="Padding" value="{$paddingValue}" class="form-control">
      <span class="input-group-addon">mm</span>
     </div>
    </fieldset>
@@ -667,6 +670,13 @@ $(function(){
 	var counter= 1;
 	$("#top_hover").hide();
 	$("#top_hover").click(function(){$("#top_hover").hide()});
+	$('#generateSelect').change(function(val){
+		if (this && this.value && this.value == 0){
+			$('#stl-btn').addClass('disabled');
+		} else {
+			$('#stl-btn').removeClass('disabled');
+		}
+	});
 	$.each([{side:'left',code:'l'},{side:'right',code:'r'}],
 		function(x,y){
 			counter= 1;

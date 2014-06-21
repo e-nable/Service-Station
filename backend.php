@@ -115,7 +115,10 @@ if(isset($_REQUEST['submit']) )
 	if(!file_exists($thingtodo) || filesize($thingtodo) == 0)
 	{
 		$time_start = microtime(true);
-		exec( "echo '\n\n A: " . escapeshellcmd($command) . "' >> log.txt");
+		exec( "echo '\n' >> log.txt");
+		exec( "date >> log.txt");
+		exec( "echo 'A: " . escapeshellcmd($command) . "' >> log.txt");
+		
 		$results = exec( "export DISPLAY=:5; time nice -n 0 " . escapeshellcmd($command) . " >> log.txt 2>&1");
 		$time_end = microtime(true);
 		$execution_time = ($time_end - $time_start);
@@ -180,7 +183,7 @@ function prostheticHand_options()
 // Create menu select options for the different parts
 function part_options()
 {
-	$return  = "";//"\t<option value='0'" . ($_SESSION['part'] == 0 ? " selected='selected' " : '') . ">Assembled Model</option>\n";
+	$return  = "\t<option value='0'" . ($_SESSION['part'] == 0 ? " selected='selected' " : '') . ">Assembled Model</option>\n";
 	$return .= "\t<option value='1'" . ($_SESSION['part'] == 1 ? " selected='selected' " : '') . ">Gauntlet</option>\n";
 	$return .= "\t<option value='2'" . ($_SESSION['part'] == 2 ? " selected='selected' " : '') . ">Palm</option>\n";
 	$return .= "\t<option value='3'" . ($_SESSION['part'] == 3 ? " selected='selected' " : '') . ">Finger Proximal (Near knuckle)</option>\n";
@@ -195,7 +198,7 @@ function part_options()
 function fingerSelect_options()
 {
 	$return  = "";//"\t<option value='1'" . ($_SESSION['fingerSelect'] == 1 ? " selected='selected' " : '') . ">Cyborg Beast</option>\n";
-	$return .= "\t<option value='2'" . ($_SESSION['fingerSelect'] == 2 ? " selected='selected' " : '') . ">David</option>\n";
+	$return .= "";//"\t<option value='2'" . ($_SESSION['fingerSelect'] == 2 ? " selected='selected' " : '') . ">David</option>\n";
 	$return .= "\t<option value='3'" . ($_SESSION['fingerSelect'] == 3 ? " selected='selected' " : '') . ">Creo Cyborg Beast</option>\n";
 	return $return;
 }
@@ -224,9 +227,11 @@ function processCount(){
 
 function renderButtons(){
   global $isUnderProcessLimit;
+  $class = (!isset($_SESSION['part']) || $_SESSION['part'] == 0) ? "disabled" : "";
+
   if($isUnderProcessLimit){
 	return <<<HTML
-    <button id="stl-btn" data-loading-text="Loading STL ..." class="download btn btn-danger" type="submit" name='submit' value='stl' onClick="javascript:goModal('stl');">
+    <button id="stl-btn" data-loading-text="Loading STL ..." class="download btn btn-danger $class" type="submit" name='submit' value='stl' onClick="javascript:goModal('stl');">
       <span class="glyphicon glyphicon-download"></span> Generate STL</button>
 
     <button id="preview-btn"  data-loading-text="Loading Preview..." class="preview btn btn-success" type="submit" name='submit' value='Preview' onClick="javascript:goModal('preview');"
