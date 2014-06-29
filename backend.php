@@ -117,7 +117,7 @@ if(isset($_REQUEST['submit']) )
 		$time_start = microtime(true);
 		exec( "echo '\n' >> log.txt");
 		exec( "date >> log.txt");
-		exec( "echo 'A: " . escapeshellcmd($command) . "' >> log.txt");
+		exec( "echo 'NEW: " . escapeshellcmd($command) . "' >> log.txt");
 		
 		$results = exec( "export DISPLAY=:5; time nice -n 0 " . escapeshellcmd($command) . " >> log.txt 2>&1");
 		$time_end = microtime(true);
@@ -127,7 +127,9 @@ if(isset($_REQUEST['submit']) )
 	if(isset($othercommand) && !file_exists($otherthingtodo))
 	{
 		//die( "pre-generating file");
-		exec( "echo '\n\n B: " . escapeshellcmd($othercommand) . "' >> log.txt");
+		exec( "echo '\n' >> log.txt");
+		exec( "date >> log.txt");
+		exec( "echo 'EXISTS: " . escapeshellcmd($othercommand) . "' >> log.txt");
 		$result = exec( "export DISPLAY=:5; time nice -n 0 " . escapeshellcmd($othercommand) . " >> log.txt 2>&1");
 		//die( $result . $othercommand );
 	}else
@@ -250,7 +252,7 @@ function renderSampleLoader(){
 
   if($isUnderProcessLimit){
 	return <<<HTML
-	<a class="disclaimer btn btn-help" href="./?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0&Right8=72.52&Right9=72.23&Right10=230.6&part=0&gauntletSelect=1&fingerSelect=2&palmSelect=2&prostheticHand=0&Padding=5&WristBolt=5.5&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview" onClick="javascript:goModal('preview');">Load Sample Data</a>
+	<a class="disclaimer btn btn-help" href="./?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0&Right8=72.52&Right9=72.23&Right10=230.6&part=0&gauntletSelect=1&fingerSelect=2&palmSelect=2&prostheticHand=0&Padding=5&WristBolt=5.5&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview" onClick="javascript:goModal('preview');$('#loadingModal').modal({backdrop:'static', keyboard: false, show:true});">Load Sample Data</a>
 HTML;
   }
 }
