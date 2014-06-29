@@ -323,7 +323,6 @@ start_user_session( $assemblervars);
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="./lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
 <form id="generatorForm" name="generatorForm">
-<input type="hidden" name="submit" id="submit" value="{$_REQUEST['submit']}">
 <?php
 
 $prostheticHand_options = prostheticHand_options();
@@ -632,7 +631,7 @@ $html = <<<HTML
         <h4 class="modal-title">Missing Measurements</h4>
       </div>
       <div class="modal-body">
-        <p>There seems to be a few missing values from the required measurements table in the first panel. Please set the associated <b>numeric</b> values for those fields <span class="broke-span">colored in red</span> before submitting again&hellip;</p>
+        <p>There seems to be a few missing values from the required measurements table in the first panel. Please set the associated <b>numeric</b> values for those fields <span class="broke-span">colored in red</span> before submitting again.</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -649,7 +648,11 @@ HTML;
 echo $html;
 ?>
 <script>
+var submitVal = 0;
+var flaggedError = true;
+
 function goModal(v){
+	submitVal =v;
 
 	var hand_selected = $("#prostheticHand").val();
 	var side = ((hand_selected == 0)?'l':'r');
@@ -680,14 +683,7 @@ function goModal(v){
 		return;
 	}
 
-	$("#loadingModal").modal({backdrop:'static', keyboard: false, show:true});
-	if (v == 'preview'){
-		$('#stl-btn').addClass('disabled');
-	} else if ( v == 'stl'){
-		$('#preview-btn').addClass('disabled');
-	}
-	$("#submit").val((val && val == "preview")?"Preview":v);
-	$("form").submit();
+	flaggedError = flagged;
 }
 
 
@@ -732,17 +728,26 @@ var descriptions =[
 	"Length of Elbow to wrist joint"
     ];
 
-
 $(function(){
 	handSelect();
 	$('#prostheticHand').change(function(){handSelect();});
 	var counter= 1;
 	$("#top_hover").hide();
 	$("#top_hover").click(function(){$("#top_hover").hide()});
-	/*$('#generatorForm').submit(function (e) {
-		console.log('stopped');
-		e.preventDefault();
-});*/
+	$('#generatorForm').submit(function (e) {
+		if (flaggedError == true)
+			return false;
+		else {
+			$("#loadingModal").modal({backdrop:'static', keyboard: false, show:true});
+			if (submitVal == 'preview'){
+				$('#stl-btn').addClass('disabled');
+			} else if (submitVal == 'stl'){
+				$('#preview-btn').addClass('disabled');
+			}
+			return true;
+		}
+		//e.preventDefault();
+	});
 	$('#generateSelect').change(function(val){
 		if (this && this.value && this.value == 0){
 			$('#stl-btn').addClass('disabled');
