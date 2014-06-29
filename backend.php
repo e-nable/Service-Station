@@ -199,7 +199,7 @@ function part_options()
 // Create menu select options for the different finger options
 function fingerSelect_options()
 {
-	$return  = "";//"\t<option value='1'" . ($_SESSION['fingerSelect'] == 1 ? " selected='selected' " : '') . ">Cyborg Beast</option>\n";
+	$return  = "\t<option value='1'" . ($_SESSION['fingerSelect'] == 1 ? " selected='selected' " : '') . ">Cyborg Beast</option>\n";
 	$return .= "";//"\t<option value='2'" . ($_SESSION['fingerSelect'] == 2 ? " selected='selected' " : '') . ">David</option>\n";
 	$return .= "\t<option value='3'" . ($_SESSION['fingerSelect'] == 3 ? " selected='selected' " : '') . ">Creo Cyborg Beast</option>\n";
 	return $return;
@@ -208,8 +208,8 @@ function fingerSelect_options()
 // Create menu select options for the different Palm Options
 function palmSelect_options()
 {
-	$return  = "";//"\t<option value='1'" . ($_SESSION['palmSelect'] == 1 ? " selected='selected' " : '') . ">Cyborg Beast</option>\n";
-	$return .= "\t<option value='2'" . ($_SESSION['palmSelect'] == 2 ? " selected='selected' " : '') . ">Cyborg Beast Parametric</option>\n";
+	$return  = "\t<option value='1'" . ($_SESSION['palmSelect'] == 1 ? " selected='selected' " : '') . ">Cyborg Beast</option>\n";
+	$return .= "";//"\t<option value='2'" . ($_SESSION['palmSelect'] == 2 ? " selected='selected' " : '') . ">Cyborg Beast Parametric</option>\n";
 	$return .= "\t<option value='3'" . ($_SESSION['palmSelect'] == 3 ? " selected='selected' " : '') . ">Creo Cyborg Beast</option>\n";
 	return $return;
 }
