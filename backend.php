@@ -137,7 +137,7 @@ if(isset($_REQUEST['submit']) )
 		//die( "file exists: " . file_exists($otherthingtodo) );
 	}
 
-	$return =  "<img src='imagecache/{$scalehash}.{$partname}.png' style='width:100%;' /> {$downloadlink}";
+	$return =  "<img src='imagecache/{$scalehash}.{$partname}.png' style='width:100%;' onError=\"this.onerror=null;this.src='./imgs/no_preview.png';\"/> {$downloadlink}";
 
 	//	echo "<input type='submit' name='submit' value='Create .STL'> {$downloadlink}";
 	//	echo "<p>Created preview in {$execution_time} seconds using the following command.</p>\n";
