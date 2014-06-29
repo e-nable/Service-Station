@@ -280,8 +280,24 @@ start_user_session( $assemblervars);
 	.focus .input-group-addon {
 		background-color: yellow;
 	}
-	.broke .input-group-addon {
-		background-color: red;
+	.broke .input-group-addon, .broke{
+		color:white;
+		border-color: #b92c28;
+		background-image: linear-gradient(to bottom,#d9534f 0,#c12e2a 100%);
+	}
+	.broke-span {
+		color:white !important;
+		border-color: #b92c28;
+		background-image: linear-gradient(to bottom,#d9534f 0,#c12e2a 100%);
+		padding: 3px 5px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1;
+		color: #555;
+		text-align: center;
+		background-color: #eee;
+		border: 1px solid #ccc;
+		border-radius: 4px;
 	}
 	.image_hover {
 		background-color: rgba(0, 0, 0, 0.5);
@@ -306,7 +322,7 @@ start_user_session( $assemblervars);
 <body id="index" class="home">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="./lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
-<form>
+<form id="generatorForm" name="generatorForm">
 <?php
 
 $prostheticHand_options = prostheticHand_options();
@@ -607,18 +623,67 @@ $html = <<<HTML
     </div>
 </div>
 
+<div class="modal fade" id="valueWarningModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Missing Measurements</h4>
+      </div>
+      <div class="modal-body">
+        <p>There seems to be a few missing values from the required measurements table in the first panel. Please set the associated <b>numeric</b> values for those fields <span class="broke-span">colored in red</span> before submitting again.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
 </div>
 HTML;
 echo $html;
 ?>
 <script>
+var submitVal = 0;
+var flaggedError = true;
+
 function goModal(v){
-	$("#loadingModal").modal({backdrop:'static', keyboard: false, show:true});
-	if (v == 'preview'){
-		$('#stl-btn').addClass('disabled');
-	} else if ( v == 'stl'){
-		$('#preview-btn').addClass('disabled');
+	submitVal =v;
+
+	var hand_selected = $("#prostheticHand").val();
+	var side = ((hand_selected == 0)?'l':'r');
+	var oSide = ((hand_selected == 0)?'r':'l');
+	var count = 0;
+	var flagged = false;
+
+	while(count++ < 10){
+		var obj = $('#v_'+side+count);
+		var val = obj.val();
+
+		if (val == undefined || val == ""){
+			obj.parent().addClass("broke");
+			flagged = true;
+		} else {
+			obj.parent().removeClass("broke");
+		}
+		$('#v_'+oSide+count).parent().removeClass("broke");
 	}
+
+	if (side == 'l')
+		$('#left-tab').tab('show');
+	else
+		$('#right-tab').tab('show');
+	
+	if (flagged){
+		$('#valueWarningModal').modal({backdrop:'static', keyboard: false, show:true});
+		return;
+	}
+
+	flaggedError = flagged;
 }
 
 
@@ -663,13 +728,26 @@ var descriptions =[
 	"Length of Elbow to wrist joint"
     ];
 
-
 $(function(){
 	handSelect();
 	$('#prostheticHand').change(function(){handSelect();});
 	var counter= 1;
 	$("#top_hover").hide();
 	$("#top_hover").click(function(){$("#top_hover").hide()});
+	$('#generatorForm').submit(function (e) {
+		if (flaggedError == true)
+			return false;
+		else {
+			$("#loadingModal").modal({backdrop:'static', keyboard: false, show:true});
+			if (submitVal == 'preview'){
+				$('#stl-btn').addClass('disabled');
+			} else if (submitVal == 'stl'){
+				$('#preview-btn').addClass('disabled');
+			}
+			return true;
+		}
+		//e.preventDefault();
+	});
 	$('#generateSelect').change(function(val){
 		if (this && this.value && this.value == 0){
 			$('#stl-btn').addClass('disabled');
