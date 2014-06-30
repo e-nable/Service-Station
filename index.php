@@ -603,6 +603,16 @@ $html = <<<HTML
           <h4 id="myModalLabel" class="modal-title">Disclaimer</h4>
         </div>
         <div class="modal-body">By accepting any design, plan, component or assembly related to the so called “e-NABLE Hand” , I understand and agree that any such information or material furnished by any individual associated with the design team is furnished as is without representation or warranties of any kind, express or implied, and is intended to be a gift  for the sole purpose of evaluating various design iterations, ideas and modifications. I understand that such improvements are intended to benefit individuals having specific disabilities and are not intended, and shall not be used,  for commercial use. I further understand and agree that any individual associated with e-NABLE organization shall not be liable for any injuries or damages resulting from the use of any of the materials related to the e-NABLE hand.
+<p>Hand designs are sourced from, with attribution found at, the following links:</p>
+<dl>
+<dt>Cyborg Beast</dt><dd>by JorgeZuniga, verson 1.4 by Marc Petrykowski <a href="http://www.thingiverse.com/thing:261462" target="_blank">http://www.thingiverse.com/thing:261462</a></dd>
+<dt>Creo version of Cyborg Beast</dt><dd>by Ryan Dailey <a href="http://www.thingiverse.com/thing:340750" target="_blank?>http://www.thingiverse.com/thing:340750</a> </dd>
+<dt>Parametric Gauntlet</dt><dd>by David Orgeman<a href="http://www.thingiverse.com/thing:270259" target="_blank">http://www.thingiverse.com/thing:270259</a></dd>
+<dt>Cyborg Beast Short Gauntlet (Karuna's Gauntlet)</dt><dd>by Frankie Flood<a href="http://www.thingiverse.com/thing:270322" target="_blank">http://www.thingiverse.com/thing:270322 </a></dd>
+<dt>Parametric Finger v2</dt><dd>by David Orgeman<a href=" http://www.thingiverse.com/thing:257544" target="_blank"> http://www.thingiverse.com/thing:257544</a></dd>
+
+<dt></dt><dd><a href="" target="_blank"></a></dd>
+</dl>
         </div>
         <div class="modal-footer">
           <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
