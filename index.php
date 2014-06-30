@@ -606,7 +606,7 @@ $html = <<<HTML
 <p>Hand designs are sourced from, with attribution found at, the following links:</p>
 <dl>
 <dt>Cyborg Beast</dt><dd>by JorgeZuniga, verson 1.4 by Marc Petrykowski <a href="http://www.thingiverse.com/thing:261462" target="_blank">http://www.thingiverse.com/thing:261462</a></dd>
-<dt>Creo version of Cyborg Beast</dt><dd>by Ryan Dailey <a href="http://www.thingiverse.com/thing:340750" target="_blank?>http://www.thingiverse.com/thing:340750</a> </dd>
+<dt>Creo version of Cyborg Beast</dt><dd>by Ryan Dailey <a href="http://www.thingiverse.com/thing:340750" target="_blank">http://www.thingiverse.com/thing:340750</a> </dd>
 <dt>Parametric Gauntlet</dt><dd>by David Orgeman<a href="http://www.thingiverse.com/thing:270259" target="_blank">http://www.thingiverse.com/thing:270259</a></dd>
 <dt>Cyborg Beast Short Gauntlet (Karuna's Gauntlet)</dt><dd>by Frankie Flood<a href="http://www.thingiverse.com/thing:270322" target="_blank">http://www.thingiverse.com/thing:270322 </a></dd>
 <dt>Parametric Finger v2</dt><dd>by David Orgeman<a href=" http://www.thingiverse.com/thing:257544" target="_blank"> http://www.thingiverse.com/thing:257544</a></dd>
