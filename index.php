@@ -583,7 +583,7 @@ $html = <<<HTML
 		<LI>Talk to a 3D printer</LI>
 	</UL>
 
-		Please reference the <a href="https://docs.google.com/file/d/0B9uusfrN9RdDX3E4anlWTW01bm8">current generic intake form</a> for more details on measurements.
+		Please reference the <a href="https://docs.google.com/file/d/0B9uusfrN9RdDRXY0NDdLalRzYWM">current generic measurement guide</a> for more details on measurements.
         </div>
         <div class="modal-footer">
           <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
