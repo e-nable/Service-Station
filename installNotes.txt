@@ -11,6 +11,20 @@ sudo apt-get install xvfb vim git
 # Agree until you get to password, do not leave password blank
 sudo apt-get install apache2 mysql-server php5 php5-mysql libapache2-mod-php5
 
+# Since there may be personal and medical information communicated through 
+# this server, it's recommended to also install SSL.
+# Use the apache documentation to install it. In short it comes down to:
+# make sure you have a certificate from a certificate authority (costs 
+# involved but recommended) or sign-it yourself (free, not recommended).
+## Install your certificate.
+## Enable ssl:
+# a2ensite default-ssl.conf
+## Configure it:
+# vi /etc/apache2/sites-enabled/default-ssl.conf
+## restart Apache to make the change effective
+# service apache2 restart
+
+
 # install openScad latest dev snapshot manually
 # source: http://www.openscad.org/downloads.html
 cd /var/tmp/
@@ -70,7 +84,7 @@ sudo vi /etc/apache2/apache2.conf
 # run this
 # will allow openscad commands to run headless
 # TODO: should force this to auto start with server
-Xvfb :5 -screen 0 800x600x24 &
+nohup Xvfb :5 -screen 0 800x600x24 &
 export DISPLAY=:5
 
 # restart our apache2 instance for kicks
