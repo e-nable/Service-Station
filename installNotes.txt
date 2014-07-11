@@ -1,0 +1,84 @@
+# ----------------------------------------------------------
+# New ubuntu server instance install script for Hand-o-matic
+# ----------------------------------------------------------
+sudo apt-get update
+
+# install 3 critical components
+sudo apt-get install xvfb vim git
+
+# LAMP stack install
+# ONLY run this following line if you don't have an html server / php / etc
+# Agree until you get to password, do not leave password blank
+sudo apt-get install apache2 mysql-server php5 php5-mysql libapache2-mod-php5
+
+# install openScad latest dev snapshot manually
+# source: http://www.openscad.org/downloads.html
+cd /var/tmp/
+wget http://files.openscad.org/snapshots/openscad-2014.05.31.x86-64.tar.gz
+tar xvf openscad-2014.05.31.x86-64.tar.gz
+cd openscad-2014.05.31
+
+# just hit enter when asked where the lib should install
+sudo ./install.sh
+
+
+# Make directory where our code will live
+sudo mkdir /var/code
+
+# probably a bad idea but we're in a hurry
+sudo chmod 777 /var/code
+cd /var/code
+
+# Clone the individual repos from git
+sudo git clone https://github.com/e-nable/e-NABLE-Assembler.git
+sudo git clone https://github.com/e-nable/Service-Station.git
+
+cd Service-Station
+
+# this helps when doing git diff / pull / check-ins
+sudo git config core.fileMode false
+
+# link the open scad / assembler code
+sudo ln -s ../e-NABLE-Assembler e-NABLE
+
+cd e-NABLE
+# this helps when doing git diff / pull / check-ins
+sudo git config core.fileMode false
+
+cd ../..
+
+# change execution permissions
+sudo chmod 755 * -R
+
+# create image cache directory and log file
+sudo mkdir Service-Station/imagecache; sudo chmod 777 Service-Station/imagecache;
+sudo touch Service-Station/log.txt; sudo chmod 777 Service-Station/log.txt;
+
+# assumes apache2 - we're about to use the default html directory
+cd /var/www
+
+# move the default directory
+sudo mv html html_old
+
+# link from /var/code as our new html directory
+sudo ln -s /var/code/Service-Station html
+
+# Configure apache2 timeouts
+# set value "Timeout" to "900" in the following:
+sudo vi /etc/apache2/apache2.conf
+
+# run this
+# will allow openscad commands to run headless
+# TODO: should force this to auto start with server
+Xvfb :5 -screen 0 800x600x24 &
+export DISPLAY=:5
+
+# restart our apache2 instance for kicks
+sudo service apache2 restart
+
+# All requirements should be there!
+# ifconfig will give us the I.P. in case you don't know it
+# following line gives you the address > inet addr:AAA.BBB.CC.DDD
+
+# Go to http://AAA.BBB.CC.DDD/
+
