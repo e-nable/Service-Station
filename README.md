@@ -20,7 +20,7 @@ Requires a Linux LAMP stack - at minimum:
 
 This will run in a headless server through: Xvfb.
 
-Ubuntu install guide provided under project as installNotes.txt.
+Ubuntu install guide provided under installNotes.txt (https://github.com/e-nable/Service-Station/blob/master/installNotes.txt).
 
 Service-Station acts as the root or base directory for the web directory being served up. The provided PHP scripts assume e-NABLE-Assembler project is linked as [web-directory]/e-NABLE. Check installer notes for more details.
 
