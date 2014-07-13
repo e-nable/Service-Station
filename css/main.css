@@ -248,6 +248,25 @@
 	.focus .input-group-addon {
 		background-color: yellow;
 	}
+	.broke .input-group-addon, .broke{
+		color:white;
+		border-color: #b92c28;
+		background-image: linear-gradient(to bottom,#d9534f 0,#c12e2a 100%);
+	}
+	.broke-span {
+		color:white !important;
+		border-color: #b92c28;
+		background-image: linear-gradient(to bottom,#d9534f 0,#c12e2a 100%);
+		padding: 3px 5px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1;
+		color: #555;
+		text-align: center;
+		background-color: #eee;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+	}
 	.image_hover {
 		background-color: rgba(0, 0, 0, 0.5);
 		/* For IE 8*/
@@ -265,4 +284,3 @@
 	.bottom {
 		top: 320px;
 	}
-	
