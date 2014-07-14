@@ -94,13 +94,14 @@ $html = <<<HTML
  <div class="col-md-4">
 
   <ul class="nav nav-tabs">
-   <li class="active"><a href="#left" data-toggle="tab" id="left-tab"><span class="fa fa-print green"></span> Left Arm</a></li>
+   <li class=""><a href="#left" data-toggle="tab" id="left-tab"><span class="fa fa-print green"></span> Left Arm</a></li>
    <li><a href="#right" data-toggle="tab" id="right-tab"><span class="fa fa-print green hidden"></span> Right Arm</a></li>  
+   <li class="active"><a href="#prosthetic" data-toggle="tab" id="prosthetic-tab"> <span class="fa fa-print green"></span><span class="title"> Left Prosthetic</span></a></li>
   </ul>
 
   <!-- Tab panes -->
   <div class="tab-content">
-   <div class="tab-pane active" id="left">
+   <div class="tab-pane" id="left">
 
      <fieldset>
      <div class="input-group"><span class="input-group-addon">L1</span> <input id="v_l1" type="number" step="any" min="0" name="Left1" value='{$_SESSION['Left1']}' id="a1" placeholder="Length of Elbow Joint" class="form-control"><span class="input-group-addon">cm</span></div>
@@ -129,6 +130,41 @@ $html = <<<HTML
      <div class="input-group"><span class="input-group-addon">R10</span> <input id="v_r10" type="number" step="any" min="0" name="Right10" value='{$_SESSION['Right10']}'  placeholder="Length of Elbow to wrist joint" class="form-control"><span class="input-group-addon">cm</span></div>
     </fieldset>
    </div>
+
+   <div class="tab-pane active" id="prosthetic">
+    <fieldset>
+
+     <input id="v_l1" type="hidden" name="Left1" value='{$_SESSION['Left1']}'>
+     <input id="v_l2" type="hidden" name="Left2" value='{$_SESSION['Left2']}'>
+     <input id="v_l3" type="hidden" name="Left3" value='{$_SESSION['Left3']}'>
+     <input id="v_l4" type="hidden" name="Left4" value='{$_SESSION['Left4']}'>
+     <input id="v_l6" type="hidden" step="any" min="0" name="Left6" value='{$_SESSION['Left6']}'>
+     <input id="v_l7" type="hidden" name="Left7" value='{$_SESSION['Left7']}'>
+     <input id="v_l8" type="hidden" name="Left8" value='{$_SESSION['Left8']}'>
+     <input id="v_l10" type="hidden" name="Left10" value='{$_SESSION['Left10']}'>
+
+     <input id="v_r1" type="hidden" step="any" min="0" name="Right1" value='{$_SESSION['Right1']}'>
+     <input id="v_r2" type="hidden" step="any" min="0" name="Right2" value='{$_SESSION['Right2']}'>
+     <input id="v_r3" type="hidden" step="any" min="0" name="Right3" value='{$_SESSION['Right3']}'>
+     <input id="v_r4" type="hidden" step="any" min="0" name="Right4" value='{$_SESSION['Right4']}'>
+     <input id="v_r6" type="hidden" step="any" min="0" name="Right6" value='{$_SESSION['Right6']}'>
+     <input id="v_r7" type="hidden" step="any" min="0" name="Right7" value='{$_SESSION['Right7']}'>
+     <input id="v_r8" type="hidden" step="any" min="0" name="Right8" value='{$_SESSION['Right8']}'>
+     <input id="v_r10" type="hidden" step="any" min="0" name="Right10" value='{$_SESSION['Right10']}'>
+
+
+     <div class="input-group"><span class="input-group-addon">P5</span> <input id="v_l5" type="number" step="any" min="0" name="Left5" value='{$_SESSION['Left5']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">cm</span></div>
+     <div class="input-group"><span class="input-group-addon">P5</span> <input id="v_r5" type="number" step="any" min="0" name="Right5" value='{$_SESSION['Right5']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">cm</span></div>
+     Wrist Joint distance from lateral to medial side<br/><br/>
+
+     <div class="input-group"><span class="input-group-addon">L9</span> <input id="v_l9" type="number" step="any" min="0" name="Left9" value='{$_SESSION['Left9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">cm</span></div>
+
+     <div class="input-group"><span class="input-group-addon">R9</span><input id="v_r9" type="number" step="any" min="0" name="Right9" value='{$_SESSION['Right9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">cm</span></div>
+     Distance from wrist to proximal end of 1st phalange on pinky side (Medial)<br/>
+    </fieldset>
+   </div>
+
+
   </div>
  </div>
 

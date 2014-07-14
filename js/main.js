@@ -1,5 +1,18 @@
 var submitVal = 0;
 var flaggedError = true;
+var isFriendly = true;
+var descriptions =[
+	"Length of Elbow Joint",
+	"Distance between lateral and medial side of the forearm proximal to the elbow joint",
+	"Distance between lateral and medial side of the middle forearm",
+	"Distance between lateral and medial side of the forearm proximal to the wrist",
+	"Wrist Joint distance from lateral to medial side",
+	"Distance from wrist to distal end of finger on thumb side (Lateral)",
+	"Distance from wrist to distal middle end of effected hand",
+	"Distance from Lateral and Medial sides of the distal part of the hand",
+	"Distance from wrist to proximal end of 1st phalange on pinky side (Medial)",
+	"Length of Elbow to wrist joint"
+    ];
 
 function goModal(v){
 	submitVal =v;
@@ -10,24 +23,45 @@ function goModal(v){
 	var count = 0;
 	var flagged = false;
 
-	while(count++ < 10){
-		var obj = $('#v_'+side+count);
-		var val = obj.val();
+	if (!isFriendly){
+		while(count++ < 10){
+			var obj = $('#v_'+side+count);
+			var val = obj.val();
 
-		if (val == undefined || val == ""){
-			obj.parent().addClass("broke");
-			flagged = true;
-		} else {
-			obj.parent().removeClass("broke");
+			if (val == undefined || val == ""){
+				obj.parent().addClass("broke");
+				flagged = true;
+			} else {
+				obj.parent().removeClass("broke");
+			}
+			$('#v_'+oSide+count).parent().removeClass("broke");
 		}
-		$('#v_'+oSide+count).parent().removeClass("broke");
+
+		if (side == 'l')
+			$('#left-tab').tab('show');
+		else
+			$('#right-tab').tab('show');
+	} else {
+		$('#prosthetic input').each(function(x,y){
+				if (y.type == 'number'){
+					var obj = $(y);
+			       		if (obj.parent().get(0).className.indexOf('hidden')> -1){
+						y.value = 0;
+					} else {
+						if (y.value == undefined || y.value == ""){
+							obj.parent().addClass("broke");
+							flagged = true;
+						} else {
+							obj.parent().removeClass("broke");
+						}
+					}
+				} 
+
+				//console.log(y.type, $(y).parent().get(0).className.indexOf('hidden')> -1);
+			}
+		);
 	}
 
-	if (side == 'l')
-		$('#left-tab').tab('show');
-	else
-		$('#right-tab').tab('show');
-	
 	if (flagged){
 		$('#valueWarningModal').modal({backdrop:'static', keyboard: false, show:true});
 		return;
@@ -36,17 +70,57 @@ function goModal(v){
 	flaggedError = flagged;
 }
 
-
-function handSelect(){
+function handSelect(isLoad){
+	isLoad = isLoad || false;
 	var hand_selected = $("#prostheticHand").val();
-	if (!hand_selected){
-		console.log('selection returned empty');
-	} else if (hand_selected == 0){
-		$('#left-tab span').removeClass('hidden');
-		$('#right-tab span').addClass('hidden');
-	} else if (hand_selected == 1){ ;
-		$('#left-tab span').addClass('hidden');
-		$('#right-tab span').removeClass('hidden');
+	if (!isFriendly){
+		if (!hand_selected){
+			console.log('selection returned empty');
+		} else if (hand_selected == 0){
+			$('#left-tab span').removeClass('hidden');
+			$('#right-tab span').addClass('hidden');
+		} else if (hand_selected == 1){ ;
+			$('#left-tab span').addClass('hidden');
+			$('#right-tab span').removeClass('hidden');
+		}
+	} else {
+		$('#prosthetic input').each(function(x,y){
+			//if(!isLoad) y.value = "";
+			var obj = $(y);
+			obj.parent().removeClass('broke');
+		});
+		if (!hand_selected){
+			console.log('selection returned empty');
+		} else if (hand_selected == 0){
+			$('#prosthetic-tab span.title').html(' Left Prosthetic');
+			$('#v_l9').parent().addClass('hidden');
+			$('#v_r5').parent().addClass('hidden');
+			$('#v_r9').parent().removeClass('hidden');
+			$('#v_l5').parent().removeClass('hidden');
+			$('#image img').get(0).src= './imgs/referece_lP.png';
+		} else if (hand_selected == 1){
+			$('#prosthetic-tab span.title').html(' Right Prosthetic');
+			$('#v_l9').parent().removeClass('hidden');
+			$('#v_r5').parent().removeClass('hidden');
+			$('#v_r9').parent().addClass('hidden');
+			$('#v_l5').parent().addClass('hidden');
+			$('#image img').get(0).src= './imgs/referece_rP.png';
+		}
+
+	}
+	$("#top_hover").hide();
+}
+
+function setType(){
+	if (isFriendly){
+		$('#left-tab').parent().remove();
+		$('#right-tab').parent().remove();
+		$('#left').remove();
+		$('#right').remove();
+		$('#v_l9').parent().addClass('hidden');
+		$('#v_r5').parent().addClass('hidden');
+	} else {
+		;
 	}
 }
 
@@ -65,21 +139,11 @@ function resetVisibility(){
 		}
 	);					
 }
-var descriptions =[
-	"Length of Elbow Joint",
-	"Distance between lateral and medial side of the forearm proximal to the elbow joint",
-	"Distance between lateral and medial side of the middle forearm",
-	"Distance between lateral and medial side of the forearm proximal to the wrist",
-	"Wrist Joint distance from lateral to medial side",
-	"Distance from wrist to distal end of finger on thumb side (Lateral)",
-	"Distance from wrist to distal middle end of effected hand",
-	"Distance from Lateral and Medial sides of the distal part of the hand",
-	"Distance from wrist to proximal end of 1st phalange on pinky side (Medial)",
-	"Length of Elbow to wrist joint"
-    ];
+
 
 $(function(){
-	handSelect();
+	setType();
+	handSelect(true);
 	$('#prostheticHand').change(function(){handSelect();});
 	var counter= 1;
 	$("#top_hover").hide();
@@ -96,7 +160,6 @@ $(function(){
 			}
 			return true;
 		}
-		//e.preventDefault();
 	});
 	$('#generateSelect').change(function(val){
 		if (this && this.value && this.value == 0){
@@ -105,7 +168,7 @@ $(function(){
 			$('#stl-btn').removeClass('disabled');
 		}
 	});
-	$.each([{side:'left',code:'l'},{side:'right',code:'r'}],
+	$.each([{side:'left',code:'l'},{side:'right',code:'r'},{side:'prosthetic',code:'r'}],
 		function(x,y){
 			counter= 1;
 			$("#"+y.side+" input").each(
@@ -113,13 +176,16 @@ $(function(){
 					var element = $(b);
 					var parent = element.parent();
 					var mssg = $("#top_hover");
-					element.mCount=counter++;
-					$("#"+y.code+element.mCount).hide();
+					var code = b.id.replace(/v_/g,'');
+					element.mCount=code.substring(1);
+					$("#"+code).hide();
+
+					if (y.side != 'prosthetic')
 					element.mouseenter( function(){
-						var c = $("#"+y.code+element.mCount);
+						var c = $("#"+code);
 						c.show();
 					}).focus(function(){
-						var c = $("#"+y.code+element.mCount);
+						var c = $("#"+code);
 						resetVisibility();
 						c.show();
 						parent.addClass("focus");
@@ -131,12 +197,12 @@ $(function(){
 							mssg.removeClass('bottom');
 						}
 					}).mouseleave( function(){
-						var c = $("#"+y.code+element.mCount);
+						var c = $("#"+code);
 						if (!element.is(":focus")){
 							c.hide();
 						}
 					}).focusout( function(){
-						var c = $("#"+y.code+element.mCount);
+						var c = $("#"+code);
 						c.hide();
 						parent.removeClass("focus");
 					});
