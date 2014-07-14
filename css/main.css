@@ -1,3 +1,7 @@
+
+	.main-container {
+		padding: 70px 15px 0;
+	}
 	.nav-tabs li a, .tab-content div {
 		background-color: #DDD;
 	}
@@ -107,7 +111,7 @@
 		margin-bottom: 0px;
 	}
 	.config-col fieldset fieldset :last-child{
-		margin-bottom: 8px;
+		/*margin-bottom: 8px;*/
 	}
 	#left-tab span, #right-tab span {
 		font-size: 1.1em;
@@ -283,4 +287,28 @@
 	}
 	.bottom {
 		top: 320px;
+	}
+	.no-bottom-margin {
+		margin-bottom: 0px;
+	}
+	.panel-body {
+		padding: 0px 14px 8px 14px;
+	}
+	.panel {
+		margin-bottom: 10px;
+	}
+	.no-height {
+		height: 200px;
+		border: 0px !important;
+	}
+	.hando-panel-height {
+		height: 400px;
+	}
+	.spaced-label {
+		margin-top: 20px !important;
+	}
+	.no-border, .no-border li, .no-border a {
+		/*border: 0px !important;*/
+		border-color: #faebcc !important;
+		font-weight: bold;
 	}

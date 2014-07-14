@@ -119,6 +119,22 @@ function setType(){
 		$('#right').remove();
 		$('#v_l9').parent().addClass('hidden');
 		$('#v_r5').parent().addClass('hidden');
+		var mTabHTML = "<br/>" + $('#mid-pane').html();
+		$('#side-select-body').html($('#side-select-body').html() + mTabHTML);
+		var selectHTML = $('#side-select');
+		 $('#side-select').remove();
+		 $('#mid-pane ul#measure-tab').remove();
+ 		 $('#mid-pane div.tab-content').remove();
+		 $('#mid-pane').html(selectHTML);
+		 $('#prosthetic').addClass('no-height');
+		 $('#side-select-body').addClass('hando-panel-height');
+		 $('#option-select-body').addClass('hando-panel-height');
+		 $('label').each(function(a,b){
+			$(b).addClass('spaced-label');
+		 });
+		 $('#measure-tab').addClass('no-border');
+		//console.log();
+		//$('#mid-pane').html($('#render_tab').html()+$('#mid-pane').html());
 	} else {
 		$('#prosthetic-tab').parent().remove();
 		$('#prosthetic').remove();

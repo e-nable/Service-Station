@@ -18,10 +18,10 @@ start_user_session( $assemblervars);
 <!--[if IE]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 <!-- Latest compiled and minified CSS -->
 
-<link rel="stylesheet" href="./css/main.css">
 <link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="./lib/font-awesome-4.0.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="./css/main.css">
 
 </head>
 
@@ -88,12 +88,86 @@ $html = <<<HTML
  </div>
 </div>
 
-<br/><br/><br/>
-<div class="container">
-<div class="row">
- <div class="col-md-4">
 
-  <ul class="nav nav-tabs">
+<div class="container main-container">
+<div class="row">
+
+ <div class="col-md-4 config-col">
+   <div class="panel panel-warning" id="side-select">
+      <div class="panel-heading">
+        <h3 class="panel-title">Prosthetic Selection</h3>
+      </div>
+      <div class="panel-body" id="side-select-body">
+        <label for='prostheticHand'>Prosthetic Hand</label>
+        <select id="prostheticHand" name='prostheticHand' class="form-control">
+          {$prostheticHand_options}
+        </select>
+      </div>
+    </div>
+
+   <div class="panel panel-warning">
+      <div class="panel-heading">
+        <h3 class="panel-title">Model Selection</h3>
+      </div>
+      <div class="panel-body" id="option-select-body">
+    <label for='part'>Generate</label>
+    <select name='part' class="form-control" id="generateSelect">
+     {$part_options}
+    </select>
+
+    <label for='gauntletSelect'>Gauntlet Style</label>
+     <select name='gauntletSelect' class="form-control">
+     {$gauntletSelect_options}
+    </select>
+
+    <label for='fingerSelect'>Finger Style</label>
+     <select name='fingerSelect' class="form-control">
+     {$fingerSelect_options}
+    </select>
+
+    <label for='palmSelect'>Palm Style</label>
+    <select name='palmSelect' class="form-control">
+     {$palmSelect_options}
+    </select>
+
+
+   <label>Spacing</label>
+    <div class="input-group"><span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
+     <input type="number" step="any" min="0" name="Padding" value="{$paddingValue}" class="form-control">
+     <span class="input-group-addon">mm</span>
+    </div>
+
+      </div>
+    </div>
+
+<!--
+   <fieldset>
+   <legend>Connector Holes</legend>
+    <div class="input-group"><span class="input-group-addon">Wrist Bolt &nbsp;&nbsp;&nbsp;</span>
+     <input type="number" step="any" min="0" name="WristBolt" value="5.5" class="form-control">
+     <span class="input-group-addon">mm</span>
+    </div>
+    <div class="input-group"><span class="input-group-addon">Knuckle Bolt</span>
+     <input type="number" step="any" min="0" name="KnuckleBolt" value="3.3" class="form-control">
+     <span class="input-group-addon">mm</span>
+    </div>
+    <div class="input-group"><span class="input-group-addon">Finger Bolt&nbsp;&nbsp;&nbsp;</span>
+     <input type="number" step="any" min="0" name="JointBolt"  value="3.3" class="form-control">
+     <span class="input-group-addon">mm</span>
+    </div>
+    <div class="input-group"><span class="input-group-addon">Thumb Bolt&nbsp;&nbsp;</span>
+     <input type="number" step="any" min="0" name="ThumbBolt" value="3.3" class="form-control">
+     <span class="input-group-addon">mm</span>
+    </div>
+   </fieldset>
+-->
+ </div>
+
+
+
+
+ <div class="col-md-4" id="mid-pane">
+  <ul class="nav nav-tabs" id="measure-tab">
    <li class=""><a href="#left" data-toggle="tab" id="left-tab"><span class="fa fa-print green"></span> Left Arm</a></li>
    <li><a href="#right" data-toggle="tab" id="right-tab"><span class="fa fa-print green hidden"></span> Right Arm</a></li>  
    <li class="active"><a href="#prosthetic" data-toggle="tab" id="prosthetic-tab"> <span class="fa fa-print green"></span><span class="title"> Left Prosthetic</span></a></li>
@@ -226,67 +300,7 @@ $html = <<<HTML
 
 {$tabselect}
 
- <div class="col-md-4 config-col">
-  <fieldset>
-   <fieldset>
-    <legend>Model Selection</legend>
-    <label for='prostheticHand'>Prosthetic Hand</label>
-    <select id="prostheticHand" name='prostheticHand' class="form-control">
-     {$prostheticHand_options}
-    </select>
-    
-    <label for='part'>Generate</label>
-    <select name='part' class="form-control" id="generateSelect">
-     {$part_options}
-    </select>
 
-    <label for='gauntletSelect'>Gauntlet Style</label>
-     <select name='gauntletSelect' class="form-control">
-     {$gauntletSelect_options}
-    </select>
-
-    <label for='fingerSelect'>Finger Style</label>
-     <select name='fingerSelect' class="form-control">
-     {$fingerSelect_options}
-    </select>
-
-    <label for='palmSelect'>Palm Style</label>
-    <select name='palmSelect' class="form-control">
-     {$palmSelect_options}
-    </select>
-   </fieldset>
-
-   <fieldset>
-   <legend>Spacing</legend>
-    <div class="input-group"><span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
-     <input type="number" step="any" min="0" name="Padding" value="{$paddingValue}" class="form-control">
-     <span class="input-group-addon">mm</span>
-    </div>
-   </fieldset>
-
-<!--
-   <fieldset>
-   <legend>Connector Holes</legend>
-    <div class="input-group"><span class="input-group-addon">Wrist Bolt &nbsp;&nbsp;&nbsp;</span>
-     <input type="number" step="any" min="0" name="WristBolt" value="5.5" class="form-control">
-     <span class="input-group-addon">mm</span>
-    </div>
-    <div class="input-group"><span class="input-group-addon">Knuckle Bolt</span>
-     <input type="number" step="any" min="0" name="KnuckleBolt" value="3.3" class="form-control">
-     <span class="input-group-addon">mm</span>
-    </div>
-    <div class="input-group"><span class="input-group-addon">Finger Bolt&nbsp;&nbsp;&nbsp;</span>
-     <input type="number" step="any" min="0" name="JointBolt"  value="3.3" class="form-control">
-     <span class="input-group-addon">mm</span>
-    </div>
-    <div class="input-group"><span class="input-group-addon">Thumb Bolt&nbsp;&nbsp;</span>
-     <input type="number" step="any" min="0" name="ThumbBolt" value="3.3" class="form-control">
-     <span class="input-group-addon">mm</span>
-    </div>
-   </fieldset>
--->
-  </fieldset>
- </div>
 </div>
 </div>
 
