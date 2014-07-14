@@ -183,26 +183,26 @@ $html = <<<HTML
   <div class="tab-content">
    <div class="tab-pane active" id="image"
 	><div class="thumbnail"><img src="./imgs/reference.png"/
-	><span id="l1" class="fancy"></span
-	><span id="l2" class="fancy"></span
-	><span id="l3" class="fancy"></span
-	><span id="l4" class="fancy"></span
-	><span id="l5" class="fancy"></span
-	><span id="l6" class="fancy"></span
-	><span id="l7" class="fancy"></span
-	><span id="l8" class="fancy"></span
-	><span id="l9" class="fancy"></span
-	><span id="l10" class="fancy"></span
-	><span id="r1" class="fancy"></span
-	><span id="r2" class="fancy"></span
-	><span id="r3" class="fancy"></span
-	><span id="r4" class="fancy"></span
-	><span id="r5" class="fancy"></span
-	><span id="r6" class="fancy"></span
-	><span id="r7" class="fancy"></span
-	><span id="r8" class="fancy"></span
-	><span id="r9" class="fancy"></span
-	><span id="r10" class="fancy"></span
+	><span id="l1" class="hover-arrow"></span
+	><span id="l2" class="hover-arrow"></span
+	><span id="l3" class="hover-arrow"></span
+	><span id="l4" class="hover-arrow"></span
+	><span id="l5" class="hover-arrow"></span
+	><span id="l6" class="hover-arrow"></span
+	><span id="l7" class="hover-arrow"></span
+	><span id="l8" class="hover-arrow"></span
+	><span id="l9" class="hover-arrow"></span
+	><span id="l10" class="hover-arrow"></span
+	><span id="r1" class="hover-arrow"></span
+	><span id="r2" class="hover-arrow"></span
+	><span id="r3" class="hover-arrow"></span
+	><span id="r4" class="hover-arrow"></span
+	><span id="r5" class="hover-arrow"></span
+	><span id="r6" class="hover-arrow"></span
+	><span id="r7" class="hover-arrow"></span
+	><span id="r8" class="hover-arrow"></span
+	><span id="r9" class="hover-arrow"></span
+	><span id="r10" class="hover-arrow"></span
 	><span id="top_hover" class="image_hover"></span
 	></div></div>
    <div class="tab-pane" id="descriptions">
@@ -230,7 +230,7 @@ $html = <<<HTML
   <fieldset>
    <fieldset>
     <legend>Model Selection</legend>
-    <label for='prostheticHand'>Hand</label>
+    <label for='prostheticHand'>Prosthetic Hand</label>
     <select id="prostheticHand" name='prostheticHand' class="form-control">
      {$prostheticHand_options}
     </select>
@@ -377,7 +377,7 @@ $html = <<<HTML
         <h4 class="modal-title">Missing Measurements</h4>
       </div>
       <div class="modal-body">
-        <p>There seems to be a few missing values from the required measurements table in the first panel. Please set the associated <b>numeric</b> values for those fields <span class="broke-span">colored in red</span> before submitting again.</p>
+        <p>There seems to be a few missing values from the required measurements table in the first panel. Please set the associated <b>numeric</b> values for those fields <span class="incomplete-span">colored in red</span> before submitting again.</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

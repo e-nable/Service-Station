@@ -113,7 +113,7 @@
 		font-size: 1.1em;
 		margin-right:2px;
 	}
-	.fancy {
+	.hover-arrow {
 		background-repeat: no-repeat;
 		width: 117px;
 		height: 35px;
@@ -248,12 +248,12 @@
 	.focus .input-group-addon {
 		background-color: yellow;
 	}
-	.broke .input-group-addon, .broke{
+	.incomplete .input-group-addon, .incomplete{
 		color:white;
 		border-color: #b92c28;
 		background-image: linear-gradient(to bottom,#d9534f 0,#c12e2a 100%);
 	}
-	.broke-span {
+	.incomplete-span {
 		color:white !important;
 		border-color: #b92c28;
 		background-image: linear-gradient(to bottom,#d9534f 0,#c12e2a 100%);

@@ -1,6 +1,6 @@
 var submitVal = 0;
 var flaggedError = true;
-var isFriendly = true;
+var isSimple = true;
 var descriptions =[
 	"Length of Elbow Joint",
 	"Distance between lateral and medial side of the forearm proximal to the elbow joint",
@@ -23,18 +23,18 @@ function goModal(v){
 	var count = 0;
 	var flagged = false;
 
-	if (!isFriendly){
+	if (!isSimple){
 		while(count++ < 10){
 			var obj = $('#v_'+side+count);
 			var val = obj.val();
 
 			if (val == undefined || val == ""){
-				obj.parent().addClass("broke");
+				obj.parent().addClass("incomplete");
 				flagged = true;
 			} else {
-				obj.parent().removeClass("broke");
+				obj.parent().removeClass("incomplete");
 			}
-			$('#v_'+oSide+count).parent().removeClass("broke");
+			$('#v_'+oSide+count).parent().removeClass("incomplete");
 		}
 
 		if (side == 'l')
@@ -49,10 +49,10 @@ function goModal(v){
 						y.value = 0;
 					} else {
 						if (y.value == undefined || y.value == ""){
-							obj.parent().addClass("broke");
+							obj.parent().addClass("incomplete");
 							flagged = true;
 						} else {
-							obj.parent().removeClass("broke");
+							obj.parent().removeClass("incomplete");
 						}
 					}
 				} 
@@ -73,7 +73,7 @@ function goModal(v){
 function handSelect(isLoad){
 	isLoad = isLoad || false;
 	var hand_selected = $("#prostheticHand").val();
-	if (!isFriendly){
+	if (!isSimple){
 		if (!hand_selected){
 			console.log('selection returned empty');
 		} else if (hand_selected == 0){
@@ -87,7 +87,7 @@ function handSelect(isLoad){
 		$('#prosthetic input').each(function(x,y){
 			//if(!isLoad) y.value = "";
 			var obj = $(y);
-			obj.parent().removeClass('broke');
+			obj.parent().removeClass('incomplete');
 		});
 		if (!hand_selected){
 			console.log('selection returned empty');
@@ -112,7 +112,7 @@ function handSelect(isLoad){
 }
 
 function setType(){
-	if (isFriendly){
+	if (isSimple){
 		$('#left-tab').parent().remove();
 		$('#right-tab').parent().remove();
 		$('#left').remove();
@@ -120,7 +120,9 @@ function setType(){
 		$('#v_l9').parent().addClass('hidden');
 		$('#v_r5').parent().addClass('hidden');
 	} else {
-		;
+		$('#prosthetic-tab').parent().remove();
+		$('#prosthetic').remove();
+		$('#left-tab').tab('show');
 	}
 }
 
