@@ -14,7 +14,7 @@ $assemblervars = array(
 	'Left1', 'Left2', 'Left3', 'Left4', 'Left5', 'Left6', 'Left7', 'Left8', 'Left9', 'Left10',
 	'Right1', 'Right2', 'Right3', 'Right4', 'Right5', 'Right6', 'Right7', 'Right8', 'Right9', 'Right10',
 	'part', 'gauntletSelect', 'fingerSelect', 'palmSelect', 'prostheticHand', 'Padding',
-	'WristBolt', 'KnuckleBolt', 'JointBolt', 'ThumbBolt'
+	'WristBolt', 'KnuckleBolt', 'JointBolt', 'ThumbBolt', 'advanced'
      );
 
 function start_user_session( $assemblervars)

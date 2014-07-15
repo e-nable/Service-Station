@@ -82,7 +82,7 @@ function goModal(v){
 function handSelect(isLoad){
 	isLoad = isLoad || false;
 	var hand_selected = $("#prostheticHand").val();
-	if (!isSimple || ($.urlParam('advanced') == 'true')){
+	if (!isSimple){
 		if (!hand_selected){
 			console.log('selection returned empty');
 		} else if (hand_selected == 0){
@@ -121,7 +121,7 @@ function handSelect(isLoad){
 }
 
 function setType(){
-	if (isSimple && ($.urlParam('advanced') != 'true')){
+	if (isSimple){
 		$('#left-tab').parent().remove();
 		$('#right-tab').parent().remove();
 		$('#left').remove();
@@ -142,13 +142,16 @@ function setType(){
 			$(b).addClass('spaced-label');
 		 });
 		 $('#measure-tab').addClass('no-border');
+		 $('#product-title').html('<a href=".\/?advanced=true">Handomatic</a>');
 		//console.log();
 		//$('#mid-pane').html($('#render_tab').html()+$('#mid-pane').html());
 	} else {
 		$('#prosthetic-tab').parent().remove();
 		$('#prosthetic').remove();
 		$('#left-tab').tab('show');
+		$('#product-title').html('<a href=".\/?advanced=false">Handomatic Pro</a>');
 	}
+	$('advanced').value=(!isSimple);
 }
 
 function resetVisibility(){
@@ -169,6 +172,7 @@ function resetVisibility(){
 
 
 $(function(){
+	isSimple =($.urlParam('advanced') == 'true')?false:true;
 	setType();
 	handSelect(true);
 	$('#prostheticHand').change(function(){handSelect();});

@@ -40,6 +40,7 @@ $render = render( $assemblervars);
 $tabselect = "";
 $stateClass = "";
 $paddingValue = !empty($_SESSION['Padding']) ? $_SESSION['Padding']: 5;
+$advanced = !empty($_SESSION['advanced']) ? $_SESSION['advanced']: 'false';
 if(isset($_GET["submit"]) && (strtolower(trim($_GET["submit"])) == 'preview' || strtolower(trim($_GET["submit"])) == 'stl')){
 	$tabselect = <<<TABSELECT
 	<script>
@@ -54,6 +55,7 @@ $renderedButtons = renderButtons();
 $renderedSampleLoader = renderSampleLoader();
 
 $html = <<<HTML
+<input id="advanced" type="hidden" name="advanced" value='{$advanced}'>
 <div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
  <div class="container">
   <div class="navbar-header">
@@ -63,7 +65,7 @@ $html = <<<HTML
     <span class="icon-bar"></span>
     <span class="icon-bar"></span>
    </button>
-   <a href="#" class="navbar-brand"><img src="imgs/eNable_dark_bg.png"/> - <span>Handomatic</span></a>
+   <a href="#" class="navbar-brand"><img src="imgs/eNable_dark_bg.png"/> - <span id="product-title">Handomatic</span></a>
   </div>
   <div class="navbar-collapse collapse">
    <div class="navbar-form navbar-right">

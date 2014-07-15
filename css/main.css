@@ -316,3 +316,7 @@
 	.no-border li a {
 		background-color: #fcf8e3 !important;
 	}
+	#product-title a:link, #product-title a:visited, #product-title a:hover, #product-title a:active, #product-title a:focus {
+		color: #EEE !important;
+	}
+	
