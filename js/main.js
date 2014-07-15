@@ -14,6 +14,15 @@ var descriptions =[
 	"Length of Elbow to wrist joint"
     ];
 
+$.urlParam = function(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null){
+       return null;
+    } else {
+       return results[1] || 0;
+    }
+}
+
 function goModal(v){
 	submitVal =v;
 
@@ -73,7 +82,7 @@ function goModal(v){
 function handSelect(isLoad){
 	isLoad = isLoad || false;
 	var hand_selected = $("#prostheticHand").val();
-	if (!isSimple){
+	if (!isSimple || ($.urlParam('advanced') == 'true')){
 		if (!hand_selected){
 			console.log('selection returned empty');
 		} else if (hand_selected == 0){
@@ -112,7 +121,7 @@ function handSelect(isLoad){
 }
 
 function setType(){
-	if (isSimple){
+	if (isSimple && ($.urlParam('advanced') != 'true')){
 		$('#left-tab').parent().remove();
 		$('#right-tab').parent().remove();
 		$('#left').remove();

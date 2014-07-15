@@ -310,5 +310,9 @@
 	.no-border, .no-border li, .no-border a {
 		/*border: 0px !important;*/
 		border-color: #faebcc !important;
+		color: #8a6d3b !important;
 		font-weight: bold;
+	}
+	.no-border li a {
+		background-color: #fcf8e3 !important;
 	}

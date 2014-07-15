@@ -210,6 +210,7 @@ function palmSelect_options()
 {
 	$return  = "\t<option value='1'" . ($_SESSION['palmSelect'] == 1 ? " selected='selected' " : '') . ">Cyborg Beast</option>\n";
 	$return .= "";//"\t<option value='2'" . ($_SESSION['palmSelect'] == 2 ? " selected='selected' " : '') . ">Cyborg Beast Parametric</option>\n";
+	$return .= "\t<option value='4'" . ($_SESSION['palmSelect'] == 4 ? " selected='selected' " : '') . ">Cyborg Beast: No thumb</option>\n";
 	$return .= "\t<option value='3'" . ($_SESSION['palmSelect'] == 3 ? " selected='selected' " : '') . ">Creo Cyborg Beast</option>\n";
 	return $return;
 }
