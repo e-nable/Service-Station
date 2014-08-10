@@ -214,24 +214,24 @@ $html = <<<HTML
      <input id="v_l2" type="hidden" name="Left2" value='{$_SESSION['Left2']}'>
      <input id="v_l3" type="hidden" name="Left3" value='{$_SESSION['Left3']}'>
      <input id="v_l4" type="hidden" name="Left4" value='{$_SESSION['Left4']}'>
-     <input id="v_l6" type="hidden" step="any" min="0" name="Left6" value='{$_SESSION['Left6']}'>
+     <input id="v_l5" type="hidden" name="Left8" value='{$_SESSION['Left5']}'>
+     <input id="v_l6" type="hidden" name="Left6" value='{$_SESSION['Left6']}'>
      <input id="v_l7" type="hidden" name="Left7" value='{$_SESSION['Left7']}'>
-     <input id="v_l8" type="hidden" name="Left8" value='{$_SESSION['Left8']}'>
      <input id="v_l10" type="hidden" name="Left10" value='{$_SESSION['Left10']}'>
 
      <input id="v_r1" type="hidden" step="any" min="0" name="Right1" value='{$_SESSION['Right1']}'>
      <input id="v_r2" type="hidden" step="any" min="0" name="Right2" value='{$_SESSION['Right2']}'>
      <input id="v_r3" type="hidden" step="any" min="0" name="Right3" value='{$_SESSION['Right3']}'>
      <input id="v_r4" type="hidden" step="any" min="0" name="Right4" value='{$_SESSION['Right4']}'>
+     <input id="v_r5" type="hidden" step="any" min="0" name="Right8" value='{$_SESSION['Right5']}'>
      <input id="v_r6" type="hidden" step="any" min="0" name="Right6" value='{$_SESSION['Right6']}'>
      <input id="v_r7" type="hidden" step="any" min="0" name="Right7" value='{$_SESSION['Right7']}'>
-     <input id="v_r8" type="hidden" step="any" min="0" name="Right8" value='{$_SESSION['Right8']}'>
      <input id="v_r10" type="hidden" step="any" min="0" name="Right10" value='{$_SESSION['Right10']}'>
 
 
-     <div class="input-group"><span class="input-group-addon">P5</span> <input id="v_l5" type="number" step="any" min="0" name="Left5" value='{$_SESSION['Left5']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">P5</span> <input id="v_r5" type="number" step="any" min="0" name="Right5" value='{$_SESSION['Right5']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">mm</span></div>
-     Wrist Joint distance from lateral to medial side<br/><br/>
+     <div class="input-group"><span class="input-group-addon">L8</span> <input id="v_l8" type="number" step="any" min="0" name="Left5" value='{$_SESSION['Left8']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">mm</span></div>
+     <div class="input-group"><span class="input-group-addon">R8</span> <input id="v_r8" type="number" step="any" min="0" name="Right5" value='{$_SESSION['Right8']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">mm</span></div>
+     Distance from Lateral and Medial sides of the distal part of the hand<br/><br/>
 
      <div class="input-group"><span class="input-group-addon">L9</span> <input id="v_l9" type="number" step="any" min="0" name="Left9" value='{$_SESSION['Left9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">mm</span></div>
 
