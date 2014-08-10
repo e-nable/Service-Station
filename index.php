@@ -65,7 +65,7 @@ $html = <<<HTML
     <span class="icon-bar"></span>
     <span class="icon-bar"></span>
    </button>
-   <a href="#" class="navbar-brand"><img src="imgs/eNable_dark_bg.png"/> - <span id="product-title">Handomatic</span></a>
+   <a href="#" class="navbar-brand"><span id="product-title"></span></a>
   </div>
   <div class="navbar-collapse collapse">
    <div class="navbar-form navbar-right">

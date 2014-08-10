@@ -142,14 +142,14 @@ function setType(){
 			$(b).addClass('spaced-label');
 		 });
 		 $('#measure-tab').addClass('no-border');
-		 $('#product-title').html('<a href=".\/?advanced=true">Handomatic</a>');
+		 $('#product-title').html('Handomatic<a href=".\/?advanced=true" class="pro_novice btn">Go Pro &gt;&gt;</a>');
 		//console.log();
 		//$('#mid-pane').html($('#render_tab').html()+$('#mid-pane').html());
 	} else {
 		$('#prosthetic-tab').parent().remove();
 		$('#prosthetic').remove();
 		$('#left-tab').tab('show');
-		$('#product-title').html('<a href=".\/?advanced=false">Handomatic Pro</a>');
+		$('#product-title').html('Handomatic Pro<a href=".\/?advanced=false" class="pro_novice btn">Go Novice &gt;&gt;</a>');
 	}
 	$('advanced').value=(!isSimple);
 }
