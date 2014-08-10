@@ -229,8 +229,8 @@ $html = <<<HTML
      <input id="v_r10" type="hidden" step="any" min="0" name="Right10" value='{$_SESSION['Right10']}'>
 
 
-     <div class="input-group"><span class="input-group-addon">L8</span> <input id="v_l8" type="number" step="any" min="0" name="Left5" value='{$_SESSION['Left8']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">R8</span> <input id="v_r8" type="number" step="any" min="0" name="Right5" value='{$_SESSION['Right8']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">mm</span></div>
+     <div class="input-group"><span class="input-group-addon">L8</span> <input id="v_l8" type="number" step="any" min="0" name="Left5" value='{$_SESSION['Left8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">mm</span></div>
+     <div class="input-group"><span class="input-group-addon">R8</span> <input id="v_r8" type="number" step="any" min="0" name="Right5" value='{$_SESSION['Right8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">mm</span></div>
      Distance from Lateral and Medial sides of the distal part of the hand<br/><br/>
 
      <div class="input-group"><span class="input-group-addon">L9</span> <input id="v_l9" type="number" step="any" min="0" name="Left9" value='{$_SESSION['Left9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">mm</span></div>
