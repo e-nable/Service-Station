@@ -103,16 +103,16 @@ function handSelect(isLoad){
 		} else if (hand_selected == 0){
 			$('#prosthetic-tab span.title').html(' Left Prosthetic');
 			$('#v_l9').parent().addClass('hidden');
-			$('#v_r5').parent().addClass('hidden');
+			$('#v_l8').parent().addClass('hidden');
 			$('#v_r9').parent().removeClass('hidden');
-			$('#v_l5').parent().removeClass('hidden');
+			$('#v_r8').parent().removeClass('hidden');
 			$('#image img').get(0).src= './imgs/referece_lP.png';
 		} else if (hand_selected == 1){
 			$('#prosthetic-tab span.title').html(' Right Prosthetic');
 			$('#v_l9').parent().removeClass('hidden');
-			$('#v_r5').parent().removeClass('hidden');
+			$('#v_l8').parent().removeClass('hidden');
 			$('#v_r9').parent().addClass('hidden');
-			$('#v_l5').parent().addClass('hidden');
+			$('#v_r8').parent().addClass('hidden');
 			$('#image img').get(0).src= './imgs/referece_rP.png';
 		}
 
@@ -127,7 +127,7 @@ function setType(){
 		$('#left').remove();
 		$('#right').remove();
 		$('#v_l9').parent().addClass('hidden');
-		$('#v_r5').parent().addClass('hidden');
+		$('#v_l8').parent().addClass('hidden');
 		var mTabHTML = "<br/>" + $('#mid-pane').html();
 		$('#side-select-body').html($('#side-select-body').html() + mTabHTML);
 		var selectHTML = $('#side-select');
@@ -142,14 +142,14 @@ function setType(){
 			$(b).addClass('spaced-label');
 		 });
 		 $('#measure-tab').addClass('no-border');
-		 $('#product-title').html('<a href=".\/?advanced=true">Handomatic</a>');
+		 $('#product-title').html('Handomatic<a href=".\/?advanced=true" class="pro_novice btn">Go Pro &gt;&gt;</a>');
 		//console.log();
 		//$('#mid-pane').html($('#render_tab').html()+$('#mid-pane').html());
 	} else {
 		$('#prosthetic-tab').parent().remove();
 		$('#prosthetic').remove();
 		$('#left-tab').tab('show');
-		$('#product-title').html('<a href=".\/?advanced=false">Handomatic Pro</a>');
+		$('#product-title').html('Handomatic Pro<a href=".\/?advanced=false" class="pro_novice btn">Go Novice &gt;&gt;</a>');
 	}
 	$('advanced').value=(!isSimple);
 }
