@@ -18,7 +18,7 @@
 
 var submitVal = 0;
 var flaggedError = true;
-var isSimple = true;
+var isNovice = true;
 var descriptions =[
 	"Length of Elbow Joint",
 	"Distance between lateral and medial side of the forearm proximal to the elbow joint",
@@ -31,6 +31,25 @@ var descriptions =[
 	"Distance from wrist to proximal end of 1st phalange on pinky side (Medial)",
 	"Length of Elbow to wrist joint"
     ];
+var optionValues;
+var viewModel = function () {
+   var self = this;
+
+   self.prostheticHandItems = ko.observableArray(optionValues.prostheticHand);
+   self.selectedProstheticHand = ko.observable(prostheticHandSession);
+
+   self.partItems = ko.observableArray(optionValues.part);
+   self.selectedPart = ko.observable(partSession);
+
+   self.gauntletSelectItems = ko.observableArray(optionValues.gauntlet);
+   self.selectedGauntletSelect = ko.observable(gauntletSelectSession);
+
+   self.fingerSelectItems = ko.observableArray(optionValues.finger);
+   self.selectedFingerSelect = ko.observable(fingerSelectSession);
+
+   self.palmItems = ko.observableArray(optionValues.palm);
+   self.selectedPalm = ko.observable(palmSelectSession);
+};
 
 $.urlParam = function(name){
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -41,7 +60,7 @@ $.urlParam = function(name){
     }
 }
 
-function goModal(v){
+function executeCommand(v){
 	submitVal =v;
 
 	var hand_selected = $("#prostheticHand").val();
@@ -50,7 +69,7 @@ function goModal(v){
 	var count = 0;
 	var flagged = false;
 
-	if (!isSimple){
+	if (!isNovice){
 		while(count++ < 10){
 			var obj = $('#v_'+side+count);
 			var val = obj.val();
@@ -73,7 +92,7 @@ function goModal(v){
 				if (y.type == 'number'){
 					var obj = $(y);
 			       		if (obj.parent().get(0).className.indexOf('hidden')> -1){
-						y.value = 0;
+						;//y.value = 0;
 					} else {
 						if (y.value == undefined || y.value == ""){
 							obj.parent().addClass("incomplete");
@@ -99,8 +118,8 @@ function goModal(v){
 
 function handSelect(isLoad){
 	isLoad = isLoad || false;
-	var hand_selected = $("#prostheticHand").val();
-	if (!isSimple){
+	var hand_selected = (!isLoad? $("#prostheticHand").val(): prostheticHandSession);//$("#prostheticHand").val();
+	if (!isNovice){
 		if (!hand_selected){
 			console.log('selection returned empty');
 		} else if (hand_selected == 0){
@@ -139,7 +158,7 @@ function handSelect(isLoad){
 }
 
 function setType(){
-	if (isSimple){
+	if (isNovice){
 		$('#left-tab').parent().remove();
 		$('#right-tab').parent().remove();
 		$('#left').remove();
@@ -169,7 +188,7 @@ function setType(){
 		$('#left-tab').tab('show');
 		$('#product-title').html('Handomatic Pro<a href=".\/?advanced=false" class="pro_novice btn">Go Novice &gt;&gt;</a>');
 	}
-	$('advanced').value=(!isSimple);
+	$('advanced').value=(!isNovice);
 }
 
 function resetVisibility(){
@@ -188,35 +207,15 @@ function resetVisibility(){
 	);					
 }
 
-
-$(function(){
-	isSimple =($.urlParam('advanced') == 'true')?false:true;
+function firstRender(){
+	isNovice =($.urlParam('advanced') == 'true')?false:true;
 	setType();
-	handSelect(true);
+	//handSelect(true);
 	$('#prostheticHand').change(function(){handSelect();});
 	var counter= 1;
 	$("#top_hover").hide();
 	$("#top_hover").click(function(){$("#top_hover").hide()});
-	$('#generatorForm').submit(function (e) {
-		if (flaggedError == true)
-			return false;
-		else {
-			$("#loadingModal").modal({backdrop:'static', keyboard: false, show:true});
-			if (submitVal == 'preview'){
-				$('#stl-btn').addClass('disabled');
-			} else if (submitVal == 'stl'){
-				$('#preview-btn').addClass('disabled');
-			}
-			return true;
-		}
-	});
-	$('#generateSelect').change(function(val){
-		if (this && this.value && this.value == 0){
-			$('#stl-btn').addClass('disabled');
-		} else {
-			$('#stl-btn').removeClass('disabled');
-		}
-	});
+
 	$.each([{side:'left',code:'l'},{side:'right',code:'r'},{side:'prosthetic',code:'r'}],
 		function(x,y){
 			counter= 1;
@@ -259,4 +258,45 @@ $(function(){
 			);
 		}
 	);
+
+	var vm = new viewModel();
+	ko.applyBindings(vm);
+
+	handSelect(prostheticHandSession);
+	$('#generatorForm').submit(function (e) {
+		if (flaggedError == true)
+			return false;
+		else {
+			$("#loadingModal").modal({backdrop:'static', keyboard: false, show:true});
+			if (submitVal == 'preview'){
+				$('#stl-btn').addClass('disabled');
+			} else if (submitVal == 'stl'){
+				$('#preview-btn').addClass('disabled');
+			}
+			return true;
+		}
+	});
+	$('#generateSelect').change(function(val){
+		if (this && this.value && this.value == 0){
+			$('#stl-btn').addClass('disabled');
+		} else {
+			$('#stl-btn').removeClass('disabled');
+		}
+	});
+}
+
+$(function(){
+   var self = this;
+   $.ajax({url:"e-NABLE/options.json",
+	success: function(jqXHR) {
+		if (jqXHR){
+			optionValues = jqXHR;
+			firstRender();
+		}
+	},error: function(jqXHR){
+
+	}
+   });
 });
+
+

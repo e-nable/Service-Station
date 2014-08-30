@@ -39,20 +39,18 @@ start_user_session( $assemblervars);
 <link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="./lib/font-awesome-4.0.3/css/font-awesome.min.css">
 <link rel="stylesheet" href="./css/main.css">
-
+<?php
+printHeader();
+?>
 </head>
 
 <body id="index" class="home">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="./lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
+<script src="./lib/knockout-3.2.0.js"></script>
 <form id="generatorForm" name="generatorForm">
 <?php
 
-$prostheticHand_options = prostheticHand_options();
-$part_options = part_options();
-$gauntletSelect_options = gauntletSelect_options();
-$fingerSelect_options = fingerSelect_options();
-$palmSelect_options = palmSelect_options();
 $render = render( $assemblervars);
 $tabselect = "";
 $stateClass = "";
@@ -118,9 +116,8 @@ $html = <<<HTML
       </div>
       <div class="panel-body" id="side-select-body">
         <label for='prostheticHand'>Prosthetic Hand</label>
-        <select id="prostheticHand" name='prostheticHand' class="form-control">
-          {$prostheticHand_options}
-        </select>
+	<select id="prostheticHand" name='prostheticHand' class="form-control"
+		data-bind="options: prostheticHandItems,optionsText: 'name',optionsValue: 'id',value: selectedProstheticHand"></select>
       </div>
     </div>
 
@@ -130,25 +127,25 @@ $html = <<<HTML
       </div>
       <div class="panel-body" id="option-select-body">
     <label for='part'>Generate</label>
-    <select name='part' class="form-control" id="generateSelect">
-     {$part_options}
+    <select name='part' class="form-control" id="generateSelect"
+	data-bind="options: partItems,optionsText: 'name',optionsValue: 'id',value: selectedPart">
     </select>
 
     <label for='gauntletSelect'>Gauntlet Style</label>
-     <select name='gauntletSelect' class="form-control">
-     {$gauntletSelect_options}
+     <select name='gauntletSelect' class="form-control"
+	data-bind="options: gauntletSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedGauntletSelect">
     </select>
 
     <label for='fingerSelect'>Finger Style</label>
-     <select name='fingerSelect' class="form-control">
-     {$fingerSelect_options}
+     <select name='fingerSelect' class="form-control"
+	data-bind="options: fingerSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedFingerSelect">
     </select>
 
     <label for='palmSelect'>Palm Style</label>
-    <select name='palmSelect' class="form-control">
-     {$palmSelect_options}
-    </select>
+    <select name='palmSelect' class="form-control"
+	data-bind="options: palmItems,optionsText: 'name',optionsValue: 'id',value: selectedPalm">
 
+    </select>
 
    <label>Spacing</label>
     <div class="input-group"><span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
@@ -158,28 +155,6 @@ $html = <<<HTML
 
       </div>
     </div>
-
-<!--
-   <fieldset>
-   <legend>Connector Holes</legend>
-    <div class="input-group"><span class="input-group-addon">Wrist Bolt &nbsp;&nbsp;&nbsp;</span>
-     <input type="number" step="any" min="0" name="WristBolt" value="5.5" class="form-control">
-     <span class="input-group-addon">mm</span>
-    </div>
-    <div class="input-group"><span class="input-group-addon">Knuckle Bolt</span>
-     <input type="number" step="any" min="0" name="KnuckleBolt" value="3.3" class="form-control">
-     <span class="input-group-addon">mm</span>
-    </div>
-    <div class="input-group"><span class="input-group-addon">Finger Bolt&nbsp;&nbsp;&nbsp;</span>
-     <input type="number" step="any" min="0" name="JointBolt"  value="3.3" class="form-control">
-     <span class="input-group-addon">mm</span>
-    </div>
-    <div class="input-group"><span class="input-group-addon">Thumb Bolt&nbsp;&nbsp;</span>
-     <input type="number" step="any" min="0" name="ThumbBolt" value="3.3" class="form-control">
-     <span class="input-group-addon">mm</span>
-    </div>
-   </fieldset>
--->
  </div>
 
 
@@ -231,7 +206,7 @@ $html = <<<HTML
      <input id="v_l2" type="hidden" name="Left2" value='{$_SESSION['Left2']}'>
      <input id="v_l3" type="hidden" name="Left3" value='{$_SESSION['Left3']}'>
      <input id="v_l4" type="hidden" name="Left4" value='{$_SESSION['Left4']}'>
-     <input id="v_l5" type="hidden" name="Left8" value='{$_SESSION['Left5']}'>
+     <input id="v_l5" type="hidden" name="Left5" value='{$_SESSION['Left5']}'>
      <input id="v_l6" type="hidden" name="Left6" value='{$_SESSION['Left6']}'>
      <input id="v_l7" type="hidden" name="Left7" value='{$_SESSION['Left7']}'>
      <input id="v_l10" type="hidden" name="Left10" value='{$_SESSION['Left10']}'>
@@ -240,14 +215,14 @@ $html = <<<HTML
      <input id="v_r2" type="hidden" step="any" min="0" name="Right2" value='{$_SESSION['Right2']}'>
      <input id="v_r3" type="hidden" step="any" min="0" name="Right3" value='{$_SESSION['Right3']}'>
      <input id="v_r4" type="hidden" step="any" min="0" name="Right4" value='{$_SESSION['Right4']}'>
-     <input id="v_r5" type="hidden" step="any" min="0" name="Right8" value='{$_SESSION['Right5']}'>
+     <input id="v_r5" type="hidden" step="any" min="0" name="Right5" value='{$_SESSION['Right5']}'>
      <input id="v_r6" type="hidden" step="any" min="0" name="Right6" value='{$_SESSION['Right6']}'>
      <input id="v_r7" type="hidden" step="any" min="0" name="Right7" value='{$_SESSION['Right7']}'>
      <input id="v_r10" type="hidden" step="any" min="0" name="Right10" value='{$_SESSION['Right10']}'>
 
 
-     <div class="input-group"><span class="input-group-addon">L8</span> <input id="v_l8" type="number" step="any" min="0" name="Left5" value='{$_SESSION['Left8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">R8</span> <input id="v_r8" type="number" step="any" min="0" name="Right5" value='{$_SESSION['Right8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">mm</span></div>
+     <div class="input-group"><span class="input-group-addon">L8</span> <input id="v_l8" type="number" step="any" min="0" name="Left8" value='{$_SESSION['Left8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">mm</span></div>
+     <div class="input-group"><span class="input-group-addon">R8</span> <input id="v_r8" type="number" step="any" min="0" name="Right8" value='{$_SESSION['Right8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">mm</span></div>
      Distance from Lateral and Medial sides of the distal part of the hand<br/><br/>
 
      <div class="input-group"><span class="input-group-addon">L9</span> <input id="v_l9" type="number" step="any" min="0" name="Left9" value='{$_SESSION['Left9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">mm</span></div>
