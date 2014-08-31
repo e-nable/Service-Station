@@ -26,15 +26,34 @@ $assemblervars = array(
 	'part', 'gauntletSelect', 'fingerSelect', 'palmSelect', 'prostheticHand', 'Padding',
 	'WristBolt', 'KnuckleBolt', 'JointBolt', 'ThumbBolt', 'advanced'
 );
+$prostheticHand;
+$part;
+$palmSelect;
+$gauntletSelect;
+$fingerSelect;
+$paddingValue;
+$advanced;
 
 processCount();
 
+function processCount(){
+	global $processCount, $isUnderProcessLimit, $processCountLimit;
+	$processCount = exec("ps aux  | grep 'openscad' | grep time | grep -v sh | grep -c -v 'grep'");
+	$processCount = empty($processCount) ? 0 : $processCount;
+	$isUnderProcessLimit = ($processCount < $processCountLimit);
+}
+
 function printHeader(){
+	global $prostheticHand, $part, $palmSelect, $gauntletSelect, $fingerSelect, $paddingValue, $advanced;
+	global $processCount, $processCountLimit, $isUnderProcessLimit, $isUnderProcessLimit;
+
 	$prostheticHand =  !empty($_SESSION['prostheticHand'])	? $_SESSION['prostheticHand']	: 'undefined';
 	$part 		=  !empty($_SESSION['part']) 		? $_SESSION['part']		: 'undefined';
 	$palmSelect 	=  !empty($_SESSION['palmSelect'])	? $_SESSION['palmSelect']	: 'undefined';
 	$gauntletSelect =  !empty($_SESSION['gauntletSelect'])	? $_SESSION['gauntletSelect']	: 'undefined';
 	$fingerSelect	=  !empty($_SESSION['fingerSelect'])	? $_SESSION['fingerSelect']	: 'undefined';
+	$paddingValue	=  !empty($_SESSION['Padding']) 	? $_SESSION['Padding']		: 5;
+	$advanced 	=  !empty($_SESSION['advanced'])	? $_SESSION['advanced']		: 'false';
 	echo <<<HTML
 	<script>
 		var prostheticHandSession 	= {$prostheticHand};
@@ -42,6 +61,8 @@ function printHeader(){
 		var palmSelectSession 		= {$palmSelect};
 		var gauntletSelectSession	= {$gauntletSelect};
 		var fingerSelectSession		= {$fingerSelect};
+		var isUnderProcessLimit		= {$isUnderProcessLimit};
+		var processCount		= {$processCount};
 	</script>
 HTML;
 }
@@ -65,9 +86,36 @@ function render( $assemblervars){
 		}
 
 		$assemblypath = "e-NABLE/Assembly/";
-		$leftsidevars = "-D Left1={$_REQUEST['Left1']} -D Left2={$_REQUEST['Left2']} -D  Left3={$_REQUEST['Left3']} -D  Left4={$_REQUEST['Left4']} -D  Left5={$_REQUEST['Left5']} -D  Left6={$_REQUEST['Left6']} -D  Left7={$_REQUEST['Left7']} -D  Left8={$_REQUEST['Left8']} -D  Left9={$_REQUEST['Left9']} -D  Left10={$_REQUEST['Left10']}";
-		$rightsidevars = "-D Right1={$_REQUEST['Right1']} -D Right2={$_REQUEST['Right2']} -D  Right3={$_REQUEST['Right3']} -D  Right4={$_REQUEST['Right4']} -D  Right5={$_REQUEST['Right5']} -D  Right6={$_REQUEST['Right6']} -D  Right7={$_REQUEST['Right7']} -D  Right8={$_REQUEST['Right8']} -D  Right9={$_REQUEST['Right9']} -D  Right10={$_REQUEST['Right10']}";
-		$options = " -D part={$_REQUEST['part']} -D prostheticHand={$_REQUEST['prostheticHand']} -D gauntletSelect={$_REQUEST['gauntletSelect']} -D fingerSelect={$_REQUEST['fingerSelect']} -D palmSelect={$_REQUEST['palmSelect']} -D Padding={$_REQUEST['Padding']} -D WristBolt={$_REQUEST['WristBolt']} -D KnuckleBolt={$_REQUEST['KnuckleBolt']} -D JointBolt={$_REQUEST['JointBolt']} -D ThumbBolt={$_REQUEST['ThumbBolt']}  ";
+		$leftsidevars =  " -D Left1={$_REQUEST['Left1']} "
+				. "-D Left2={$_REQUEST['Left2']} "
+				. "-D Left3={$_REQUEST['Left3']} "
+				. "-D Left4={$_REQUEST['Left4']} "
+				. "-D Left5={$_REQUEST['Left5']} "
+				. "-D Left6={$_REQUEST['Left6']} "
+				. "-D Left7={$_REQUEST['Left7']} "
+				. "-D Left8={$_REQUEST['Left8']} "
+				. "-D Left9={$_REQUEST['Left9']} "
+				. "-D Left10={$_REQUEST['Left10']}";
+		$rightsidevars = " -D Right1={$_REQUEST['Right1']} "
+				. "-D Right2={$_REQUEST['Right2']} "
+				. "-D Right3={$_REQUEST['Right3']} "
+				. "-D Right4={$_REQUEST['Right4']} "
+				. "-D Right5={$_REQUEST['Right5']} "
+				. "-D Right6={$_REQUEST['Right6']} "
+				. "-D Right7={$_REQUEST['Right7']} "
+				. "-D Right8={$_REQUEST['Right8']} "
+				. "-D Right9={$_REQUEST['Right9']} "
+				. "-D Right10={$_REQUEST['Right10']}";
+		$options = 	 " -D part={$_REQUEST['part']} "
+				. "-D prostheticHand={$_REQUEST['prostheticHand']} "
+				. "-D gauntletSelect={$_REQUEST['gauntletSelect']} "
+				. "-D fingerSelect={$_REQUEST['fingerSelect']} "
+				. "-D palmSelect={$_REQUEST['palmSelect']} "
+				. "-D Padding={$_REQUEST['Padding']} "
+				. "-D WristBolt={$_REQUEST['WristBolt']} "
+				. "-D KnuckleBolt={$_REQUEST['KnuckleBolt']} "
+				. "-D JointBolt={$_REQUEST['JointBolt']} "
+				. "-D ThumbBolt={$_REQUEST['ThumbBolt']} ";
 
 		$scalehash = md5($leftsidevars.$rightsidevars.$options) .'.'. crc32($leftsidevars.$rightsidevars.$options);
 
@@ -181,45 +229,6 @@ function load_session_data($options) {
 		}
 
 	}
-}
-
-function processCount(){
-	global $processCount, $isUnderProcessLimit, $processCountLimit;
-	$processCount = exec("ps aux  | grep 'openscad' | grep time | grep -v sh | grep -c -v 'grep'");
-	$isUnderProcessLimit = ($processCount < $processCountLimit);
-}
-
-function renderButtons(){
-	global $isUnderProcessLimit;
-	$class = (!isset($_SESSION['part']) || $_SESSION['part'] == 0) ? "disabled" : "";
-
-	if($isUnderProcessLimit){
-	return <<<HTML
-		<button id="stl-btn" data-loading-text="Loading STL ..." class="download btn btn-danger $class"
-		type="submit" name='submit' value='stl' onClick="javascript:executeCommand('stl');">
-		<span class="glyphicon glyphicon-download"></span> Generate STL</button>
-
-		<button id="preview-btn"  data-loading-text="Loading Preview..." class="preview btn btn-success"
-		type="submit" name='submit' value='Preview' onClick="javascript:executeCommand('preview');"
-		title="Preview" data-toggle="tooltip" data-placement="bottom">
-
-		<span class="glyphicon glyphicon-picture"></span> Preview</button>
-HTML;
-	} else {
-		return <<<HTML
-		<h5 style="color:white; font-weight:bold;">Processing limit reached. Please try again in a few minutes</h5>
-HTML;
-	}
-}
-
-function renderSampleLoader(){
- 	global $isUnderProcessLimit, $isUnderProcessLimit, $processCount;
-
-	if($isUnderProcessLimit){
-		return <<<HTML
-		<a class="disclaimer btn btn-help" href="./?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0&Right8=72.52&Right9=72.23&Right10=230.6&part=0&gauntletSelect=1&fingerSelect=2&palmSelect=2&prostheticHand=0&Padding=5&WristBolt=5.5&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview" onClick="javascript:executeCommand('preview');$('#loadingModal').modal({backdrop:'static', keyboard: false, show:true});">Load Sample Data</a>
-HTML;
- 	}
 }
 
 ?>

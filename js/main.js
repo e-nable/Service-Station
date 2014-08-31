@@ -20,16 +20,16 @@ var submitVal = 0;
 var flaggedError = true;
 var isNovice = true;
 var descriptions =[
-	"Length of Elbow Joint",
-	"Distance between lateral and medial side of the forearm proximal to the elbow joint",
-	"Distance between lateral and medial side of the middle forearm",
-	"Distance between lateral and medial side of the forearm proximal to the wrist",
-	"Wrist Joint distance from lateral to medial side",
-	"Distance from wrist to distal end of finger on thumb side (Lateral)",
-	"Distance from wrist to distal middle end of effected hand",
-	"Distance from Lateral and Medial sides of the distal part of the hand",
-	"Distance from wrist to proximal end of 1st phalange on pinky side (Medial)",
-	"Length of Elbow to wrist joint"
+	{ id: 1,  label: "Length of Elbow Joint"},
+	{ id: 2,  label: "Distance between lateral and medial side of the forearm proximal to the elbow joint"},
+	{ id: 3,  label: "Distance between lateral and medial side of the middle forearm"},
+	{ id: 4,  label: "Distance between lateral and medial side of the forearm proximal to the wrist"},
+	{ id: 5,  label: "Wrist Joint distance from lateral to medial side"},
+	{ id: 6,  label: "Distance from wrist to distal end of finger on thumb side (Lateral)"},
+	{ id: 7,  label: "Distance from wrist to distal middle end of effected hand"},
+	{ id: 8,  label: "Distance from Lateral and Medial sides of the distal part of the hand"},
+	{ id: 9,  label: "Distance from wrist to proximal end of 1st phalange on pinky side (Medial)"},
+	{ id: 10, label: "Length of Elbow to wrist joint"}
     ];
 var optionValues;
 var viewModel = function () {
@@ -60,7 +60,7 @@ $.urlParam = function(name){
     }
 }
 
-function executeCommand(v){
+function submitForm(v){
 	submitVal =v;
 
 	var hand_selected = $("#prostheticHand").val();
@@ -206,11 +206,60 @@ function resetVisibility(){
 		}
 	);					
 }
+function conditionalButtonRender(){
+	var sampleDataURL = "./?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97"
+		+ "&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67"
+		+ "&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0"
+		+ "&Right8=72.52&Right9=72.23&Right10=230.6&part=0&gauntletSelect=1"
+		+ "&fingerSelect=2&palmSelect=2&prostheticHand=0&Padding=5&WristBolt=5.5"
+		+ "&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview";
+
+	if (isUnderProcessLimit == 1){
+		$('#action_buttons').append(
+			$('<button></button>').attr({
+				id:'stl-btn',
+				'data-loading-text':'Loading STL...',
+				class:'download btn btn-danger',
+				type: 'submit',
+				name: 'submit',
+				value: 'stl'})
+			.click(function(){submitForm('stl');})
+			.html('<span class="glyphicon glyphicon-download"></span> Generate STL')
+		);
+		$('#action_buttons').append(
+			$('<button></button>').attr({
+				'data-loading-text':'Loading Preview...',
+				id:	'preview-btn',
+				class:	'preview btn btn-success',
+				type:	'submit',
+				name:	'submit',
+				value:	'Preview'})
+			.click(function(){submitForm('preview');})
+			.html('<span class="glyphicon glyphicon-picture"></span> Preview')
+		);
+		$('#e_footer').append(
+			$('<a></a>').attr({
+				class:	"disclaimer btn btn-help",
+				href:	sampleDataURL	
+			}).click(function(){
+				submitForm('preview');
+				$('#loadingModal').modal({backdrop:'static', keyboard: false, show:true});
+			}).html('Load Sample Data')
+		);
+	} else {
+		$('#action_buttons').append(
+			$('<h5></h5>').attr({
+				style:'color:white; font-weight:bold;',
+				'data-loading-text':'Loading Preview...',
+				value: 'Preview'}).html('Processing limit reached. Please try again in a few minutes')
+		);
+	}
+}
 
 function firstRender(){
+	conditionalButtonRender();
 	isNovice =($.urlParam('advanced') == 'true')?false:true;
 	setType();
-	//handSelect(true);
 	$('#prostheticHand').change(function(){handSelect();});
 	var counter= 1;
 	$("#top_hover").hide();
@@ -237,7 +286,7 @@ function firstRender(){
 						resetVisibility();
 						c.show();
 						parent.addClass("focus");
-						mssg.html(element.mCount+". "+ descriptions[element.mCount-1]);
+						mssg.html(element.mCount+". "+ descriptions[element.mCount-1].label);
 						$("#top_hover").show();
 						if (element.mCount > 5 && element.mCount != 10){
 							mssg.addClass('bottom');

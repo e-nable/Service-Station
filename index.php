@@ -26,36 +26,36 @@ start_user_session( $assemblervars);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>eNable Web-Creator Demonstration</title>
+	<title>e-NABLE Hand-o-matic</title>
 
-<!--[if IE]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
-<!-- Latest compiled and minified CSS -->
+	<!--[if IE]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
+	<!-- Latest compiled and minified CSS -->
 
-<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap-theme.min.css">
-<link rel="stylesheet" href="./lib/font-awesome-4.0.3/css/font-awesome.min.css">
-<link rel="stylesheet" href="./css/main.css">
-<?php
-printHeader();
-?>
+	<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="./lib/font-awesome-4.0.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="./css/main.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="./lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
+	<script src="./lib/knockout-3.2.0.js"></script>
+	<script src="./js/main.js"></script>
+	<?php
+		printHeader();
+	?>
 </head>
 
 <body id="index" class="home">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="./lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
-<script src="./lib/knockout-3.2.0.js"></script>
 <form id="generatorForm" name="generatorForm">
 <?php
 
 $render = render( $assemblervars);
 $tabselect = "";
 $stateClass = "";
-$paddingValue = !empty($_SESSION['Padding']) ? $_SESSION['Padding']: 5;
-$advanced = !empty($_SESSION['advanced']) ? $_SESSION['advanced']: 'false';
+
 if(isset($_GET["submit"]) && (strtolower(trim($_GET["submit"])) == 'preview' || strtolower(trim($_GET["submit"])) == 'stl')){
 	$tabselect = <<<TABSELECT
 	<script>
@@ -65,9 +65,6 @@ TABSELECT;
 } else {
 	$stateClass = "hidden";
 }
-
-$renderedButtons = renderButtons();
-$renderedSampleLoader = renderSampleLoader();
 
 $html = <<<HTML
 <input id="advanced" type="hidden" name="advanced" value='{$advanced}'>
@@ -86,9 +83,10 @@ $html = <<<HTML
    <div class="navbar-form navbar-right">
     <span id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
       <span class="fa fa-question-circle"></span> </span>
-    <a id="feedback" class="help btn btn-help" value='feedback' target='_blank' href="https://docs.google.com/forms/d/1hqjed1x9NuTdLt5qNfGwx-YoK3H3JSgnu30vaF47mKs/viewform?edit_requested=true#">
+      <a id="feedback" class="help btn btn-help" value='feedback' target='_blank'
+	href="https://docs.google.com/forms/d/1hqjed1x9NuTdLt5qNfGwx-YoK3H3JSgnu30vaF47mKs/viewform?edit_requested=true#">
       <span class="fa fa-comments"></span> </a>
-      $renderedButtons
+      <span id="action_buttons"></span>
     </div>
    </div>
   </div>
@@ -97,11 +95,10 @@ $html = <<<HTML
 
 
 <div class="navbar  navbar-inverse navbar-fixed-bottom">
- <div class="container">
+ <div class="container" id="e_footer">
 	&copy; e-NABLE 2014
     <span id="disclaimer" class="disclaimer btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
       Disclaimer</span>
-      $renderedSampleLoader
  </div>
 </div>
 
@@ -298,107 +295,12 @@ $html = <<<HTML
 </div>
 </div>
 
-<br />
-<br />
-
-<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="help-modal modal fade in" id="helpModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-
-        <div class="modal-header">
-          <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="fa fa-times-circle"></i></button>
-          <h4 id="myModalLabel" class="modal-title">Help</h4>
-        </div>
-	<div class="modal-body">
-		The purpose of this project is to allow an advanced user to preview and build STL files associated with an <b>e-NABLE</b> Gauntlet or any associated part to it while assuring that the scaling factors used do not affect the bolting components and that other fittings remain proportionately scaled.
-	<BR/>
-	<BR/>
-		In order to provide a proper fitting, several measurements are required which are detailed by the image in the center visual pane. Please provide all lengths for both left (L#) and right (R#) arm measurements by tabbing through the left pane, select the proper bolts sizes and other configurable selections before choosing to request a preview or generate an STL file. The preview image will only populate in a tab within the center pane when either preview or generate buttons are clicked.
-	<BR/>
-	<BR/>
-	This product allows the user to:
-	<UL>
-		<LI>Preview a component build</LI>
-		<LI>Generate downloadable associated STL files</LI>
-	</UL>
-	This product does NOT:
-	<UL>
-		<LI>Generate a request to order manufacturing of this product</LI>
-		<LI>Talk to a 3D printer</LI>
-	</UL>
-
-		Please reference the <a href="https://docs.google.com/file/d/0B9uusfrN9RdDRXY0NDdLalRzYWM">current generic measurement guide</a> for more details on measurements.
-        </div>
-        <div class="modal-footer">
-          <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-        </div>
-
-      </div>
-    </div>
-</div>
-
-
-<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="disclaimer-modal modal fade in" id="disclaimerModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-
-        <div class="modal-header">
-          <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="fa fa-times-circle"></i></button>
-          <h4 id="myModalLabel" class="modal-title">Disclaimer</h4>
-        </div>
-        <div class="modal-body">By accepting any design, plan, component or assembly related to the so called “e-NABLE Hand” , I understand and agree that any such information or material furnished by any individual associated with the design team is furnished as is without representation or warranties of any kind, express or implied, and is intended to be a gift  for the sole purpose of evaluating various design iterations, ideas and modifications. I understand that such improvements are intended to benefit individuals having specific disabilities and are not intended, and shall not be used,  for commercial use. I further understand and agree that any individual associated with e-NABLE organization shall not be liable for any injuries or damages resulting from the use of any of the materials related to the e-NABLE hand.
-<p>Hand designs are sourced from, with attribution found at, the following links:</p>
-<dl>
-<dt>Cyborg Beast</dt><dd>by JorgeZuniga, verson 1.4 by Marc Petrykowski <a href="http://www.thingiverse.com/thing:261462" target="_blank">http://www.thingiverse.com/thing:261462</a></dd>
-<dt>Creo version of Cyborg Beast</dt><dd>by Ryan Dailey <a href="http://www.thingiverse.com/thing:340750" target="_blank">http://www.thingiverse.com/thing:340750</a> </dd>
-<dt>Parametric Gauntlet</dt><dd>by David Orgeman<a href="http://www.thingiverse.com/thing:270259" target="_blank">http://www.thingiverse.com/thing:270259</a></dd>
-<dt>Cyborg Beast Short Gauntlet (Karuna's Gauntlet)</dt><dd>by Frankie Flood<a href="http://www.thingiverse.com/thing:270322" target="_blank">http://www.thingiverse.com/thing:270322 </a></dd>
-<dt>Parametric Finger v2</dt><dd>by David Orgeman<a href=" http://www.thingiverse.com/thing:257544" target="_blank"> http://www.thingiverse.com/thing:257544</a></dd>
-
-<dt></dt><dd><a href="" target="_blank"></a></dd>
-</dl>
-        </div>
-        <div class="modal-footer">
-          <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-        </div>
-
-      </div>
-    </div>
-</div>
-
-
-<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="loading-modal modal fade" id="loadingModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-	<div class="modal-body">
-		<div>Please wait while the content renders...</div>
-        </div>
-      </div>
-    </div>
-</div>
-
-<div class="modal fade" id="valueWarningModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Missing Measurements</h4>
-      </div>
-      <div class="modal-body">
-        <p>There seems to be a few missing values from the required measurements table in the first panel. Please set the associated <b>numeric</b> values for those fields <span class="incomplete-span">colored in red</span> before submitting again.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
+<br /><br />
 </div>
 HTML;
 echo $html;
+echo file_get_contents('modals.html');
 ?>
-<script src="./js/main.js"></script>
 
 </form>
 </body>
