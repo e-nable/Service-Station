@@ -20,12 +20,6 @@
 $processCountLimit = 2;
 $processCount = 0;
 $isUnderProcessLimit = false;
-$assemblervars = array(
-	'Left1', 'Left2', 'Left3', 'Left4', 'Left5', 'Left6', 'Left7', 'Left8', 'Left9', 'Left10',
-	'Right1', 'Right2', 'Right3', 'Right4', 'Right5', 'Right6', 'Right7', 'Right8', 'Right9', 'Right10',
-	'part', 'gauntletSelect', 'fingerSelect', 'palmSelect', 'prostheticHand', 'Padding',
-	'WristBolt', 'KnuckleBolt', 'JointBolt', 'ThumbBolt', 'advanced'
-);
 $prostheticHand;
 $part;
 $palmSelect;
@@ -33,6 +27,12 @@ $gauntletSelect;
 $fingerSelect;
 $paddingValue;
 $advanced;
+$assemblervars = array(
+	'Left1', 'Left2', 'Left3', 'Left4', 'Left5', 'Left6', 'Left7', 'Left8', 'Left9', 'Left10',
+	'Right1', 'Right2', 'Right3', 'Right4', 'Right5', 'Right6', 'Right7', 'Right8', 'Right9', 'Right10',
+	'part', 'gauntletSelect', 'fingerSelect', 'palmSelect', 'prostheticHand', 'Padding',
+	'WristBolt', 'KnuckleBolt', 'JointBolt', 'ThumbBolt', 'advanced'
+);
 
 processCount();
 
@@ -47,15 +47,31 @@ function printHeader(){
 	global $prostheticHand, $part, $palmSelect, $gauntletSelect, $fingerSelect, $paddingValue, $advanced;
 	global $processCount, $processCountLimit, $isUnderProcessLimit, $isUnderProcessLimit;
 
-	$prostheticHand =  !empty($_SESSION['prostheticHand'])	? $_SESSION['prostheticHand']	: 'undefined';
-	$part 		=  !empty($_SESSION['part']) 		? $_SESSION['part']		: 'undefined';
-	$palmSelect 	=  !empty($_SESSION['palmSelect'])	? $_SESSION['palmSelect']	: 'undefined';
-	$gauntletSelect =  !empty($_SESSION['gauntletSelect'])	? $_SESSION['gauntletSelect']	: 'undefined';
-	$fingerSelect	=  !empty($_SESSION['fingerSelect'])	? $_SESSION['fingerSelect']	: 'undefined';
+	$submitType	=  isset($_GET["submit"])? "'" . strtolower(trim($_GET["submit"])) . "'" : 'undefined';
+
+	$prostheticHand =  !empty($_SESSION['prostheticHand'])	? $_SESSION['prostheticHand']	: 0;
+	$part 		=  !empty($_SESSION['part']) 		? $_SESSION['part']		: 0;
+	$palmSelect 	=  !empty($_SESSION['palmSelect'])	? $_SESSION['palmSelect']	: 0;
+	$gauntletSelect =  !empty($_SESSION['gauntletSelect'])	? $_SESSION['gauntletSelect']	: 0;
+	$fingerSelect	=  !empty($_SESSION['fingerSelect'])	? $_SESSION['fingerSelect']	: 0;
 	$paddingValue	=  !empty($_SESSION['Padding']) 	? $_SESSION['Padding']		: 5;
 	$advanced 	=  !empty($_SESSION['advanced'])	? $_SESSION['advanced']		: 'false';
+
+	$r1	=  $_SESSION['Right1'];		$r2	=  $_SESSION['Right2'];
+	$r3	=  $_SESSION['Right3'];		$r4	=  $_SESSION['Right4'];
+	$r5	=  $_SESSION['Right5'];		$r6	=  $_SESSION['Right6'];
+	$r7	=  $_SESSION['Right7'];		$r8	=  $_SESSION['Right8'];
+	$r9	=  $_SESSION['Right9'];		$r10	=  $_SESSION['Right10'];
+
+	$l1	=  $_SESSION['Left1'];		$l2	=  $_SESSION['Left2'];
+	$l3	=  $_SESSION['Left3'];		$l4	=  $_SESSION['Left4'];
+	$l5	=  $_SESSION['Left5'];		$l6	=  $_SESSION['Left6'];
+	$l7	=  $_SESSION['Left7'];		$l8	=  $_SESSION['Left8'];
+	$l9	=  $_SESSION['Left9'];		$l10	=  $_SESSION['Left10'];
+
 	echo <<<HTML
 	<script>
+		var submitType		 	= {$submitType};
 		var prostheticHandSession 	= {$prostheticHand};
 		var partSession 		= {$part};
 		var palmSelectSession 		= {$palmSelect};
@@ -63,6 +79,22 @@ function printHeader(){
 		var fingerSelectSession		= {$fingerSelect};
 		var isUnderProcessLimit		= {$isUnderProcessLimit};
 		var processCount		= {$processCount};
+		var handSessionValues		= {
+			'Right':{
+				r1: '{$r1}',	r2: '{$r2}',
+				r3: '{$r3}',	r4: '{$r4}',
+				r5: '{$r5}',	r6: '{$r6}',
+				r7: '{$r7}',	r8: '{$r8}',
+				r9: '{$r9}',	r10: '{$r10}'
+			},
+			'Left': {
+				l1: '{$l1}',	l2: '{$l2}',
+				l3: '{$l3}',	l4: '{$l4}',
+				l5: '{$l5}',	l6: '{$l6}',
+				l7: '{$l7}',	l8: '{$l8}',
+				l9: '{$l9}',	l10: '{$l10}'
+			}
+		};
 	</script>
 HTML;
 }
@@ -71,7 +103,16 @@ function start_user_session( $assemblervars){
 	// this starts the session
 	session_start();
 	$userid = session_id();
-	load_session_data( $assemblervars);
+
+	// Load the session data from the form, if available
+	// Loop through an array of options provided and set the session
+	foreach($assemblervars AS $option){
+		if (isset($_REQUEST[$option])){
+			$_SESSION[$option] = $_REQUEST[$option];
+		} elseif ( !isset($_SESSION[$option])) {
+			$_SESSION[$option] = '';
+		}
+	}
 }
 
 function render( $assemblervars){
@@ -149,9 +190,9 @@ function render( $assemblervars){
 		switch($_REQUEST['part']){
 			case 0:
 			case 2:
-				if($_REQUEST['prostheticHand'] = 0){
+				if ($_REQUEST['prostheticHand'] = 0){
 					$partname='Left'.$partname;
-				}elseif($_REQUEST['prostheticHand'] = 1){
+				} elseif ($_REQUEST['prostheticHand'] = 1){
 					$partname='Right'.$partname;
 				}
 			break;
@@ -166,7 +207,7 @@ function render( $assemblervars){
 		}else{
 			$thingtodo = $previewimage;
 			$downloadlink = '';
-			if($_REQUEST['part'] >= 1){ // we are previewing a part, lets render it as well
+			if ($_REQUEST['part'] >= 1){ // we are previewing a part, lets render it as well
 				$otherthingtodo = $exportfile;
 				$othercommand = "echo \" openscad -o {$otherthingtodo} {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad  \" | batch ";
 			}
@@ -201,7 +242,7 @@ function render( $assemblervars){
 
 		//	echo "<input type='submit' name='submit' value='Create .STL'> {$downloadlink}";
 		//	echo "<p>Created preview in {$execution_time} seconds using the following command.</p>\n";
-		$return .= "<p style='color:ivory;'>{$command}</p>\n";
+		//$return .= "<p style='color:ivory;'>{$command}</p>\n";
 
 		//	echo "<p>Computer Stats - for performance considerations</p>\n";
 		//	echo "<pre>\n";
@@ -209,26 +250,10 @@ function render( $assemblervars){
 		//	echo `cat /proc/meminfo`;
 		//	echo "</pre>";
 	} else {
-		$return = "<p>A sample data set can be loaded by <a href='?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0&Right8=72.52&Right9=72.23&Right10=230.6&part=0&gauntletSelect=1&fingerSelect=1&palmSelect=1&Padding=5&WristBolt=5.5&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview'>Clicking here</a>.</p>\n";
+		$return = "Please choose to render an item";
 	}
+
 	return $return;
-}
-
-// Load the session data from the form, if available
-// Loop through an array of options provided and set the session
-function load_session_data($options) {
-	foreach($options AS $option)
-	{
-		if(isset($_REQUEST[$option]))
-		{ 
-			$_SESSION[$option] = $_REQUEST[$option]; 
-		} 
-		elseif( !isset($_SESSION[$option]))
-		{ 
-			$_SESSION[$option] = '';
-		}
-
-	}
 }
 
 ?>

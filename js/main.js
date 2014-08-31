@@ -336,6 +336,10 @@ function firstRender(){
 
 $(function(){
    var self = this;
+
+   if (submitType)
+	$("#render_tab a:last").tab("show");
+
    $.ajax({url:"e-NABLE/options.json",
 	success: function(jqXHR) {
 		if (jqXHR){

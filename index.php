@@ -21,7 +21,7 @@ require_once('backend.php');
 
 // this starts the session
 start_user_session( $assemblervars);
-
+$time = time();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,14 +35,14 @@ start_user_session( $assemblervars);
 	<!--[if IE]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 	<!-- Latest compiled and minified CSS -->
 
-	<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap.min.css">
-	<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap-theme.min.css">
-	<link rel="stylesheet" href="./lib/font-awesome-4.0.3/css/font-awesome.min.css">
-	<link rel="stylesheet" href="./css/main.css">
+	<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap.min.css?_=<?php echo $time ?>">
+	<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap-theme.min.css?_=<?php echo $time ?>">
+	<link rel="stylesheet" href="./lib/font-awesome-4.0.3/css/font-awesome.min.css?_=<?php echo $time ?>">
+	<link rel="stylesheet" href="./css/main.css?_=<?php echo $time ?>">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="./lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
 	<script src="./lib/knockout-3.2.0.js"></script>
-	<script src="./js/main.js"></script>
+	<script src="./js/main.js?_=<?php echo $time ?>"></script>
 	<?php
 		printHeader();
 	?>
@@ -58,9 +58,6 @@ $stateClass = "";
 
 if(isset($_GET["submit"]) && (strtolower(trim($_GET["submit"])) == 'preview' || strtolower(trim($_GET["submit"])) == 'stl')){
 	$tabselect = <<<TABSELECT
-	<script>
-		$("#render_tab a:last").tab("show");
-	</script>
 TABSELECT;
 } else {
 	$stateClass = "hidden";
