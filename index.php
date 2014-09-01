@@ -42,10 +42,9 @@ $time = time();
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="./lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
 	<script src="./lib/knockout-3.2.0.js"></script>
+<?php echo file_get_contents('js/knockout_templates.html'); ?>
 	<script src="./js/main.js?_=<?php echo $time ?>"></script>
-	<?php
-		printHeader();
-	?>
+<?php	printHeaderSessionVariables();	?>
 </head>
 
 <body id="index" class="home">
@@ -53,15 +52,6 @@ $time = time();
 <?php
 
 $render = render( $assemblervars);
-$tabselect = "";
-$stateClass = "";
-
-if(isset($_GET["submit"]) && (strtolower(trim($_GET["submit"])) == 'preview' || strtolower(trim($_GET["submit"])) == 'stl')){
-	$tabselect = <<<TABSELECT
-TABSELECT;
-} else {
-	$stateClass = "hidden";
-}
 
 $html = <<<HTML
 <input id="advanced" type="hidden" name="advanced" value='{$advanced}'>
@@ -146,12 +136,9 @@ $html = <<<HTML
      <input type="number" step="any" min="0" name="Padding" value="{$paddingValue}" class="form-control">
      <span class="input-group-addon">mm</span>
     </div>
-
       </div>
     </div>
  </div>
-
-
 
 
  <div class="col-md-4" id="mid-pane">
@@ -163,69 +150,15 @@ $html = <<<HTML
 
   <!-- Tab panes -->
   <div class="tab-content">
-   <div class="tab-pane" id="left">
-
-     <fieldset>
-     <div class="input-group"><span class="input-group-addon">L1</span> <input id="v_l1" type="number" step="any" min="0" name="Left1" value='{$_SESSION['Left1']}' id="a1" placeholder="Length of Elbow Joint" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">L2</span> <input id="v_l2" type="number" step="any" min="0" name="Left2" value='{$_SESSION['Left2']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the elbow joint" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">L3</span> <input id="v_l3" type="number" step="any" min="0" name="Left3" value='{$_SESSION['Left3']}'  placeholder="Distance between lateral and medial side of the middle forearm" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">L4</span> <input id="v_l4" type="number" step="any" min="0" name="Left4" value='{$_SESSION['Left4']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the wrist" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">L5</span> <input id="v_l5" type="number" step="any" min="0" name="Left5" value='{$_SESSION['Left5']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">L6</span> <input id="v_l6" type="number" step="any" min="0" name="Left6" value='{$_SESSION['Left6']}'  placeholder="Distance from wrist to distal end of finger on thumb side (Lateral)" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">L7</span> <input id="v_l7" type="number" step="any" min="0" name="Left7" value='{$_SESSION['Left7']}'  placeholder="Distance from wrist to distal middle end of effected hand" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">L8</span> <input id="v_l8" type="number" step="any" min="0" name="Left8" value='{$_SESSION['Left8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">L9</span> <input id="v_l9" type="number" step="any" min="0" name="Left9" value='{$_SESSION['Left9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">L10</span> <input id="v_l10" type="number" step="any" min="0" name="Left10" value='{$_SESSION['Left10']}'  placeholder="Length of Elbow to wrist joint" class="form-control"><span class="input-group-addon">mm</span></div>
-    </fieldset>
+   <div class="tab-pane" id="left"
+	data-bind="template: { name: 'left-full-template', foreach: fields }">
    </div>
-   <div class="tab-pane" id="right">
-    <fieldset>
-     <div class="input-group"><span class="input-group-addon">R1</span> <input id="v_r1" type="number" step="any" min="0" name="Right1" value='{$_SESSION['Right1']}'  placeholder="Length of Elbow Joint" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">R2</span> <input id="v_r2" type="number" step="any" min="0" name="Right2" value='{$_SESSION['Right2']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the elbow joint" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">R3</span> <input id="v_r3" type="number" step="any" min="0" name="Right3" value='{$_SESSION['Right3']}'  placeholder="Distance between lateral and medial side of the middle forearm" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">R4</span> <input id="v_r4" type="number" step="any" min="0" name="Right4" value='{$_SESSION['Right4']}'  placeholder="Distance between lateral and medial side of the forearm proximal to the wrist" class="form-control"><span class="input-group-addon">mm</span></div>
-      <div class="input-group"><span class="input-group-addon">R5</span> <input id="v_r5" type="number" step="any" min="0" name="Right5" value='{$_SESSION['Right5']}'  placeholder="Wrist Joint distance from lateral to medial side" class="form-control"><span class="input-group-addon">mm</span></div>
-      <div class="input-group"><span class="input-group-addon">R6</span> <input id="v_r6" type="number" step="any" min="0" name="Right6" value='{$_SESSION['Right6']}'  placeholder="Distance from wrist to distal end of finger on thumb side (Lateral)" class="form-control"><span class="input-group-addon">mm</span></div>
-      <div class="input-group"><span class="input-group-addon">R7</span> <input id="v_r7" type="number" step="any" min="0" name="Right7" value='{$_SESSION['Right7']}'  placeholder="Distance from wrist to distal middle end of effected hand" class="form-control"><span class="input-group-addon">mm</span></div>
-      <div class="input-group"><span class="input-group-addon">R8</span> <input id="v_r8" type="number" step="any" min="0" name="Right8" value='{$_SESSION['Right8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">mm</span></div>
-      <div class="input-group"><span class="input-group-addon">R9</span> <input id="v_r9" type="number" step="any" min="0" name="Right9" value='{$_SESSION['Right9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">R10</span> <input id="v_r10" type="number" step="any" min="0" name="Right10" value='{$_SESSION['Right10']}'  placeholder="Length of Elbow to wrist joint" class="form-control"><span class="input-group-addon">mm</span></div>
-    </fieldset>
+   <div class="tab-pane" id="right"
+	data-bind="template: { name: 'right-full-template', foreach: fields }">
    </div>
-
    <div class="tab-pane active" id="prosthetic">
-    <fieldset>
-
-     <input id="v_l1" type="hidden" name="Left1" value='{$_SESSION['Left1']}'>
-     <input id="v_l2" type="hidden" name="Left2" value='{$_SESSION['Left2']}'>
-     <input id="v_l3" type="hidden" name="Left3" value='{$_SESSION['Left3']}'>
-     <input id="v_l4" type="hidden" name="Left4" value='{$_SESSION['Left4']}'>
-     <input id="v_l5" type="hidden" name="Left5" value='{$_SESSION['Left5']}'>
-     <input id="v_l6" type="hidden" name="Left6" value='{$_SESSION['Left6']}'>
-     <input id="v_l7" type="hidden" name="Left7" value='{$_SESSION['Left7']}'>
-     <input id="v_l10" type="hidden" name="Left10" value='{$_SESSION['Left10']}'>
-
-     <input id="v_r1" type="hidden" step="any" min="0" name="Right1" value='{$_SESSION['Right1']}'>
-     <input id="v_r2" type="hidden" step="any" min="0" name="Right2" value='{$_SESSION['Right2']}'>
-     <input id="v_r3" type="hidden" step="any" min="0" name="Right3" value='{$_SESSION['Right3']}'>
-     <input id="v_r4" type="hidden" step="any" min="0" name="Right4" value='{$_SESSION['Right4']}'>
-     <input id="v_r5" type="hidden" step="any" min="0" name="Right5" value='{$_SESSION['Right5']}'>
-     <input id="v_r6" type="hidden" step="any" min="0" name="Right6" value='{$_SESSION['Right6']}'>
-     <input id="v_r7" type="hidden" step="any" min="0" name="Right7" value='{$_SESSION['Right7']}'>
-     <input id="v_r10" type="hidden" step="any" min="0" name="Right10" value='{$_SESSION['Right10']}'>
-
-
-     <div class="input-group"><span class="input-group-addon">L8</span> <input id="v_l8" type="number" step="any" min="0" name="Left8" value='{$_SESSION['Left8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">mm</span></div>
-     <div class="input-group"><span class="input-group-addon">R8</span> <input id="v_r8" type="number" step="any" min="0" name="Right8" value='{$_SESSION['Right8']}'  placeholder="Distance from Lateral and Medial sides of the distal part of the hand" class="form-control"><span class="input-group-addon">mm</span></div>
-     Distance from Lateral and Medial sides of the distal part of the hand<br/><br/>
-
-     <div class="input-group"><span class="input-group-addon">L9</span> <input id="v_l9" type="number" step="any" min="0" name="Left9" value='{$_SESSION['Left9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">mm</span></div>
-
-     <div class="input-group"><span class="input-group-addon">R9</span><input id="v_r9" type="number" step="any" min="0" name="Right9" value='{$_SESSION['Right9']}'  placeholder="Distance from wrist to proximal end of 1st phalange on pinky side (Medial)" class="form-control"><span class="input-group-addon">mm</span></div>
-     Distance from wrist to proximal end of 1st phalange on pinky side (Medial)<br/>
-    </fieldset>
+	<span data-bind="template: { name: 'field-template', foreach: fields }"></span>
    </div>
-
 
   </div>
  </div>
@@ -239,55 +172,23 @@ $html = <<<HTML
      <li><a data-toggle="tab" tabindex="-1"  href="#descriptions" data-toggle="tab">Descriptions</a></li>
     </ul>
    </li>
-   <li class="{$stateClass}"><a href="#preview" data-toggle="tab">Preview</a></li>  
+   <li id="preview_tab"><a href="#preview" data-toggle="tab">Preview</a></li>  
   </ul>
   <!-- Tab panes -->
   <div class="tab-content">
-   <div class="tab-pane active" id="image"
-	><div class="thumbnail"><img src="./imgs/reference.png"/
-	><span id="l1" class="hover-arrow"></span
-	><span id="l2" class="hover-arrow"></span
-	><span id="l3" class="hover-arrow"></span
-	><span id="l4" class="hover-arrow"></span
-	><span id="l5" class="hover-arrow"></span
-	><span id="l6" class="hover-arrow"></span
-	><span id="l7" class="hover-arrow"></span
-	><span id="l8" class="hover-arrow"></span
-	><span id="l9" class="hover-arrow"></span
-	><span id="l10" class="hover-arrow"></span
-	><span id="r1" class="hover-arrow"></span
-	><span id="r2" class="hover-arrow"></span
-	><span id="r3" class="hover-arrow"></span
-	><span id="r4" class="hover-arrow"></span
-	><span id="r5" class="hover-arrow"></span
-	><span id="r6" class="hover-arrow"></span
-	><span id="r7" class="hover-arrow"></span
-	><span id="r8" class="hover-arrow"></span
-	><span id="r9" class="hover-arrow"></span
-	><span id="r10" class="hover-arrow"></span
-	><span id="top_hover" class="image_hover"></span
-	></div></div>
+   <div class="tab-pane active" id="image">
+	<div class="thumbnail">
+		<img src="./imgs/reference.png"/>
+		<span data-bind="template: { name: 'arrow-template', foreach: fields }"></span>
+		<span id="top_hover" class="image_hover"></span>
+	</div>
+   </div>
    <div class="tab-pane" id="descriptions">
-    <br>
-    <ol>
-    <li>Length of Elbow Joint</li>
-    <li>Distance between lateral and medial side of the forearm proximal to the elbow joint</li>
-    <li>Distance between lateral and medial side of the middle forearm</li>
-    <li>Distance between lateral and medial side of the forearm proximal to the wrist</li>
-    <li>Wrist Joint distance from lateral to medial side</li>
-    <li>Distance from wrist to distal end of finger on thumb side (Lateral)</li>
-    <li>Distance from wrist to distal middle end of effected hand</li>
-    <li>Distance from Lateral and Medial sides of the distal part of the hand</li>
-    <li>Distance from wrist to proximal end of 1st phalange on pinky side (Medial)</li>
-    <li>Length of Elbow to wrist joint</li>
-    </ol>
+    <br><ol data-bind="template: { name: 'description-template', foreach: descriptions }"></ol>
    </div>
    <div class="tab-pane" id="preview">{$render}</div>
   </div>
  </div>
-
-{$tabselect}
-
 
 </div>
 </div>

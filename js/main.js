@@ -19,6 +19,7 @@
 var submitVal = 0;
 var flaggedError = true;
 var isNovice = true;
+var optionValues;
 var descriptions =[
 	{ id: 1,  label: "Length of Elbow Joint"},
 	{ id: 2,  label: "Distance between lateral and medial side of the forearm proximal to the elbow joint"},
@@ -31,9 +32,61 @@ var descriptions =[
 	{ id: 9,  label: "Distance from wrist to proximal end of 1st phalange on pinky side (Medial)"},
 	{ id: 10, label: "Length of Elbow to wrist joint"}
     ];
-var optionValues;
+
+// DOM Ready method
+// Request configured options before we configure the UI
+$(function(){
+   var self = this;
+
+   if (submitType)
+	$("#render_tab a:last").tab("show");
+
+   $.ajax({url:"e-NABLE/options.json",
+	success: function(jqXHR) {
+		if (jqXHR){
+			optionValues = jqXHR;
+			firstRender();
+		}
+	},error: function(jqXHR){
+
+	}
+   });
+});
+
+// URL parser addition to jQuery
+$.urlParam = function(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null){
+       return null;
+    } else {
+       return results[1] || 0;
+    }
+}
+
+// View Model content
 var viewModel = function () {
    var self = this;
+   self.isNovice = isNovice;
+   self.submitType = submitType;
+   self.prostheticHandSession = prostheticHandSession;
+   self.partSession = partSession;
+   self.palmSelectSession = palmSelectSession;
+   self.gauntletSelectSession = gauntletSelectSession;
+   self.fingerSelectSession = fingerSelectSession;
+   self.isUnderProcessLimit = isUnderProcessLimit;
+   self.processCount = processCount;
+   self.handSessionValues = handSessionValues;
+
+   // aggregate lables dynamically
+   $.each(handSessionValues, function(index, obj){
+	var i = parseInt(obj.id.replace(/[LR]/g, ''));
+	obj.description = descriptions[i-1].label;
+	obj.name = obj.id.replace(/L/g, 'Left').replace(/R/g, 'Right');
+	obj.hidden = ((i == 8 || i == 9)?false:true);
+   });
+
+   self.descriptions = descriptions;
+   self.fields = handSessionValues;
 
    self.prostheticHandItems = ko.observableArray(optionValues.prostheticHand);
    self.selectedProstheticHand = ko.observable(prostheticHandSession);
@@ -51,15 +104,7 @@ var viewModel = function () {
    self.selectedPalm = ko.observable(palmSelectSession);
 };
 
-$.urlParam = function(name){
-    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-    if (results==null){
-       return null;
-    } else {
-       return results[1] || 0;
-    }
-}
-
+// Call this when we submit
 function submitForm(v){
 	submitVal =v;
 
@@ -116,6 +161,7 @@ function submitForm(v){
 	flaggedError = flagged;
 }
 
+// Toggle called when left / right is selected on both types of UI instances
 function handSelect(isLoad){
 	isLoad = isLoad || false;
 	var hand_selected = (!isLoad? $("#prostheticHand").val(): prostheticHandSession);//$("#prostheticHand").val();
@@ -141,15 +187,23 @@ function handSelect(isLoad){
 			$('#prosthetic-tab span.title').html(' Left Prosthetic');
 			$('#v_l9').parent().addClass('hidden');
 			$('#v_l8').parent().addClass('hidden');
+			$('#v_l9_desc').addClass('hidden');
+			$('#v_l8_desc').addClass('hidden');
 			$('#v_r9').parent().removeClass('hidden');
 			$('#v_r8').parent().removeClass('hidden');
+			$('#v_r9_desc').removeClass('hidden');
+			$('#v_r8_desc').removeClass('hidden');
 			$('#image img').get(0).src= './imgs/referece_lP.png';
 		} else if (hand_selected == 1){
 			$('#prosthetic-tab span.title').html(' Right Prosthetic');
 			$('#v_l9').parent().removeClass('hidden');
 			$('#v_l8').parent().removeClass('hidden');
+			$('#v_l9_desc').removeClass('hidden');
+			$('#v_l8_desc').removeClass('hidden');
 			$('#v_r9').parent().addClass('hidden');
 			$('#v_r8').parent().addClass('hidden');
+			$('#v_r9_desc').addClass('hidden');
+			$('#v_r8_desc').addClass('hidden');
 			$('#image img').get(0).src= './imgs/referece_rP.png';
 		}
 
@@ -157,6 +211,7 @@ function handSelect(isLoad){
 	$("#top_hover").hide();
 }
 
+// Helps configure UI while we get full knockout logic in place
 function setType(){
 	if (isNovice){
 		$('#left-tab').parent().remove();
@@ -206,6 +261,9 @@ function resetVisibility(){
 		}
 	);					
 }
+
+// Render buttons when needed - leave out when process count
+// has gone over limit
 function conditionalButtonRender(){
 	var sampleDataURL = "./?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97"
 		+ "&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67"
@@ -219,7 +277,7 @@ function conditionalButtonRender(){
 			$('<button></button>').attr({
 				id:'stl-btn',
 				'data-loading-text':'Loading STL...',
-				class:'download btn btn-danger',
+				class:'download btn btn-danger' +((partSession == 0)?' disabled':''),
 				type: 'submit',
 				name: 'submit',
 				value: 'stl'})
@@ -256,8 +314,11 @@ function conditionalButtonRender(){
 	}
 }
 
+// configures UI on first render while we get knockout completed
 function firstRender(){
 	conditionalButtonRender();
+	if (!submitType)
+		$("#preview_tab").hide();
 	isNovice =($.urlParam('advanced') == 'true')?false:true;
 	setType();
 	$('#prostheticHand').change(function(){handSelect();});
@@ -265,11 +326,15 @@ function firstRender(){
 	$("#top_hover").hide();
 	$("#top_hover").click(function(){$("#top_hover").hide()});
 
+	var vm = new viewModel();
+	ko.applyBindings(vm);
+
 	$.each([{side:'left',code:'l'},{side:'right',code:'r'},{side:'prosthetic',code:'r'}],
 		function(x,y){
 			counter= 1;
 			$("#"+y.side+" input").each(
 				function(a,b){
+				//console.log(a,b);
 					var element = $(b);
 					var parent = element.parent();
 					var mssg = $("#top_hover");
@@ -308,10 +373,8 @@ function firstRender(){
 		}
 	);
 
-	var vm = new viewModel();
-	ko.applyBindings(vm);
-
 	handSelect(prostheticHandSession);
+
 	$('#generatorForm').submit(function (e) {
 		if (flaggedError == true)
 			return false;
@@ -325,6 +388,7 @@ function firstRender(){
 			return true;
 		}
 	});
+
 	$('#generateSelect').change(function(val){
 		if (this && this.value && this.value == 0){
 			$('#stl-btn').addClass('disabled');
@@ -333,23 +397,3 @@ function firstRender(){
 		}
 	});
 }
-
-$(function(){
-   var self = this;
-
-   if (submitType)
-	$("#render_tab a:last").tab("show");
-
-   $.ajax({url:"e-NABLE/options.json",
-	success: function(jqXHR) {
-		if (jqXHR){
-			optionValues = jqXHR;
-			firstRender();
-		}
-	},error: function(jqXHR){
-
-	}
-   });
-});
-
-

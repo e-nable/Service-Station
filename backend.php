@@ -43,7 +43,7 @@ function processCount(){
 	$isUnderProcessLimit = ($processCount < $processCountLimit);
 }
 
-function printHeader(){
+function printHeaderSessionVariables(){
 	global $prostheticHand, $part, $palmSelect, $gauntletSelect, $fingerSelect, $paddingValue, $advanced;
 	global $processCount, $processCountLimit, $isUnderProcessLimit, $isUnderProcessLimit;
 
@@ -79,22 +79,22 @@ function printHeader(){
 		var fingerSelectSession		= {$fingerSelect};
 		var isUnderProcessLimit		= {$isUnderProcessLimit};
 		var processCount		= {$processCount};
-		var handSessionValues		= {
-			'Right':{
-				r1: '{$r1}',	r2: '{$r2}',
-				r3: '{$r3}',	r4: '{$r4}',
-				r5: '{$r5}',	r6: '{$r6}',
-				r7: '{$r7}',	r8: '{$r8}',
-				r9: '{$r9}',	r10: '{$r10}'
-			},
-			'Left': {
-				l1: '{$l1}',	l2: '{$l2}',
-				l3: '{$l3}',	l4: '{$l4}',
-				l5: '{$l5}',	l6: '{$l6}',
-				l7: '{$l7}',	l8: '{$l8}',
-				l9: '{$l9}',	l10: '{$l10}'
-			}
-		};
+		var handSessionValues		= [
+			//'Right':[
+				{id: 'R1', value: '{$r1}'},	{id: 'R2', value: '{$r2}'},
+				{id: 'R3', value: '{$r3}'},	{id: 'R4', value: '{$r4}'},
+				{id: 'R5', value: '{$r5}'},	{id: 'R6', value: '{$r6}'},
+				{id: 'R7', value: '{$r7}'},	{id: 'R8', value: '{$r8}'},
+				{id: 'R9', value: '{$r9}'},	{id: 'R10', value: '{$r10}'},
+			//],
+			//'Left': [
+				{id: 'L1', value: '{$l1}'},	{id: 'L2', value: '{$l2}'},
+				{id: 'L3', value: '{$l3}'},	{id: 'L4', value: '{$l4}'},
+				{id: 'L5', value: '{$l5}'},	{id: 'L6', value: '{$l6}'},
+				{id: 'L7', value: '{$l7}'},	{id: 'L8', value: '{$l8}'},
+				{id: 'L9', value: '{$l9}'},	{id: 'L10', value: '{$l10}'}
+			//]
+		];
 	</script>
 HTML;
 }
