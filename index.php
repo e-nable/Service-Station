@@ -89,11 +89,20 @@ $html = <<<HTML
  </div>
 </div>
 
+<div class="jumbotron" style="opacity:0">
+      <div class="container">
+        <h1>Welcome</h1>
+	<p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p>
+
+        <p><a class="btn btn-primary btn-lg" role="button" id="close-jumbo">Close</a></p>
+      </div>
+</div>
+
 
 <div class="container main-container">
 <div class="row">
 
- <div class="col-md-4 config-col">
+ <div class="col-md-4 config-col" id="first-pane" style="opacity:0">
    <div class="panel panel-warning" id="side-select">
       <div class="panel-heading">
         <h3 class="panel-title">Prosthetic Selection</h3>
@@ -141,7 +150,7 @@ $html = <<<HTML
  </div>
 
 
- <div class="col-md-4" id="mid-pane">
+ <div class="col-md-4" id="mid-pane" style="opacity:0">
   <ul class="nav nav-tabs" id="measure-tab">
    <li class=""><a href="#left" data-toggle="tab" id="left-tab"><span class="fa fa-print green"></span> Left Arm</a></li>
    <li><a href="#right" data-toggle="tab" id="right-tab"><span class="fa fa-print green hidden"></span> Right Arm</a></li>  
@@ -163,7 +172,7 @@ $html = <<<HTML
   </div>
  </div>
 
- <div class="col-md-4">
+ <div class="col-md-4" id="third-pane" style="opacity:0">
   <ul class="nav nav-tabs" id="render_tab">
    <li class="dropdown">
     <a data-toggle="dropdown" class="dropdown-toggle" id="myTabDrop1" href="#">Reference <b class="caret"></b></a>
@@ -193,7 +202,7 @@ $html = <<<HTML
 </div>
 </div>
 
-<br /><br />
+<br /><br /><br /><br />
 </div>
 HTML;
 echo $html;

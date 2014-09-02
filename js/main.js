@@ -302,7 +302,7 @@ function conditionalButtonRender(){
 			}).click(function(){
 				submitForm('preview');
 				$('#loadingModal').modal({backdrop:'static', keyboard: false, show:true});
-			}).html('Load Sample Data')
+			}).html('Sample Data')
 		);
 	} else {
 		$('#action_buttons').append(
@@ -317,8 +317,13 @@ function conditionalButtonRender(){
 // configures UI on first render while we get knockout completed
 function firstRender(){
 	conditionalButtonRender();
-	if (!submitType)
+	if (!submitType){
 		$("#preview_tab").hide();
+		$('.jumbotron').animate({opacity: 1},500);
+	} else {
+		$('.jumbotron').remove();
+	}
+
 	isNovice =($.urlParam('advanced') == 'true')?false:true;
 	setType();
 	$('#prostheticHand').change(function(){handSelect();});
@@ -396,4 +401,16 @@ function firstRender(){
 			$('#stl-btn').removeClass('disabled');
 		}
 	});
+	$('#first-pane').animate({opacity: 1},750);
+	$('#mid-pane').animate({opacity: 1},2000);
+	$('#third-pane').animate({opacity: 1},2800);
+	$('#close-jumbo').click(function(){closeJumbo()});
+}
+
+function closeJumbo(){
+	$('.jumbotron').animate({
+		opacity: 0,
+		height: '0px',
+		padding: '0px'
+		},1500, function() {/*$('.jumbotron').remove();*/})
 }
