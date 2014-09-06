@@ -397,8 +397,10 @@ function firstRender(){
 	$('#generateSelect').change(function(val){
 		if (this && this.value && this.value == 0){
 			$('#stl-btn').addClass('disabled');
+			$('#email').removeClass('hide');
 		} else {
 			$('#stl-btn').removeClass('disabled');
+			$('#email').addClass('hide');
 		}
 	});
 	$('#first-pane').animate({opacity: 1},750);
