@@ -22,6 +22,7 @@ require_once('backend.php');
 // this starts the session
 start_user_session( $assemblervars);
 $time = time();
+$sessionID = getSessionId();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,7 +93,7 @@ $html = <<<HTML
 <div class="jumbotron" style="opacity:0">
       <div class="container">
         <h1>Welcome</h1>
-	<p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p><p>Welcome to hand-o-matic</p>
+	<p>Placeholder for introductory video</p>
 
         <p><a class="btn btn-primary btn-lg" role="button" id="close-jumbo">Close</a></p>
       </div>
@@ -119,32 +120,34 @@ $html = <<<HTML
         <h3 class="panel-title">Model Selection</h3>
       </div>
       <div class="panel-body" id="option-select-body">
-    <label for='part'>Generate</label>
-    <select name='part' class="form-control" id="generateSelect"
-	data-bind="options: partItems,optionsText: 'name',optionsValue: 'id',value: selectedPart">
-    </select>
+	  <label for='part'>Generate</label>
+	  <select name='part' class="form-control" id="generateSelect"
+		data-bind="options: partItems,optionsText: 'name',optionsValue: 'id',value: selectedPart">
+	  </select>
+	  <div class="input-group incomplete" id="email"><span class="input-group-addon"><span class="fa fa-cogs"></span>&nbsp;&nbsp; Email </span>
+		<input type="" step="any" min="0" name="email" value="{$email}" class="form-control">
+	  </div>
 
-    <label for='gauntletSelect'>Gauntlet Style</label>
-     <select name='gauntletSelect' class="form-control"
-	data-bind="options: gauntletSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedGauntletSelect">
-    </select>
+	  <label for='gauntletSelect'>Gauntlet Style</label>
+	  <select name='gauntletSelect' class="form-control"
+		data-bind="options: gauntletSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedGauntletSelect">
+	  </select>
 
-    <label for='fingerSelect'>Finger Style</label>
-     <select name='fingerSelect' class="form-control"
-	data-bind="options: fingerSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedFingerSelect">
-    </select>
+	  <label for='fingerSelect'>Finger Style</label>
+	  <select name='fingerSelect' class="form-control"
+		data-bind="options: fingerSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedFingerSelect">
+	  </select>
 
-    <label for='palmSelect'>Palm Style</label>
-    <select name='palmSelect' class="form-control"
-	data-bind="options: palmItems,optionsText: 'name',optionsValue: 'id',value: selectedPalm">
+	  <label for='palmSelect'>Palm Style</label>
+	  <select name='palmSelect' class="form-control"
+		data-bind="options: palmItems,optionsText: 'name',optionsValue: 'id',value: selectedPalm">
+	  </select>
 
-    </select>
-
-   <label>Spacing</label>
-    <div class="input-group"><span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
-     <input type="number" step="any" min="0" name="Padding" value="{$paddingValue}" class="form-control">
-     <span class="input-group-addon">mm</span>
-    </div>
+	  <label>Spacing</label>
+	  <div class="input-group"><span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
+		<input type="number" step="any" min="0" name="Padding" value="{$paddingValue}" class="form-control">
+		<span class="input-group-addon">mm</span>
+	  </div>
       </div>
     </div>
  </div>
