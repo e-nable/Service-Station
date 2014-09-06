@@ -16,11 +16,10 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
     */
 
-var submitVal = 0;
-var flaggedError = true;
-var isNovice = true;
-var optionValues;
-var descriptions =[
+
+
+// NOTE: this will eventually come from a service
+var descriptions = [
 	{ id: 1,  label: "Length of Elbow Joint"},
 	{ id: 2,  label: "Distance between lateral and medial side of the forearm proximal to the elbow joint"},
 	{ id: 3,  label: "Distance between lateral and medial side of the middle forearm"},
@@ -33,6 +32,12 @@ var descriptions =[
 	{ id: 10, label: "Length of Elbow to wrist joint"}
     ];
 
+var submitVal = 0;
+var flaggedError = true;
+var isNovice = true;
+var optionValues;
+
+
 // DOM Ready method
 // Request configured options before we configure the UI
 $(function(){
@@ -41,16 +46,7 @@ $(function(){
    if (submitType)
 	$("#render_tab a:last").tab("show");
 
-   $.ajax({url:"e-NABLE/options.json",
-	success: function(jqXHR) {
-		if (jqXHR){
-			optionValues = jqXHR;
-			firstRender();
-		}
-	},error: function(jqXHR){
-
-	}
-   });
+   optionValuesService(firstRender);
 });
 
 // URL parser addition to jQuery
@@ -63,46 +59,113 @@ $.urlParam = function(name){
     }
 }
 
-// View Model content
-var viewModel = function () {
-   var self = this;
-   self.isNovice = isNovice;
-   self.submitType = submitType;
-   self.prostheticHandSession = prostheticHandSession;
-   self.partSession = partSession;
-   self.palmSelectSession = palmSelectSession;
-   self.gauntletSelectSession = gauntletSelectSession;
-   self.fingerSelectSession = fingerSelectSession;
-   self.isUnderProcessLimit = isUnderProcessLimit;
-   self.processCount = processCount;
-   self.handSessionValues = handSessionValues;
+var optionValuesService = function(callback) {
+	$.ajax({url:"e-NABLE/options.json",
+		success: function(jqXHR) {
+			if (jqXHR){
+				optionValues = jqXHR;
+				firstRender(optionValues);
+			}
+		},error: function(jqXHR){
 
-   // aggregate lables dynamically
-   $.each(handSessionValues, function(index, obj){
-	var i = parseInt(obj.id.replace(/[LR]/g, ''));
-	obj.description = descriptions[i-1].label;
-	obj.name = obj.id.replace(/L/g, 'Left').replace(/R/g, 'Right');
-	obj.hidden = ((i == 8 || i == 9)?false:true);
-   });
-
-   self.descriptions = descriptions;
-   self.fields = handSessionValues;
-
-   self.prostheticHandItems = ko.observableArray(optionValues.prostheticHand);
-   self.selectedProstheticHand = ko.observable(prostheticHandSession);
-
-   self.partItems = ko.observableArray(optionValues.part);
-   self.selectedPart = ko.observable(partSession);
-
-   self.gauntletSelectItems = ko.observableArray(optionValues.gauntlet);
-   self.selectedGauntletSelect = ko.observable(gauntletSelectSession);
-
-   self.fingerSelectItems = ko.observableArray(optionValues.finger);
-   self.selectedFingerSelect = ko.observable(fingerSelectSession);
-
-   self.palmItems = ko.observableArray(optionValues.palm);
-   self.selectedPalm = ko.observable(palmSelectSession);
+		}
+	   });	
 };
+
+// We'll use this adapter to disintermediate the global session variables until we integrate with Ro's new session service
+var sessionService = function() {
+	return {
+		submitType: submitType,
+		prostheticHandSession: prostheticHandSession,
+		partSession: partSession,
+		palmSelectSession: palmSelectSession,
+		gauntletSelectSession: gauntletSelectSession,
+		fingerSelectSession: fingerSelectSession,
+		isUnderProcessLimit: isUnderProcessLimit,
+		processCount: processCount,
+		handSessionValues: handSessionValues,
+	};
+}
+
+// The dimensionViewModelBuilder is a replacement for this:
+// aggregate lables dynamically
+//  $.each(handSessionValues, function(index, obj){
+//	var i = parseInt(obj.id.replace(/[LR]/g, ''));
+//	obj.description = descriptions[i-1].label;
+//	obj.name = obj.id.replace(/L/g, 'Left').replace(/R/g, 'Right');
+//	obj.hidden = ((i == 8 || i == 9)?false:true);
+//   });
+
+var dimensionViewModelBuilder = function(descriptionReferenceData) {
+	var self = this;	
+	self.descriptions = descriptionReferenceData;
+	
+	self.extractSequenceNumFromSession = function(handSession) {
+		return parseInt(handSession.id.replace(/[LR]/g, ''));	
+	};
+	
+	self.extractDescriptionFromSession = function(handSession) {
+		var id = self.extractSequenceNumFromSession(handSession);
+		return descriptions[id - 1].label;	// TODO: replace with KO First Or Default function
+	};
+	
+	self.extractNameFromSession = function(handSession) {
+		return handSession.id
+				.replace(/L/g, 'Left')
+				.replace(/R/g, 'Right');
+	};
+	
+	self.extractHiddenFromSession = function(handSession) {
+		var id = self.extractSequenceNumFromSession(handSession);
+		return (id == 8 || id == 9) ? false : true;
+	};	
+	
+	self.buildViewModel = function(handSession) {
+		return {
+			id: handSession.id,
+			sequenceNo: self.extractSequenceNumFromSession(handSession),
+			name: self.extractNameFromSession(handSession),
+			description:  self.extractDescriptionFromSession(handSession),
+			hidden: self.extractHiddenFromSession(handSession),			
+			dataEntry: ko.observable(handSession.value),
+		};
+	};	
+};
+
+// View Model content
+var viewModel = function (optionValuesData, descriptionData) {
+	var self = this;
+	
+	self.descriptions = descriptionData;
+	
+	self.fields = [];
+
+	self.prostheticHandItems = ko.observableArray(optionValuesData.prostheticHand);
+	self.gauntletSelectItems = ko.observableArray(optionValuesData.gauntlet);
+	self.fingerSelectItems = ko.observableArray(optionValuesData.finger);
+	self.partItems = ko.observableArray(optionValuesData.part);
+	self.palmItems = ko.observableArray(optionValuesData.palm);
+
+	self.selectedProstheticHand = ko.observable();
+	self.selectedGauntletSelect = ko.observable();
+	self.selectedFingerSelect = ko.observable();
+	self.selectedPart = ko.observable();
+	self.selectedPalm = ko.observable();
+
+	self.loadSession = function(session) {
+		self.selectedProstheticHand(session.prostheticHandSession);
+		self.selectedGauntletSelect(session.gauntletSelectSession);
+		self.selectedFingerSelect(session.fingerSelectSession);
+		self.selectedPart(session.partSession);
+		self.selectedPalm(session.palmSelectSession);
+		
+		var builder = new dimensionViewModelBuilder(self.descriptions);			
+		$.each(session.handSessionValues, function(index, obj){
+			self.fields.push(builder.buildViewModel(obj));
+		});
+	};
+};
+
 
 // Call this when we submit
 function submitForm(v){
@@ -315,8 +378,9 @@ function conditionalButtonRender(){
 }
 
 // configures UI on first render while we get knockout completed
-function firstRender(){
+function firstRender(optionValues) {
 	conditionalButtonRender();
+
 	if (!submitType){
 		$("#preview_tab").hide();
 		$('.jumbotron').animate({opacity: 1},500);
@@ -330,9 +394,11 @@ function firstRender(){
 	var counter= 1;
 	$("#top_hover").hide();
 	$("#top_hover").click(function(){$("#top_hover").hide()});
-
-	var vm = new viewModel();
+	
+	var vm = new viewModel(optionValues, descriptions);
 	ko.applyBindings(vm);
+	var session = sessionService();
+	vm.loadSession(session);
 
 	$.each([{side:'left',code:'l'},{side:'right',code:'r'},{side:'prosthetic',code:'r'}],
 		function(x,y){

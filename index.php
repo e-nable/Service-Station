@@ -39,11 +39,14 @@ $time = time();
 	<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap-theme.min.css?_=<?php echo $time ?>">
 	<link rel="stylesheet" href="./lib/font-awesome-4.0.3/css/font-awesome.min.css?_=<?php echo $time ?>">
 	<link rel="stylesheet" href="./css/main.css?_=<?php echo $time ?>">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+ temporarily using local version as my interwebz is down -->
+<script src="./js/jquery-2.0.3.min.js"></script>
+
 	<script src="./lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
 	<script src="./lib/knockout-3.2.0.js"></script>
 <?php echo file_get_contents('js/knockout_templates.html'); ?>
-	<script src="./js/main.js?_=<?php echo $time ?>"></script>
+	<script src="./js/main.js"></script> <!-- ?_=<?php echo $time ?>"></script> DISABLE THIS FOR NOW TO MAKE DEBUGGING EASY-->
 <?php	printHeaderSessionVariables();	?>
 </head>
 
