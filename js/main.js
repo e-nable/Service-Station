@@ -87,7 +87,7 @@ var sessionService = function() {
 	};
 }
 
-// The dimensionViewModelBuilder is a replacement for this:
+// The fieldsViewModelBuilder is a replacement for this:
 // aggregate lables dynamically
 //  $.each(handSessionValues, function(index, obj){
 //	var i = parseInt(obj.id.replace(/[LR]/g, ''));
@@ -96,7 +96,7 @@ var sessionService = function() {
 //	obj.hidden = ((i == 8 || i == 9)?false:true);
 //   });
 
-var dimensionViewModelBuilder = function(descriptionReferenceData) {
+var fieldsViewModelBuilder = function(descriptionReferenceData) {
 	var self = this;	
 	self.descriptions = descriptionReferenceData;
 	
@@ -128,6 +128,7 @@ var dimensionViewModelBuilder = function(descriptionReferenceData) {
 			description:  self.extractDescriptionFromSession(handSession),
 			hidden: self.extractHiddenFromSession(handSession),			
 			dataEntry: ko.observable(handSession.value),
+			value: handSession.value, // TODO: delete
 		};
 	};	
 };
@@ -136,9 +137,14 @@ var dimensionViewModelBuilder = function(descriptionReferenceData) {
 var viewModel = function (optionValuesData, descriptionData) {
 	var self = this;
 	
+	// TODO - convert these into observables and isolate the loading of their state
+	self.isNovice = isNovice;
+	self.submitType = submitType;
+	self.isUnderProcessLimit = isUnderProcessLimit;
+	self.processCount = processCount;
+
 	self.descriptions = descriptionData;
-	
-	self.fields = [];
+	self.fields = ko.observableArray();
 
 	self.prostheticHandItems = ko.observableArray(optionValuesData.prostheticHand);
 	self.gauntletSelectItems = ko.observableArray(optionValuesData.gauntlet);
@@ -159,7 +165,7 @@ var viewModel = function (optionValuesData, descriptionData) {
 		self.selectedPart(session.partSession);
 		self.selectedPalm(session.palmSelectSession);
 		
-		var builder = new dimensionViewModelBuilder(self.descriptions);			
+		var builder = new fieldsViewModelBuilder(self.descriptions);			
 		$.each(session.handSessionValues, function(index, obj){
 			self.fields.push(builder.buildViewModel(obj));
 		});
@@ -390,8 +396,8 @@ function firstRender(optionValues) {
 
 	isNovice =($.urlParam('advanced') == 'true')?false:true;
 	setType();
+	
 	$('#prostheticHand').change(function(){handSelect();});
-	var counter= 1;
 	$("#top_hover").hide();
 	$("#top_hover").click(function(){$("#top_hover").hide()});
 	
@@ -400,45 +406,48 @@ function firstRender(optionValues) {
 	var session = sessionService();
 	vm.loadSession(session);
 
-	$.each([{side:'left',code:'l'},{side:'right',code:'r'},{side:'prosthetic',code:'r'}],
-		function(x,y){
-			counter= 1;
-			$("#"+y.side+" input").each(
-				function(a,b){
-				//console.log(a,b);
-					var element = $(b);
+	// Refactored Loop
+	$.each(
+		[ { side: 'left' }, { side: 'right' }, { side: 'prosthetic' }],
+
+		function(index, item){
+
+			$("#" + item.side +" input").each(
+				function(inner_index, inner_item){
+				
+					var element = $(inner_item);
 					var parent = element.parent();
 					var mssg = $("#top_hover");
-					var code = b.id.replace(/v_/g,'');
-					element.mCount=code.substring(1);
-					$("#"+code).hide();
+					var code = inner_item.id.replace(/v_/g,'');
 
-					if (y.side != 'prosthetic')
-					element.mouseenter( function(){
-						var c = $("#"+code);
-						c.show();
-					}).focus(function(){
-						var c = $("#"+code);
-						resetVisibility();
-						c.show();
-						parent.addClass("focus");
-						mssg.html(element.mCount+". "+ descriptions[element.mCount-1].label);
-						$("#top_hover").show();
-						if (element.mCount > 5 && element.mCount != 10){
-							mssg.addClass('bottom');
-						} else {
-							mssg.removeClass('bottom');
-						}
-					}).mouseleave( function(){
-						var c = $("#"+code);
-						if (!element.is(":focus")){
-							c.hide();
-						}
-					}).focusout( function(){
-						var c = $("#"+code);
-						c.hide();
-						parent.removeClass("focus");
-					});
+					// console.log(code);
+
+					element.mCount = code.substring(1);					
+					var targetElement = $("#" + code);
+					targetElement.hide();
+					
+					if (item.side != 'prosthetic')
+						element.mouseenter( function(){
+							targetElement.show();
+						}).focus(function(){
+							resetVisibility();
+							targetElement.show();
+							parent.addClass("focus");
+							mssg.html(element.mCount + ". " + descriptions[element.mCount - 1].label);
+							$("#top_hover").show();
+							if (element.mCount > 5 && element.mCount != 10){
+								mssg.addClass('bottom');
+							} else {
+								mssg.removeClass('bottom');
+							}
+						}).mouseleave( function(){
+							if (!element.is(":focus")){
+								targetElement.hide();
+							}
+						}).focusout( function(){
+							targetElement.hide();
+							parent.removeClass("focus");
+						});
 				}
 			);
 		}
@@ -467,6 +476,7 @@ function firstRender(optionValues) {
 			$('#stl-btn').removeClass('disabled');
 		}
 	});
+	
 	$('#first-pane').animate({opacity: 1},750);
 	$('#mid-pane').animate({opacity: 1},2000);
 	$('#third-pane').animate({opacity: 1},2800);

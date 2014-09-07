@@ -39,14 +39,12 @@ $time = time();
 	<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap-theme.min.css?_=<?php echo $time ?>">
 	<link rel="stylesheet" href="./lib/font-awesome-4.0.3/css/font-awesome.min.css?_=<?php echo $time ?>">
 	<link rel="stylesheet" href="./css/main.css?_=<?php echo $time ?>">
-	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
- temporarily using local version as my interwebz is down -->
-<script src="./js/jquery-2.0.3.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
 	<script src="./lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
 	<script src="./lib/knockout-3.2.0.js"></script>
 <?php echo file_get_contents('js/knockout_templates.html'); ?>
-	<script src="./js/main.js"></script> <!-- ?_=<?php echo $time ?>"></script> DISABLE THIS FOR NOW TO MAKE DEBUGGING EASY-->
+	<script src="./js/main.js"></script> <!-- ?_=<?php echo $time ?>"></script> DISABLE THIS FOR NOW TO MAKE DEBUGGING EASY IN CHROME-->
 <?php	printHeaderSessionVariables();	?>
 </head>
 
@@ -58,6 +56,7 @@ $render = render( $assemblervars);
 
 $html = <<<HTML
 <input id="advanced" type="hidden" name="advanced" value='{$advanced}'>
+
 <div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
  <div class="container">
   <div class="navbar-header">
@@ -69,6 +68,7 @@ $html = <<<HTML
    </button>
    <a href="#" class="navbar-brand"><span id="product-title"></span></a>
   </div>
+
   <div class="navbar-collapse collapse">
    <div class="navbar-form navbar-right">
     <span id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
@@ -165,9 +165,11 @@ $html = <<<HTML
    <div class="tab-pane" id="left"
 	data-bind="template: { name: 'left-full-template', foreach: fields }">
    </div>
+   
    <div class="tab-pane" id="right"
 	data-bind="template: { name: 'right-full-template', foreach: fields }">
    </div>
+
    <div class="tab-pane active" id="prosthetic">
 	<span data-bind="template: { name: 'field-template', foreach: fields }"></span>
    </div>
