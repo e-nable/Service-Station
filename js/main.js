@@ -115,37 +115,66 @@ var fieldsViewModelBuilder = function(descriptionReferenceData) {
 				.replace(/R/g, 'Right');
 	};
 	
+	self.extractLeftFromSession = function(handSession) {
+		return handSession.id.toUpperCase().indexOf('L') > -1;
+	};
+
+	self.extractRightFromSession = function(handSession) {
+		return !handSession.id.toUpperCase().indexOf('R') > -1;
+	};
+
+	// Legacy stuff - soon to be deprecated
 	self.extractHiddenFromSession = function(handSession) {
 		var id = self.extractSequenceNumFromSession(handSession);
 		return (id == 8 || id == 9) ? false : true;
 	};	
 	
-	self.buildViewModel = function(handSession) {
+	self.extractVisibleForNoviceFromSession = function(handSession) {
+		var id = self.extractSequenceNumFromSession(handSession);
+		return (id == 8 || id == 9);
+	};
+
+	self.buildViewModel = function(handSession, isNoviceObservable) {
 		return {
 			id: handSession.id,
 			sequenceNo: self.extractSequenceNumFromSession(handSession),
 			name: self.extractNameFromSession(handSession),
 			description:  self.extractDescriptionFromSession(handSession),
-			hidden: self.extractHiddenFromSession(handSession),			
+			left: self.extractLeftFromSession(handSession),
+			right: self.extractRightFromSession(handSession),
+			
+			isVisible: ko.computed(function() {
+				if (isNoviceObservable()) {
+					return self.extractVisibleForNoviceFromSession(handSession);
+				} else {
+					return true;
+				}
+			}),
+
 			dataEntry: ko.observable(handSession.value),
-			value: handSession.value, // TODO: delete
+
+
+			// TODO: delete "legacy" properties
+			hidden: self.extractHiddenFromSession(handSession), 
+			value: handSession.value, 
 		};
-	};	
+	};
 };
 
 // View Model content
 var viewModel = function (optionValuesData, descriptionData) {
 	var self = this;
+
+	self.isNovice = ko.observable(isNovice);
 	
 	// TODO - convert these into observables and isolate the loading of their state
-	self.isNovice = isNovice;
 	self.submitType = submitType;
 	self.isUnderProcessLimit = isUnderProcessLimit;
 	self.processCount = processCount;
-
+	
 	self.descriptions = descriptionData;
 	self.fields = ko.observableArray();
-
+	
 	self.prostheticHandItems = ko.observableArray(optionValuesData.prostheticHand);
 	self.gauntletSelectItems = ko.observableArray(optionValuesData.gauntlet);
 	self.fingerSelectItems = ko.observableArray(optionValuesData.finger);
@@ -166,8 +195,8 @@ var viewModel = function (optionValuesData, descriptionData) {
 		self.selectedPalm(session.palmSelectSession);
 		
 		var builder = new fieldsViewModelBuilder(self.descriptions);			
-		$.each(session.handSessionValues, function(index, obj){
-			self.fields.push(builder.buildViewModel(obj));
+		$.each(session.handSessionValues, function(index, item){
+			self.fields.push(builder.buildViewModel(item, self.isNovice));
 		});
 	};
 
@@ -240,8 +269,7 @@ function submitForm(v){
 
 // Toggle called when left / right is selected on both types of UI instances
 function handSelect(isLoad){
-	isLoad = isLoad || false;
-	
+	isLoad = isLoad || false;	
 	var hand_selected = (!isLoad ? $("#prostheticHand").val() : prostheticHandSession);
 	
 	if (!isNovice){
@@ -251,8 +279,10 @@ function handSelect(isLoad){
 			var obj = $(y);
 			obj.parent().removeClass('incomplete');
 		});
+		
 		if (!hand_selected){
 			console.log('selection returned empty');
+
 		} else if (hand_selected == 0){
 			$('#prosthetic-tab span.title').html(' Left Prosthetic');
 			$('#v_l9').parent().addClass('hidden');
@@ -264,6 +294,7 @@ function handSelect(isLoad){
 			$('#v_r9_desc').removeClass('hidden');
 			$('#v_r8_desc').removeClass('hidden');
 			$('#image img').get(0).src= './imgs/referece_lP.png';
+
 		} else if (hand_selected == 1){
 			$('#prosthetic-tab span.title').html(' Right Prosthetic');
 			$('#v_l9').parent().removeClass('hidden');

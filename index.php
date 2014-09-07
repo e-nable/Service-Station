@@ -161,12 +161,12 @@ $html = <<<HTML
 	
    	<li class="">
 		<a href="#left" data-toggle="tab" id="left-tab">
-			<span data-bind="visible: leftHandSelected" class="fa fa-print green"></span> Left Arm
+			<span data-bind="visible: \$root.leftHandSelected" class="fa fa-print green"></span> Left Arm
 		</a>
 	</li>
    	<li>
 		<a href="#right" data-toggle="tab" id="right-tab">
-			<span data-bind="visible: rightHandSelected" class="fa fa-print green"></span> Right Arm
+			<span data-bind="visible: \$root.rightHandSelected" class="fa fa-print green"></span> Right Arm
 		</a>
 	</li>
 	
@@ -178,18 +178,15 @@ $html = <<<HTML
 
   <!-- Tab panes -->
   <div class="tab-content">
-   <div class="tab-pane" id="left"
-	data-bind="template: { name: 'left-full-template', foreach: fields }">
-   </div>
-   
-   <div class="tab-pane" id="right"
-	data-bind="template: { name: 'right-full-template', foreach: fields }">
-   </div>
+	<div class="tab-pane" id="left" data-bind="template: { name: 'left-full-template', foreach: fields }">
+	</div>
 
-   <div class="tab-pane active" id="prosthetic">
+	<div class="tab-pane" id="right" data-bind="template: { name: 'right-full-template', foreach: fields }">
+	</div>
+	
+	<div class="tab-pane active" id="prosthetic">
 	<span data-bind="template: { name: 'field-template', foreach: fields }"></span>
-   </div>
-
+	</div>
   </div>
  </div>
 

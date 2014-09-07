@@ -20,26 +20,28 @@
 	</script>
 
 	<script type="text/html" id="field-template">
-		<!-- ko if: $root.isNovice && ! hidden -->
+		<div data-bind="visible: isVisible">
 		  <div class="input-group">
 			<span class="input-group-addon" data-bind="text: id"></span>
 			<input type="number" step="any" min="0" class="form-control"
 			data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value, placeholder: description}"/>
 			<span class="input-group-addon">mm</span>
 		  </div>
-		  <!-- ko if: $root.isNovice -->
+	
+		  <!-- ko if: $root.isNovice() -->
 		    <div data-bind="text: description,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
 			  style="margin-bottom:36px; background-color:white"></div>
 		  <!-- /ko -->
-		<!-- /ko -->
-		<!-- ko if: $root.isNovice && hidden -->
+		</div>
+		
+		<div data-bind="ko if: $root.isNovice() && hidden">
 		  <input type="hidden" data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value}">
-		<!-- /ko -->
+		</div>
 	</script>
 	
 
 	<script type="text/html" id="right-full-template">
-		<!-- ko if: !$root.isNovice  && id.toLowerCase().indexOf('r') > -1 -->
+		<!-- ko if: !$root.isNovice()  && id.toLowerCase().indexOf('r') > -1 -->
 		  <div class="input-group">
 			<span class="input-group-addon" data-bind="text: id"></span>
 			<input type="number" step="any" min="0" class="form-control"
@@ -50,7 +52,7 @@
 	</script>
 
 	<script type="text/html" id="left-full-template">
-		<!-- ko if: !$root.isNovice  && id.toLowerCase().indexOf('l') > -1 -->
+		<!-- ko if: !$root.isNovice()  && id.toLowerCase().indexOf('l') > -1 -->
 		  <div class="input-group">
 			<span class="input-group-addon" data-bind="text: id"></span>
 			<input type="number" step="any" min="0" class="form-control"
@@ -65,7 +67,7 @@
 	</script>
 
 	<script type="text/html" id="arrow-template">
-		<!-- ko if: !$root.isNovice -->
+		<!-- ko if: !$root.isNovice() -->
 		<span class="hover-arrow" style="display:none" data-bind="attr: { id: id.toLowerCase()}"></span>
 		<!-- /ko -->
 	</script>	
