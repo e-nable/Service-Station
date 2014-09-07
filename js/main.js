@@ -157,7 +157,7 @@ var viewModel = function (optionValuesData, descriptionData) {
 	self.selectedFingerSelect = ko.observable();
 	self.selectedPart = ko.observable();
 	self.selectedPalm = ko.observable();
-
+	
 	self.loadSession = function(session) {
 		self.selectedProstheticHand(session.prostheticHandSession);
 		self.selectedGauntletSelect(session.gauntletSelectSession);
@@ -170,6 +170,14 @@ var viewModel = function (optionValuesData, descriptionData) {
 			self.fields.push(builder.buildViewModel(obj));
 		});
 	};
+
+	self.leftHandSelected = ko.computed(function() {
+		return self.selectedProstheticHand() == "0";
+	});
+
+	self.rightHandSelected = ko.computed(function() {
+		return self.selectedProstheticHand() == "1";
+	});
 };
 
 
@@ -233,20 +241,13 @@ function submitForm(v){
 // Toggle called when left / right is selected on both types of UI instances
 function handSelect(isLoad){
 	isLoad = isLoad || false;
-	var hand_selected = (!isLoad? $("#prostheticHand").val(): prostheticHandSession);//$("#prostheticHand").val();
+	
+	var hand_selected = (!isLoad ? $("#prostheticHand").val() : prostheticHandSession);
+	
 	if (!isNovice){
-		if (!hand_selected){
-			console.log('selection returned empty');
-		} else if (hand_selected == 0){
-			$('#left-tab span').removeClass('hidden');
-			$('#right-tab span').addClass('hidden');
-		} else if (hand_selected == 1){ ;
-			$('#left-tab span').addClass('hidden');
-			$('#right-tab span').removeClass('hidden');
-		}
+		
 	} else {
 		$('#prosthetic input').each(function(x,y){
-			//if(!isLoad) y.value = "";
 			var obj = $(y);
 			obj.parent().removeClass('incomplete');
 		});
@@ -277,6 +278,7 @@ function handSelect(isLoad){
 		}
 
 	}
+	
 	$("#top_hover").hide();
 }
 
@@ -398,6 +400,8 @@ function firstRender(optionValues) {
 	setType();
 	
 	$('#prostheticHand').change(function(){handSelect();});
+	
+
 	$("#top_hover").hide();
 	$("#top_hover").click(function(){$("#top_hover").hide()});
 	
@@ -405,6 +409,8 @@ function firstRender(optionValues) {
 	ko.applyBindings(vm);
 	var session = sessionService();
 	vm.loadSession(session);
+
+	window.tmpViewModelReferenceForDebug = vm;
 
 	// Refactored Loop
 	$.each(

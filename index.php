@@ -114,7 +114,7 @@ $html = <<<HTML
       <div class="panel-body" id="side-select-body">
         <label for='prostheticHand'>Prosthetic Hand</label>
 	<select id="prostheticHand" name='prostheticHand' class="form-control"
-		data-bind="options: prostheticHandItems,optionsText: 'name',optionsValue: 'id',value: selectedProstheticHand"></select>
+		data-bind="options: prostheticHandItems, optionsText: 'name', optionsValue: 'id', value: selectedProstheticHand"></select>
       </div>
     </div>
 
@@ -158,9 +158,22 @@ $html = <<<HTML
 
  <div class="col-md-4" id="mid-pane" style="opacity:0">
   <ul class="nav nav-tabs" id="measure-tab">
-   <li class=""><a href="#left" data-toggle="tab" id="left-tab"><span class="fa fa-print green"></span> Left Arm</a></li>
-   <li><a href="#right" data-toggle="tab" id="right-tab"><span class="fa fa-print green hidden"></span> Right Arm</a></li>  
-   <li class="active"><a href="#prosthetic" data-toggle="tab" id="prosthetic-tab"> <span class="fa fa-print green"></span><span class="title"> Left Prosthetic</span></a></li>
+	
+   	<li class="">
+		<a href="#left" data-toggle="tab" id="left-tab">
+			<span data-bind="visible: leftHandSelected" class="fa fa-print green"></span> Left Arm
+		</a>
+	</li>
+   	<li>
+		<a href="#right" data-toggle="tab" id="right-tab">
+			<span data-bind="visible: rightHandSelected" class="fa fa-print green"></span> Right Arm
+		</a>
+	</li>
+	
+   	<li class="active"><a href="#prosthetic" data-toggle="tab" id="prosthetic-tab">
+		<span class="fa fa-print green"></span>
+		<span class="title"> Left Prosthetic</span></a>
+	</li>
   </ul>
 
   <!-- Tab panes -->
