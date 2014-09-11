@@ -152,6 +152,9 @@ function submitForm(v){
 			}
 		);
 	}
+	if (!$('#email').hasClass('hide') && !isEmail($('#email input').val()) && v == 'stl'){
+		flagged = true;
+	}
 
 	if (flagged){
 		$('#valueWarningModal').modal({backdrop:'static', keyboard: false, show:true});
@@ -277,7 +280,7 @@ function conditionalButtonRender(){
 			$('<button></button>').attr({
 				id:'stl-btn',
 				'data-loading-text':'Loading STL...',
-				class:'download btn btn-danger' +((partSession == 0)?' disabled':''),
+				class:'download btn btn-danger',
 				type: 'submit',
 				name: 'submit',
 				value: 'stl'})
@@ -393,16 +396,19 @@ function firstRender(){
 			return true;
 		}
 	});
-
 	$('#generateSelect').change(function(val){
+			console.log('Testing');
 		if (this && this.value && this.value == 0){
-			$('#stl-btn').addClass('disabled');
 			$('#email').removeClass('hide');
 		} else {
-			$('#stl-btn').removeClass('disabled');
 			$('#email').addClass('hide');
 		}
 	});
+	if (partSession == 0){
+		$('#email').removeClass('hide');
+	} else {
+		$('#email').addClass('hide');
+	}
 	$('#first-pane').animate({opacity: 1},750);
 	$('#mid-pane').animate({opacity: 1},2000);
 	$('#third-pane').animate({opacity: 1},2800);
@@ -416,3 +422,9 @@ function closeJumbo(){
 		padding: '0px'
 		},1500, function() {/*$('.jumbotron').remove();*/})
 }
+
+function isEmail(email) {
+  var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  return regex.test(email);
+}
+
