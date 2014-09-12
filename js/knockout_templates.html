@@ -15,60 +15,76 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 -->
-	<script type="text/html" id="description-template">
-		<li data-bind="text: label"></li>
-	</script>
 
-	<script type="text/html" id="field-template">
-		<div data-bind="visible: isVisible">
-		  <div class="input-group">
-			<span class="input-group-addon" data-bind="text: id"></span>
-			<input type="number" step="any" min="0" class="form-control"
-			data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value, placeholder: description}"/>
-			<span class="input-group-addon">mm</span>
-		  </div>
+<script type="text/html" id="prosthetic-select-template">
+<div class="panel panel-warning" id="side-select">
+	<div class="panel-heading">
+		<h3 class="panel-title">Prosthetic Selection</h3>
+	</div>
+      	<div class="panel-body" id="side-select-body">
+        	<label for='prostheticHand'>Prosthetic Hand</label>
+
+		<select class="form-control" 
+			data-bind="options: prostheticHandItems, optionsText: 'name', optionsValue: 'id', value: selectedProstheticHand">
+		</select>
+	</div>
+</div>
+</script>
+
+<script type="text/html" id="description-template">
+	<li data-bind="text: label"></li>
+</script>
+
+<script type="text/html" id="field-template">
+	<div data-bind="visible: isVisible">
+	  <div class="input-group">
+		<span class="input-group-addon" data-bind="text: id"></span>
+		<input type="number" step="any" min="0" class="form-control"
+		data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value, placeholder: description}"/>
+		<span class="input-group-addon">mm</span>
+	  </div>
+
+	  <!-- ko if: $root.isNovice() -->
+	    <div data-bind="text: description,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
+		  style="margin-bottom:36px; background-color:white"></div>
+	  <!-- /ko -->
+	</div>
 	
-		  <!-- ko if: $root.isNovice() -->
-		    <div data-bind="text: description,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
-			  style="margin-bottom:36px; background-color:white"></div>
-		  <!-- /ko -->
-		</div>
-		
-		<div data-bind="ko if: $root.isNovice() && hidden">
-		  <input type="hidden" data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value}">
-		</div>
-	</script>
+	<div data-bind="ko if: $root.isNovice() && hidden">
+	  <input type="hidden" data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value}">
+	</div>
+</script>
 	
 
-	<script type="text/html" id="right-full-template">
-		<!-- ko if: !$root.isNovice()  && id.toLowerCase().indexOf('r') > -1 -->
-		  <div class="input-group">
-			<span class="input-group-addon" data-bind="text: id"></span>
-			<input type="number" step="any" min="0" class="form-control"
-			data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value, placeholder: description}"/>
-			<span class="input-group-addon">mm</span>
-		  </div>
-		<!-- /ko -->
-	</script>
+<script type="text/html" id="right-full-template">
+	<!-- ko if: !$root.isNovice()  && id.toLowerCase().indexOf('r') > -1 -->
+	  <div class="input-group">
+		<span class="input-group-addon" data-bind="text: id"></span>
+		<input type="number" step="any" min="0" class="form-control"
+		data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value, placeholder: description}"/>
+		<span class="input-group-addon">mm</span>
+	  </div>
+	<!-- /ko -->
+</script>
 
-	<script type="text/html" id="left-full-template">
-		<!-- ko if: !$root.isNovice()  && id.toLowerCase().indexOf('l') > -1 -->
-		  <div class="input-group">
-			<span class="input-group-addon" data-bind="text: id"></span>
-			<input type="number" step="any" min="0" class="form-control"
-			data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value, placeholder: description}"/>
-			<span class="input-group-addon">mm</span>
-		  </div>
-		<!-- /ko -->
-	</script>
+<script type="text/html" id="left-full-template">
+	<!-- ko if: !$root.isNovice()  && id.toLowerCase().indexOf('l') > -1 -->
+	  <div class="input-group">
+		<span class="input-group-addon" data-bind="text: id"></span>
+		<input type="number" step="any" min="0" class="form-control"
+		data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value, placeholder: description}"/>
+		<span class="input-group-addon">mm</span>
+	  </div>
+	<!-- /ko -->
+</script>
 
-	<script type="text/html" id="other-template">
-		<li data-bind="text: label"></li>
-	</script>
+<script type="text/html" id="other-template">
+	<li data-bind="text: label"></li>
+</script>
 
-	<script type="text/html" id="arrow-template">
-		<!-- ko if: !$root.isNovice() -->
-		<span class="hover-arrow" style="display:none" data-bind="attr: { id: id.toLowerCase()}"></span>
-		<!-- /ko -->
-	</script>	
+<script type="text/html" id="arrow-template">
+	<!-- ko if: !$root.isNovice() -->
+	<span class="hover-arrow" style="display:none" data-bind="attr: { id: id.toLowerCase()}"></span>
+	<!-- /ko -->
+</script>	
 

@@ -107,16 +107,9 @@ $html = <<<HTML
 <div class="row">
 
  <div class="col-md-4 config-col" id="first-pane" style="opacity:0">
-   <div class="panel panel-warning" id="side-select">
-      <div class="panel-heading">
-        <h3 class="panel-title">Prosthetic Selection</h3>
-      </div>
-      <div class="panel-body" id="side-select-body">
-        <label for='prostheticHand'>Prosthetic Hand</label>
-	<select id="prostheticHand" name='prostheticHand' class="form-control"
-		data-bind="options: prostheticHandItems, optionsText: 'name', optionsValue: 'id', value: selectedProstheticHand"></select>
-      </div>
-    </div>
+	<div data-bind="ifnot: isNovice">
+		<div data-bind="template: { name: 'prosthetic-select-template' }"></div>
+	</div>
 
    <div class="panel panel-warning">
       <div class="panel-heading">
@@ -157,37 +150,52 @@ $html = <<<HTML
 
 
  <div class="col-md-4" id="mid-pane" style="opacity:0">
-  <ul class="nav nav-tabs" id="measure-tab">
-	
-   	<li class="">
-		<a href="#left" data-toggle="tab" id="left-tab">
-			<span data-bind="visible: \$root.leftHandSelected" class="fa fa-print green"></span> Left Arm
-		</a>
-	</li>
-   	<li>
-		<a href="#right" data-toggle="tab" id="right-tab">
-			<span data-bind="visible: \$root.rightHandSelected" class="fa fa-print green"></span> Right Arm
-		</a>
-	</li>
-	
-   	<li class="active"><a href="#prosthetic" data-toggle="tab" id="prosthetic-tab">
-		<span class="fa fa-print green"></span>
-		<span class="title"> Left Prosthetic</span></a>
-	</li>
-  </ul>
-
-  <!-- Tab panes -->
-  <div class="tab-content">
-	<div class="tab-pane" id="left" data-bind="template: { name: 'left-full-template', foreach: fields }">
+	<div data-bind="if: isNovice">
+		<div data-bind="template: { name: 'prosthetic-select-template' }"></div>
 	</div>
 
-	<div class="tab-pane" id="right" data-bind="template: { name: 'right-full-template', foreach: fields }">
-	</div>
+	<ul class="nav nav-tabs" id="measure-tab">
+
+		<!-- ko ifnot: isNovice -->
+		<li>
+			<a href="#left" data-toggle="tab" id="left-tab">
+				<span data-bind="visible: \$root.leftHandSelected" class="fa fa-print green"></span> Left Arm
+			</a>
+		</li>
+		<li>
+			<a href="#right" data-toggle="tab" id="right-tab">
+				<span data-bind="visible: \$root.rightHandSelected" class="fa fa-print green"></span> Right Arm
+			</a>
+		</li>
+		<!-- /ko -->
+
+		<!-- ko if: isNovice -->
+		<li class="active"><a href="#prosthetic" data-toggle="tab" id="prosthetic-tab">
+			<span class="fa fa-print green"></span>
+			<span class="title"> Left Prosthetic</span></a>
+		</li>
+	<!-- /ko -->
+	</ul>
 	
-	<div class="tab-pane active" id="prosthetic">
-	<span data-bind="template: { name: 'field-template', foreach: fields }"></span>
-	</div>
-  </div>
+	  <!-- Tab panes -->
+	  <div class="tab-content">
+		<div data-bind="ifnot: isNovice">
+			<!-- ko if: leftHandSelected -->
+			<div class="tab-pane" id="left" data-bind="template: { name: 'left-full-template', foreach: selectedFields }">
+			</div>
+			<!-- /ko -->
+			
+			<!-- ko if: rightHandSelected -->			
+			<div class="tab-pane" id="right" data-bind="template: { name: 'right-full-template', foreach: selectedFields }">
+			</div>
+			<!-- /ko -->
+		</div>
+		
+		<!-- Novice input -->
+		<div data-bind="if: isNovice" class="tab-pane active" id="prosthetic">
+			<span data-bind="template: { name: 'field-template', foreach: selectedFields }"></span>
+		</div>
+	  </div>
  </div>
 
  <div class="col-md-4" id="third-pane" style="opacity:0">
