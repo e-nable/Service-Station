@@ -44,195 +44,35 @@ $sessionID = getSessionId();
 
 	<script src="./lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
 	<script src="./lib/knockout-3.2.0.js"></script>
-<?php echo file_get_contents('js/knockout_templates.html'); ?>
+	<?php echo file_get_contents('js/knockout_templates.html'); ?>
 	<script src="./js/main.js"></script> <!-- ?_=<?php echo $time ?>"></script> DISABLE THIS FOR NOW TO MAKE DEBUGGING EASY IN CHROME-->
-<?php	printHeaderSessionVariables();	?>
+	
+	<?php printHeaderSessionVariables(); ?>
+	
+	<script type="text/javascript">
+		// TODO: move this stuff into AJAX services, etc.
+		var server_email = function() { $("#email").val(); };
+		var server_paddingValue = function() { $("#paddingValue").val(); };
+		var server_render = function() { $("#render").val(); };
+	</script>
 </head>
 
-<body id="index" class="home">
-<form id="generatorForm" name="generatorForm">
 <?php
+	$render = render( $assemblervars);
+?>
 
-$render = render( $assemblervars);
+<body id="index" class="home">
+	<input id="email" type="hidden" value="{$email}" />
+	<input id="paddingValue" type="hidden" value="{$paddingValue}" />
+	<input id="render" type="hidden" value="{$render}" />
 
-$html = <<<HTML
-<input id="advanced" type="hidden" name="advanced" value='{$advanced}'>
+	<form id="generatorForm" name="generatorForm">
 
-<div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
- <div class="container">
-  <div class="navbar-header">
-   <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
-    <span class="sr-only">Toggle navigation</span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-   </button>
-   <a href="#" class="navbar-brand"><span id="product-title"></span></a>
-  </div>
-
-  <div class="navbar-collapse collapse">
-   <div class="navbar-form navbar-right">
-    <span id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
-      <span class="fa fa-question-circle"></span> </span>
-      <a id="feedback" class="help btn btn-help" value='feedback' target='_blank'
-	href="https://docs.google.com/forms/d/1hqjed1x9NuTdLt5qNfGwx-YoK3H3JSgnu30vaF47mKs/viewform?edit_requested=true#">
-      <span class="fa fa-comments"></span> </a>
-      <span id="action_buttons"></span>
-    </div>
-   </div>
-  </div>
- </div>
-</div>
-
-
-<div class="navbar  navbar-inverse navbar-fixed-bottom">
- <div class="container" id="e_footer">
-	&copy; e-NABLE 2014
-    <span id="disclaimer" class="disclaimer btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
-      Disclaimer</span>
- </div>
-</div>
-
-<div class="jumbotron" style="opacity:0">
-      <div class="container">
-        <h1>Welcome</h1>
-	<p>Placeholder for introductory video</p>
-
-        <p><a class="btn btn-primary btn-lg" role="button" id="close-jumbo">Close</a></p>
-      </div>
-</div>
-
-
-<div class="container main-container">
-<div class="row">
-
- <div class="col-md-4 config-col" id="first-pane" style="opacity:0">
-	<div data-bind="ifnot: isNovice">
-		<div data-bind="template: { name: 'prosthetic-select-template' }"></div>
+	<div data-bind="template: { name: 'main-interface' }">
 	</div>
 
-   <div class="panel panel-warning">
-      <div class="panel-heading">
-        <h3 class="panel-title">Model Selection</h3>
-      </div>
-      <div class="panel-body" id="option-select-body">
-	  <label for='part'>Generate</label>
-	  <select name='part' class="form-control" id="generateSelect"
-		data-bind="options: partItems,optionsText: 'name',optionsValue: 'id',value: selectedPart">
-	  </select>
-	  <div class="input-group incomplete" id="email"><span class="input-group-addon"><span class="fa fa-cogs"></span>&nbsp;&nbsp; Email </span>
-		<input type="" step="any" min="0" name="email" value="{$email}" class="form-control">
-	  </div>
-
-	  <label for='gauntletSelect'>Gauntlet Style</label>
-	  <select name='gauntletSelect' class="form-control"
-		data-bind="options: gauntletSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedGauntletSelect">
-	  </select>
-
-	  <label for='fingerSelect'>Finger Style</label>
-	  <select name='fingerSelect' class="form-control"
-		data-bind="options: fingerSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedFingerSelect">
-	  </select>
-
-	  <label for='palmSelect'>Palm Style</label>
-	  <select name='palmSelect' class="form-control"
-		data-bind="options: palmItems,optionsText: 'name',optionsValue: 'id',value: selectedPalm">
-	  </select>
-
-	  <label>Spacing</label>
-	  <div class="input-group"><span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
-		<input type="number" step="any" min="0" name="Padding" value="{$paddingValue}" class="form-control">
-		<span class="input-group-addon">mm</span>
-	  </div>
-      </div>
-    </div>
- </div>
-
-
- <div class="col-md-4" id="mid-pane" style="opacity:0">
-	<div data-bind="if: isNovice">
-		<div data-bind="template: { name: 'prosthetic-select-template' }"></div>
-	</div>
-
-	<ul class="nav nav-tabs" id="measure-tab">
-
-		<!-- ko ifnot: isNovice -->
-		<li>
-			<a href="#left" data-toggle="tab" id="left-tab">
-				<span data-bind="visible: \$root.leftHandSelected" class="fa fa-print green"></span> Left Arm
-			</a>
-		</li>
-		<li>
-			<a href="#right" data-toggle="tab" id="right-tab">
-				<span data-bind="visible: \$root.rightHandSelected" class="fa fa-print green"></span> Right Arm
-			</a>
-		</li>
-		<!-- /ko -->
-
-		<!-- ko if: isNovice -->
-		<li class="active"><a href="#prosthetic" data-toggle="tab" id="prosthetic-tab">
-			<span class="fa fa-print green"></span>
-			<span class="title"> Left Prosthetic</span></a>
-		</li>
-	<!-- /ko -->
-	</ul>
-	
-	  <!-- Tab panes -->
-	  <div class="tab-content">
-		<div data-bind="ifnot: isNovice">
-			<!-- ko if: leftHandSelected -->
-			<div class="tab-pane" id="left" data-bind="template: { name: 'left-full-template', foreach: selectedFields }">
-			</div>
-			<!-- /ko -->
-			
-			<!-- ko if: rightHandSelected -->			
-			<div class="tab-pane" id="right" data-bind="template: { name: 'right-full-template', foreach: selectedFields }">
-			</div>
-			<!-- /ko -->
-		</div>
-		
-		<!-- Novice input -->
-		<div data-bind="if: isNovice" class="tab-pane active" id="prosthetic">
-			<span data-bind="template: { name: 'field-template', foreach: selectedFields }"></span>
-		</div>
-	  </div>
- </div>
-
- <div class="col-md-4" id="third-pane" style="opacity:0">
-  <ul class="nav nav-tabs" id="render_tab">
-   <li class="dropdown">
-    <a data-toggle="dropdown" class="dropdown-toggle" id="myTabDrop1" href="#">Reference <b class="caret"></b></a>
-    <ul aria-labelledby="myTabDrop1" role="menu" class="dropdown-menu">
-     <li><a data-toggle="tab" tabindex="-1"  href="#image" data-toggle="tab">Visual</a></li>
-     <li><a data-toggle="tab" tabindex="-1"  href="#descriptions" data-toggle="tab">Descriptions</a></li>
-    </ul>
-   </li>
-   <li id="preview_tab"><a href="#preview" data-toggle="tab">Preview</a></li>  
-  </ul>
-  <!-- Tab panes -->
-  <div class="tab-content">
-   <div class="tab-pane active" id="image">
-	<div class="thumbnail">
-		<img src="./imgs/reference.png"/>
-		<span data-bind="template: { name: 'arrow-template', foreach: fields }"></span>
-		<span id="top_hover" class="image_hover"></span>
-	</div>
-   </div>
-   <div class="tab-pane" id="descriptions">
-    <br><ol data-bind="template: { name: 'description-template', foreach: descriptions }"></ol>
-   </div>
-   <div class="tab-pane" id="preview">{$render}</div>
-  </div>
- </div>
-
-</div>
-</div>
-
-<br /><br /><br /><br />
-</div>
-HTML;
-echo $html;
-echo file_get_contents('modals.html');
+<?php
+	echo file_get_contents('modals.html');
 ?>
 
 </form>

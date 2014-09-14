@@ -16,6 +16,163 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 -->
 
+
+<script type="text/html" id="main-interface">
+<div data-bind="template: { name: 'navbar-top' }"></div>
+
+<div data-bind="template: { name: 'navbar-bottom' }"></div>
+
+<div data-bind="template: { name: 'jumbotron-thingy' }"></div>
+
+<div class="container main-container">
+<div class="row">
+	<div data-bind="template: { name: 'prosthetic-data-entry' }"></div>	
+	<div data-bind="template: { name: 'reference-pane' }"></div>
+	<div data-bind="template: { name: 'model-selection' }"></div>	
+</div>
+</script>
+
+
+<script type="text/html" id="jumbotron-thingy">
+<div class="jumbotron" style="opacity:0; display:none;">
+      <div class="container">
+        <h1>Welcome</h1>
+	<p>Placeholder for introductory video</p>
+
+        <p><a class="btn btn-primary btn-lg" role="button" id="close-jumbo">Close</a></p>
+      </div>
+</div>
+</script>
+
+
+<script type="text/html" id="navbar-top">
+<div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
+ <div class="container">
+  <div class="navbar-header">
+   <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+    <span class="sr-only">Toggle navigation</span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+   </button>
+   <a href="#" class="navbar-brand"><span id="product-title"></span></a>
+  </div>
+
+  <div class="navbar-collapse collapse">
+   <div class="navbar-form navbar-right">
+    <span id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
+      <span class="fa fa-question-circle"></span> </span>
+      <a id="feedback" class="help btn btn-help" value='feedback' target='_blank'
+		href="https://docs.google.com/forms/d/1hqjed1x9NuTdLt5qNfGwx-YoK3H3JSgnu30vaF47mKs/viewform?edit_requested=true#">
+      <span class="fa fa-comments"></span> </a>
+      <span id="action_buttons"></span>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+</script>
+
+
+<script type="text/html" id="reference-pane">
+ <div class="col-md-4" id="third-pane" style="opacity:0">
+  <ul class="nav nav-tabs" id="render_tab">
+   <li class="dropdown">
+    <a data-toggle="dropdown" class="dropdown-toggle" id="myTabDrop1" href="#">Reference <b class="caret"></b></a>
+    <ul aria-labelledby="myTabDrop1" role="menu" class="dropdown-menu">
+     <li><a data-toggle="tab" tabindex="-1"  href="#image" data-toggle="tab">Visual</a></li>
+     <li><a data-toggle="tab" tabindex="-1"  href="#descriptions" data-toggle="tab">Descriptions</a></li>
+    </ul>
+   </li>
+   <li id="preview_tab"><a href="#preview" data-toggle="tab">Preview</a></li>  
+  </ul>
+  <!-- Tab panes -->
+  <div class="tab-content">
+   <div class="tab-pane active" id="image">
+	<div class="thumbnail">
+		<img src="./imgs/reference.png"/>
+		<span data-bind="template: { name: 'arrow-template', foreach: fields }"></span>
+		<span id="top_hover" class="image_hover"></span>
+	</div>
+   </div>
+   <div class="tab-pane" id="descriptions">
+    <br><ol data-bind="template: { name: 'description-template', foreach: descriptions }"></ol>
+   </div>
+   <div class="tab-pane" id="preview" data-bind="text: render"></div>
+  </div>
+ </div>
+</script>
+
+
+<script type="text/html" id="prosthetic-data-entry">
+<div class="col-md-4" id="mid-pane" style="opacity:0">
+	<div data-bind="template: { name: 'prosthetic-select-template' }"></div>
+
+	<!-- Tab panes -->
+	<div class="tab-content">
+		<div class="tab-pane active" id="prosthetic">
+			<span data-bind="template: { name: 'field-template', foreach: selectedFields }"></span>
+		</div>
+	</div>
+</div>
+</script>
+
+
+<script type="text/html" id="model-selection">
+<div class="col-md-4 config-col" id="first-pane" style="opacity:0">
+	<div class="panel panel-warning">
+		<div class="panel-heading">
+			<h3 class="panel-title">Model Selection</h3>
+		</div>
+	
+	      	<div class="panel-body" id="option-select-body">
+			<label for='part'>Generate</label>
+			<select name='part' class="form-control" id="generateSelect"
+				data-bind="options: partItems,optionsText: 'name',optionsValue: 'id',value: selectedPart">
+			</select>
+		
+			<div class="input-group incomplete" id="email"><span class="input-group-addon">
+				<span class="fa fa-cogs"></span>&nbsp;&nbsp; Email </span>
+				<input type="" step="any" min="0" name="email" data-bind="value: email" class="form-control">
+			</div>
+
+			  <label for='gauntletSelect'>Gauntlet Style</label>
+			  <select name='gauntletSelect' class="form-control"
+				data-bind="options: gauntletSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedGauntletSelect">
+			  </select>
+
+			  <label for='fingerSelect'>Finger Style</label>
+			  <select name='fingerSelect' class="form-control"
+				data-bind="options: fingerSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedFingerSelect">
+			  </select>
+
+			  <label for='palmSelect'>Palm Style</label>
+			  <select name='palmSelect' class="form-control"
+				data-bind="options: palmItems,optionsText: 'name',optionsValue: 'id',value: selectedPalm">
+			  </select>
+
+			  <label>Spacing</label>
+			  <div class="input-group"><span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
+				<input type="number" step="any" min="0" name="Padding" data-bind="value: paddingValue" class="form-control" />
+				<span class="input-group-addon">mm</span>
+			  </div>
+		</div>
+	</div>
+</div>
+</script>
+
+
+<script type="text/html" id="navbar-bottom">
+<div class="navbar  navbar-inverse navbar-fixed-bottom">
+ <div class="container" id="e_footer">
+	&copy; e-NABLE 2014
+    <span id="disclaimer" class="disclaimer btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
+      Disclaimer</span>
+ </div>
+</div>
+</script>
+
+
 <script type="text/html" id="prosthetic-select-template">
 <div class="panel panel-warning" id="side-select">
 	<div class="panel-heading">
@@ -31,9 +188,11 @@
 </div>
 </script>
 
+
 <script type="text/html" id="description-template">
 	<li data-bind="text: label"></li>
 </script>
+
 
 <script type="text/html" id="field-template">
 	<div data-bind="visible: isVisible">
@@ -43,48 +202,22 @@
 		data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value, placeholder: description}"/>
 		<span class="input-group-addon">mm</span>
 	  </div>
-
-	  <!-- ko if: $root.isNovice() -->
 	    <div data-bind="text: description,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
 		  style="margin-bottom:36px; background-color:white"></div>
-	  <!-- /ko -->
 	</div>
 	
-	<div data-bind="ko if: $root.isNovice() && hidden">
+	<div data-bind="ko if: hidden">
 	  <input type="hidden" data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value}">
 	</div>
 </script>
 	
 
-<script type="text/html" id="right-full-template">
-	<!-- ko if: !$root.isNovice()  && id.toLowerCase().indexOf('r') > -1 -->
-	  <div class="input-group">
-		<span class="input-group-addon" data-bind="text: id"></span>
-		<input type="number" step="any" min="0" class="form-control"
-		data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value, placeholder: description}"/>
-		<span class="input-group-addon">mm</span>
-	  </div>
-	<!-- /ko -->
-</script>
-
-<script type="text/html" id="left-full-template">
-	<!-- ko if: !$root.isNovice()  && id.toLowerCase().indexOf('l') > -1 -->
-	  <div class="input-group">
-		<span class="input-group-addon" data-bind="text: id"></span>
-		<input type="number" step="any" min="0" class="form-control"
-		data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value, placeholder: description}"/>
-		<span class="input-group-addon">mm</span>
-	  </div>
-	<!-- /ko -->
-</script>
-
 <script type="text/html" id="other-template">
 	<li data-bind="text: label"></li>
 </script>
 
+
 <script type="text/html" id="arrow-template">
-	<!-- ko if: !$root.isNovice() -->
 	<span class="hover-arrow" style="display:none" data-bind="attr: { id: id.toLowerCase()}"></span>
-	<!-- /ko -->
 </script>	
 
