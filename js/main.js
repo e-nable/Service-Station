@@ -292,17 +292,7 @@ function conditionalButtonRender(){
 			.click(function(){submitForm('stl');})
 			.html('<span class="glyphicon glyphicon-download"></span> Generate STL')
 		);
-		$('#action_buttons').append(
-			$('<button></button>').attr({
-				'data-loading-text':'Loading Preview...',
-				id:	'preview-btn',
-				class:	'preview btn btn-success',
-				type:	'submit',
-				name:	'submit',
-				value:	'Preview'})
-			.click(function(){submitForm('preview');})
-			.html('<span class="glyphicon glyphicon-picture"></span> Preview')
-		);
+		
 		$('#e_footer').append(
 			$('<a></a>').attr({
 				class:	"disclaimer btn btn-help",

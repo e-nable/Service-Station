@@ -55,7 +55,9 @@
     <span class="icon-bar"></span>
     <span class="icon-bar"></span>
    </button>
-   <a href="#" class="navbar-brand"><span id="product-title"></span></a>
+   <a href="#" class="navbar-brand">
+	<span id="product-title">e-NABLE Hand-o-Matic v1.2</span>
+	</a>
   </div>
 
   <div class="navbar-collapse collapse">
@@ -90,9 +92,8 @@
   <div class="tab-content">
    <div class="tab-pane active" id="image">
 	<div class="thumbnail">
-		<img src="./imgs/reference.png"/>
-		<span data-bind="template: { name: 'arrow-template', foreach: fields }"></span>
-		<span id="top_hover" class="image_hover"></span>
+		<img src="./imgs/referece_rP.png" data-bind="visible: rightHandSelected" />
+		<img src="./imgs/referece_lP.png" data-bind="visible: leftHandSelected" />
 	</div>
    </div>
    <div class="tab-pane" id="descriptions">
@@ -164,11 +165,11 @@
 
 <script type="text/html" id="navbar-bottom">
 <div class="navbar  navbar-inverse navbar-fixed-bottom">
- <div class="container" id="e_footer">
-	&copy; e-NABLE 2014
-    <span id="disclaimer" class="disclaimer btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
-      Disclaimer</span>
- </div>
+	<div class="container" id="e_footer">
+		&copy; e-NABLE 2014
+		<span id="disclaimer" class="disclaimer btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
+		Disclaimer</span>
+	</div>
 </div>
 </script>
 
@@ -220,4 +221,5 @@
 <script type="text/html" id="arrow-template">
 	<span class="hover-arrow" style="display:none" data-bind="attr: { id: id.toLowerCase()}"></span>
 </script>	
+
 

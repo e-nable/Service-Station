@@ -62,19 +62,18 @@ $sessionID = getSessionId();
 ?>
 
 <body id="index" class="home">
-	<input id="email" type="hidden" value="{$email}" />
-	<input id="paddingValue" type="hidden" value="{$paddingValue}" />
-	<input id="render" type="hidden" value="{$render}" />
+<input id="email" type="hidden" value="{$email}" />
+<input id="paddingValue" type="hidden" value="{$paddingValue}" />
+<input id="render" type="hidden" value="{$render}" />
 
-	<form id="generatorForm" name="generatorForm">
-
+<form id="generatorForm" name="generatorForm">
 	<div data-bind="template: { name: 'main-interface' }">
 	</div>
 
-<?php
-	echo file_get_contents('modals.html');
-?>
-
+	<?php
+		echo file_get_contents('modals.html');
+	?>
 </form>
 </body>
 </html>
+
