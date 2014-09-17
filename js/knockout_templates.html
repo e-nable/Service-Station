@@ -18,30 +18,30 @@
 
 
 <script type="text/html" id="main-interface">
-<div data-bind="template: { name: 'navbar-top' }"></div>
+	<div data-bind="template: { name: 'navbar-top' }"></div>
 
-<div data-bind="template: { name: 'navbar-bottom' }"></div>
+	<div data-bind="template: { name: 'navbar-bottom' }"></div>
 
-<div data-bind="template: { name: 'jumbotron-thingy' }"></div>
+	<div data-bind="template: { name: 'jumbotron-thingy' }"></div>
 
-<div class="container main-container">
-<div class="row">
-	<div data-bind="template: { name: 'prosthetic-data-entry' }"></div>	
-	<div data-bind="template: { name: 'reference-pane' }"></div>
-	<div data-bind="template: { name: 'model-selection' }"></div>	
-</div>
+	<div class="container main-container">
+	<div class="row">
+		<div data-bind="template: { name: 'prosthetic-data-entry' }"></div>	
+		<div data-bind="template: { name: 'reference-pane' }"></div>
+		<div data-bind="template: { name: 'model-selection' }"></div>	
+	</div>
 </script>
 
 
 <script type="text/html" id="jumbotron-thingy">
-<div class="jumbotron" style="opacity:0; display:none;">
-      <div class="container">
-        <h1>Welcome</h1>
-	<p>Placeholder for introductory video</p>
+	<div class="jumbotron" style="opacity:0; display:none;">
+	      <div class="container">
+		<h1>Welcome</h1>
+		<p>Placeholder for introductory video</p>
 
-        <p><a class="btn btn-primary btn-lg" role="button" id="close-jumbo">Close</a></p>
-      </div>
-</div>
+		<p><a class="btn btn-primary btn-lg" role="button" id="close-jumbo">Close</a></p>
+	      </div>
+	</div>
 </script>
 
 
@@ -88,17 +88,20 @@
    </li>
    <li id="preview_tab"><a href="#preview" data-toggle="tab">Preview</a></li>  
   </ul>
+
   <!-- Tab panes -->
   <div class="tab-content">
-   <div class="tab-pane active" id="image">
-	<div class="thumbnail">
+   <div class="tab-pane active" id="image" style="height:460px; padding-top:14px;">
+	<div class="thumbnail" data-bind="visible: !noHandSelected()">
 		<img src="./imgs/referece_rP.png" data-bind="visible: rightHandSelected" />
 		<img src="./imgs/referece_lP.png" data-bind="visible: leftHandSelected" />
 	</div>
    </div>
-   <div class="tab-pane" id="descriptions">
+   <div class="tab-pane" id="descriptions" style="height:460px;">
     <br><ol data-bind="template: { name: 'description-template', foreach: descriptions }"></ol>
    </div>
+
+	<!-- TODO: move this elsewhere -->
    <div class="tab-pane" id="preview" data-bind="text: render"></div>
   </div>
  </div>
@@ -106,13 +109,30 @@
 
 
 <script type="text/html" id="prosthetic-data-entry">
-<div class="col-md-4" id="mid-pane" style="opacity:0">
-	<div data-bind="template: { name: 'prosthetic-select-template' }"></div>
+<div class="col-md-4" id="mid-pane" style="opacity:0;">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Prosthetic Selection</h3>
+		</div>
+		
+		<div style="height:460px;">
+		      	<div class="panel-body" id="side-select-body" style="padding-top:14px;">
+				<select class="form-control" 
+					data-bind="options: prostheticHandItems, 
+						optionsText: 'name', 
+						optionsValue: 'id', 
+						value: selectedProstheticHand">
+				</select>
+			</div>
+			
+			<div id="prosthetic" style="padding-left:14px; padding-right:14px;" 
+				data-bind="template: { name: 'field-template', foreach: selectedFields }">
+			</div>
 
-	<!-- Tab panes -->
-	<div class="tab-content">
-		<div class="tab-pane active" id="prosthetic">
-			<span data-bind="template: { name: 'field-template', foreach: selectedFields }"></span>
+			<div data-bind="visible: noHandSelected()" style="padding-left:14px; padding-right:14px;" >
+				<h2 style="color:#999;">Select which hand needs a prosthetic and we will gather your measurements</h2>
+			</div>
+
 		</div>
 	</div>
 </div>
@@ -125,7 +145,7 @@
 		<div class="panel-heading">
 			<h3 class="panel-title">Model Selection</h3>
 		</div>
-	
+		
 	      	<div class="panel-body" id="option-select-body">
 			<label for='part'>Generate</label>
 			<select name='part' class="form-control" id="generateSelect"
@@ -169,22 +189,6 @@
 		&copy; e-NABLE 2014
 		<span id="disclaimer" class="disclaimer btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
 		Disclaimer</span>
-	</div>
-</div>
-</script>
-
-
-<script type="text/html" id="prosthetic-select-template">
-<div class="panel panel-warning" id="side-select">
-	<div class="panel-heading">
-		<h3 class="panel-title">Prosthetic Selection</h3>
-	</div>
-      	<div class="panel-body" id="side-select-body">
-        	<label for='prostheticHand'>Prosthetic Hand</label>
-
-		<select class="form-control" 
-			data-bind="options: prostheticHandItems, optionsText: 'name', optionsValue: 'id', value: selectedProstheticHand">
-		</select>
 	</div>
 </div>
 </script>

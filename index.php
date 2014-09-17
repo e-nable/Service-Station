@@ -67,8 +67,7 @@ $sessionID = getSessionId();
 <input id="render" type="hidden" value="{$render}" />
 
 <form id="generatorForm" name="generatorForm">
-	<div data-bind="template: { name: 'main-interface' }">
-	</div>
+	<div data-bind="template: { name: 'main-interface' }"></div>
 
 	<?php
 		echo file_get_contents('modals.html');

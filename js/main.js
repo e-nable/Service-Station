@@ -125,12 +125,11 @@ var fieldsViewModelBuilder = function(descriptionReferenceData) {
 	self.extractLeftFromSession = function(handSession) {
 		return handSession.id.toUpperCase().indexOf('L') > -1;
 	};
-
+	
 	self.extractRightFromSession = function(handSession) {
 		return handSession.id.toUpperCase().indexOf('R') > -1;
 	};
-
-	// Legacy stuff - soon to be deprecated	
+	
 	self.extractHiddenFromSession = function(handSession) {
 		var id = self.extractSequenceNumFromSession(handSession);
 		return !(id == 8 || id == 9);
@@ -204,6 +203,9 @@ var viewModel = function (descriptionData) {
 	};
 
 	self.loadOptions = function(optionValuesData) {
+		optionValuesData.prostheticHand.unshift({ 
+			id: null, name: "Select the hand needing a prosthetic" 
+		});
 		self.prostheticHandItems(optionValuesData.prostheticHand);
 		self.gauntletSelectItems(optionValuesData.gauntlet);
 		self.fingerSelectItems(optionValuesData.finger);
@@ -224,6 +226,10 @@ var viewModel = function (descriptionData) {
 
 	self.rightHandSelected = ko.computed(function() {
 		return self.selectedProstheticHand() == "1";
+	});
+
+	self.noHandSelected = ko.computed(function() { 
+		return self.selectedProstheticHand() == null;
 	});
 	
 	self.prostheticSelectedTitle = ko.computed(function() {
