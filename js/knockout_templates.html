@@ -22,29 +22,66 @@
 
 	<div data-bind="template: { name: 'navbar-bottom' }"></div>
 
-	<div data-bind="template: { name: 'jumbotron-thingy' }"></div>
-
 	<div class="container main-container">
-	<div class="row">
-		<div data-bind="template: { name: 'prosthetic-data-entry' }"></div>	
-		<div data-bind="template: { name: 'reference-pane' }"></div>
-		<div data-bind="template: { name: 'model-selection' }"></div>	
+		<div class="row" data-bind="if: currentStep() == processSteps.welcomePage ">
+			<div data-bind="template: { name: 'left-welcome-pane' }"></div>	
+			<div data-bind="template: { name: 'right-welcome-pane' }"></div>
+		</div>
+
+		<div class="row" data-bind="if: currentStep() == processSteps.measurementsPage ">
+			<div data-bind="template: { name: 'prosthetic-data-entry' }"></div>	
+			<div data-bind="template: { name: 'reference-pane' }"></div>
+			<div data-bind="template: { name: 'measurement-next-step' }"></div>  			
+		</div>
+
 	</div>
+
 </script>
 
 
-<script type="text/html" id="jumbotron-thingy">
-	<div class="jumbotron" style="opacity:0; display:none;">
-	      <div class="container">
-		<h1>Welcome</h1>
-		<p>Placeholder for introductory video</p>
+<!-- Welcome View Templates -->
+<script type="text/html" id="left-welcome-pane">
+<div class="col-md-8">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Welcome to Hand-o-matic!</h3>
+		</div>
+		
+		<div style="height:460px;">
+		      	<h1 style="color:#999; text-align:center;">Welcome to Hand-o-matic!</h1>
 
-		<p><a class="btn btn-primary btn-lg" role="button" id="close-jumbo">Close</a></p>
-	      </div>
+		</div>
 	</div>
+</div>
+</script>
+<script type="text/html" id="right-welcome-pane">
+<div class="col-md-4" id="mid-pane">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Next Steps</h3>
+		</div>
+		
+		<div style="height:460px;">	      	
+			<div style="padding:14px;" >
+                                <div style="height:360px">
+				        <h2 style="color:#999; text-align:center;">
+                                                Are you ready to start entering your measurements?
+                                        <h2>
+                                        <h4 style="text-align:center; color:#555;">Click the "Next" to begin!</h1>
+                                </div>
+                                <div style="text-align:right;">
+                                        <a href="#" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+			</div>
+		</div>
+	</div></div>
 </script>
 
 
+
+
+
+<!-- Measurements View Templates -->
 <script type="text/html" id="navbar-top">
 <div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
  <div class="container">
@@ -74,10 +111,37 @@
  </div>
 </div>
 </script>
+<script type="text/html" id="prosthetic-data-entry">
+<div class="col-md-4" id="mid-pane">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Prosthetic Selection</h3>
+		</div>
+		
+		<div style="height:460px;">
+		      	<div class="panel-body" id="side-select-body" style="padding-top:14px;">
+				<select class="form-control" 
+					data-bind="options: prostheticHandItems, 
+						optionsText: 'name', 
+						optionsValue: 'id', 
+						value: selectedProstheticHand">
+				</select>
+			</div>
+			
+			<div id="prosthetic" style="padding-top:14px; padding-left:14px; padding-right:14px;" 
+				data-bind="template: { name: 'field-template', foreach: selectedFields }">
+			</div>
 
+			<div data-bind="visible: noHandSelected()" style="padding-left:14px; padding-right:14px;" >
+				<h2 style="color:#999; text-align:center;">Select which hand needs a prosthetic and we will gather your measurements</h2>
+			</div>
 
+		</div>
+	</div>
+</div>
+</script>
 <script type="text/html" id="reference-pane">
- <div class="col-md-4" id="third-pane" style="opacity:0">
+ <div class="col-md-4" id="third-pane" data-bind="visible: !noHandSelected()">
   <ul class="nav nav-tabs" id="render_tab">
    <li class="dropdown">
     <a data-toggle="dropdown" class="dropdown-toggle" id="myTabDrop1" href="#">Reference <b class="caret"></b></a>
@@ -107,32 +171,24 @@
  </div>
 </script>
 
-
-<script type="text/html" id="prosthetic-data-entry">
-<div class="col-md-4" id="mid-pane" style="opacity:0;">
+<script type="text/html" id="measurement-next-step">
+<div class="col-md-4" id="right-pane-step1"  data-bind="visible: !noHandSelected()">
 	<div class="panel panel-warning" id="side-select">
 		<div class="panel-heading">
-			<h3 class="panel-title">Prosthetic Selection</h3>
+			<h3 class="panel-title">Next Steps</h3>
 		</div>
 		
-		<div style="height:460px;">
-		      	<div class="panel-body" id="side-select-body" style="padding-top:14px;">
-				<select class="form-control" 
-					data-bind="options: prostheticHandItems, 
-						optionsText: 'name', 
-						optionsValue: 'id', 
-						value: selectedProstheticHand">
-				</select>
+		<div style="height:460px;">	      	
+			<div style="padding:14px;" >
+                                <div style="height:360px">
+				        <h2 style="color:#999; text-align:center;">
+                                                After you enter your measurements, click "Next" below
+                                        <h2>
+                                </div>
+                                <div style="text-align:right;">
+                                        <a href="#" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
 			</div>
-			
-			<div id="prosthetic" style="padding-left:14px; padding-right:14px;" 
-				data-bind="template: { name: 'field-template', foreach: selectedFields }">
-			</div>
-
-			<div data-bind="visible: noHandSelected()" style="padding-left:14px; padding-right:14px;" >
-				<h2 style="color:#999;">Select which hand needs a prosthetic and we will gather your measurements</h2>
-			</div>
-
 		</div>
 	</div>
 </div>
@@ -200,15 +256,18 @@
 
 
 <script type="text/html" id="field-template">
-	<div data-bind="visible: isVisible">
-	  <div class="input-group">
+	<div data-bind="visible: isVisible" style="margin-bottom:36px;">
+	  <div class="input-group" style="margin-bottom:5px;">
 		<span class="input-group-addon" data-bind="text: id"></span>
 		<input type="number" step="any" min="0" class="form-control"
 		data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value, placeholder: description}"/>
 		<span class="input-group-addon">mm</span>
 	  </div>
-	    <div data-bind="text: description,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
-		  style="margin-bottom:36px; background-color:white"></div>
+		<div style="color:#666;">
+	    <span data-bind="text: description,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
+		  style="font-size:13px; font-weight:bold;"></span>
+		<i style="font-size:20px" class="fa fa-question-circle"></i>
+		</div>
 	</div>
 	
 	<div data-bind="ko if: hidden">

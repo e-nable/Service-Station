@@ -167,6 +167,15 @@ var viewModel = function (descriptionData) {
 	var self = this;
 	
 	// TODO - convert these into observables and isolate the loading of their state	
+	self.processSteps = {
+		welcomePage: 1,
+		measurementsPage: 2,
+		modelPage: 3,
+	};
+
+	self.currentStep = ko.observable(self.processSteps.welcomePage);
+		
+
 	self.submitType = submitType;
 	self.isUnderProcessLimit = isUnderProcessLimit;
 	self.processCount = processCount;
@@ -260,13 +269,7 @@ var viewModel = function (descriptionData) {
 // Call this when we submit
 function submitForm(v){
 	submitVal =v;
-
-	var hand_selected = $("prostheticHand").val();
-	var side = ((hand_selected == 0)?'l':'r');
-	var oSide = ((hand_selected == 0)?'r':'l');
-	var count = 0;
-	var flagged = false;
-
+	
 	if (flagged){
 		$('#valueWarningModal').modal({backdrop:'static', keyboard: false, show:true});
 		return;
@@ -318,14 +321,6 @@ function conditionalButtonRender(){
 	}
 }
 
-function showJumbotron() { 
-	if (!submitType){
-		$("#preview_tab").hide();
-		$('.jumbotron').animate({opacity: 1},500);
-	} else {
-		$('.jumbotron').remove();
-	}
-}
 
 // configures UI on first render while we get knockout completed
 function firstRender() {
@@ -346,7 +341,7 @@ function firstRender() {
 			return true;
 		}
 	});
-
+	
 	$('#generateSelect').change(function(val){
 		if (this && this.value && this.value == 0){
 			$('#stl-btn').addClass('disabled');
@@ -357,16 +352,5 @@ function firstRender() {
 		}
 	});
 	
-	$('#first-pane').animate({opacity: 1},750);
-	$('#mid-pane').animate({opacity: 1},2000);
-	$('#third-pane').animate({opacity: 1},2800);
-	$('#close-jumbo').click(function(){closeJumbo()});
 }
 
-function closeJumbo(){
-	$('.jumbotron').animate({
-		opacity: 0,
-		height: '0px',
-		padding: '0px'
-		},1500, function() {/*$('.jumbotron').remove();*/})
-}
