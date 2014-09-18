@@ -301,8 +301,19 @@ function conditionalButtonRender(){
 		+ "&fingerSelect=2&palmSelect=2&prostheticHand=0&Padding=5&WristBolt=5.5"
 		+ "&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview";
 
+
+	$('#e_footer').append(
+		$('<a></a>').attr({
+			class:	"disclaimer btn btn-help",
+			href:	sampleDataURL	
+		}).click(function(){
+			submitForm('preview');
+			$('#loadingModal').modal({backdrop:'static', keyboard: false, show:true});
+		}).html('Sample Data')
+	);
+	
 	if (isUnderProcessLimit == 1){
-		$('#action_buttons').append(
+		/*$('#action_buttons').append(
 			$('<button></button>').attr({
 				id:'stl-btn',
 				'data-loading-text':'Loading STL...',
@@ -312,17 +323,8 @@ function conditionalButtonRender(){
 				value: 'stl'})
 			.click(function(){submitForm('stl');})
 			.html('<span class="glyphicon glyphicon-download"></span> Generate STL')
-		);
+		);*/
 		
-		$('#e_footer').append(
-			$('<a></a>').attr({
-				class:	"disclaimer btn btn-help",
-				href:	sampleDataURL	
-			}).click(function(){
-				submitForm('preview');
-				$('#loadingModal').modal({backdrop:'static', keyboard: false, show:true});
-			}).html('Sample Data')
-		);
 	} else {
 		$('#action_buttons').append(
 			$('<h5></h5>').attr({
@@ -337,8 +339,6 @@ function conditionalButtonRender(){
 // configures UI on first render while we get knockout completed
 function firstRender() {
 	conditionalButtonRender();
-	
-	showJumbotron();
 	
 	$('#generatorForm').submit(function (e) {
 		if (flaggedError == true)

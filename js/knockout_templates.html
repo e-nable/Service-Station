@@ -36,6 +36,8 @@
 
 		<div class="row" data-bind="if: currentStep() == processSteps.modelPage ">
                         <div data-bind="template: { name: 'model-selection' }"></div>			
+                        <div data-bind="template: { name: 'model-preview' }"></div>			
+                        <div data-bind="template: { name: 'model-generate' }"></div>			
                 </div>
 	</div>
 </script>
@@ -241,19 +243,7 @@
 		
 		<div style="height:460px; padding:14px;" >
                         <div style="height:375px">
-	                      	<div class="panel-body" id="option-select-body">
-                                        <!--
-			                <label for='part'>Generate</label>
-			                <select name='part' class="form-control" id="generateSelect"
-				                data-bind="options: partItems,optionsText: 'name',optionsValue: 'id',value: selectedPart">
-			                </select>
-		
-			                <div class="input-group incomplete" id="email"><span class="input-group-addon">
-				                <span class="fa fa-cogs"></span>&nbsp;&nbsp; Email </span>
-				                <input type="" step="any" min="0" name="email" data-bind="value: email" class="form-control">
-			                </div>-->
-
-                                        
+	                      	<div class="panel-body" id="option-select-body">                                        
 			                  <label for='palmSelect'>Palm Style</label>
 			                  <select name='palmSelect' class="form-control"
 				                data-bind="options: palmItems,optionsText: 'name',optionsValue: 'id',value: selectedPalm">
@@ -288,9 +278,56 @@
 	</div>
 </div>
 </script>
+<script type="text/html" id="model-preview">
+<div class="col-md-4" id="right-pane-step1">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Preview Window</h3>
+		</div>
+		
+		<div style="height:460px; padding:14px;">
+			<img src="imagecache/fccd36dfa3de16303869f54f10b9d2dc.1324543605.Right.png" style="width:100%;" />
+		</div>
+	</div>
+</div>
+</script>
+<script type="text/html" id="model-generate">
+<div class="col-md-4" id="right-pane-step1">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Generate Model</h3>
+		</div>
+		
+		<div style="height:460px; padding:14px;" >
+                        <div style="height:375px">
+			        <h2 style="color:#999; text-align:center; margin:0px;">
+                                        Finally: choose the parts you want to generate, enter your email address and hit "Generate STL"!</h2>
+                                
+                                <div style="height:40px;"></div>
+
+		                <label for='part'>What would you like to generate?</label>
+		                <select name='part' class="form-control" id="generateSelect"
+			                data-bind="options: partItems,optionsText: 'name',optionsValue: 'id',value: selectedPart">
+		                </select>
+	                        
+                                <div style="height:20px;"></div>
+
+		                <label for='part'>Where would you like the model emailed to?</label>
+
+		                <div class="input-group incomplete" id="email"><span class="input-group-addon">
+
+			                <span class="fa fa-cogs"></span>&nbsp;&nbsp; Email </span>
+			                <input type="" step="any" min="0" name="email" data-bind="value: email" class="form-control">
+		                </div>
+                        </div>
+                        <div style="text-align:center;">
+                                <a href="#" data-bind="click:navigateModelPage" class="btn btn-lg btn-danger">Generate <i class="fa fa-bolt"></i></a>
+                        </div>
+		</div>
+	</div>
+</div>
+</script>
 
 
-<!-- TODO: move this elsewhere
-        <div class="tab-pane" id="preview" data-bind="text: render"></div>
- -->
+
 
