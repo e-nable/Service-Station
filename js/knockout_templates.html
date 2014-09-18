@@ -34,54 +34,15 @@
 			<div data-bind="template: { name: 'measurement-next-step' }"></div>  			
 		</div>
 
+		<div class="row" data-bind="if: currentStep() == processSteps.modelPage ">
+                        <div data-bind="template: { name: 'model-selection' }"></div>			
+                </div>
 	</div>
-
-</script>
-
-
-<!-- Welcome View Templates -->
-<script type="text/html" id="left-welcome-pane">
-<div class="col-md-8">
-	<div class="panel panel-warning" id="side-select">
-		<div class="panel-heading">
-			<h3 class="panel-title">Welcome to Hand-o-matic!</h3>
-		</div>
-		
-		<div style="height:460px;">
-		      	<h1 style="color:#999; text-align:center;">Welcome to Hand-o-matic!</h1>
-
-		</div>
-	</div>
-</div>
-</script>
-<script type="text/html" id="right-welcome-pane">
-<div class="col-md-4" id="mid-pane">
-	<div class="panel panel-warning" id="side-select">
-		<div class="panel-heading">
-			<h3 class="panel-title">Next Steps</h3>
-		</div>
-		
-		<div style="height:460px;">	      	
-			<div style="padding:14px;" >
-                                <div style="height:360px">
-				        <h2 style="color:#999; text-align:center;">
-                                                Are you ready to start entering your measurements?
-                                        <h2>
-                                        <h4 style="text-align:center; color:#555;">Click the "Next" to begin!</h1>
-                                </div>
-                                <div style="text-align:right;">
-                                        <a href="#" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
-                                </div>
-			</div>
-		</div>
-	</div></div>
 </script>
 
 
 
-
-
-<!-- Measurements View Templates -->
+<!-- Navbar and Disclaimer View Templates -->
 <script type="text/html" id="navbar-top">
 <div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
  <div class="container">
@@ -111,134 +72,6 @@
  </div>
 </div>
 </script>
-<script type="text/html" id="prosthetic-data-entry">
-<div class="col-md-4" id="mid-pane">
-	<div class="panel panel-warning" id="side-select">
-		<div class="panel-heading">
-			<h3 class="panel-title">Prosthetic Selection</h3>
-		</div>
-		
-		<div style="height:460px;">
-		      	<div class="panel-body" id="side-select-body" style="padding-top:14px;">
-				<select class="form-control" 
-					data-bind="options: prostheticHandItems, 
-						optionsText: 'name', 
-						optionsValue: 'id', 
-						value: selectedProstheticHand">
-				</select>
-			</div>
-			
-			<div id="prosthetic" style="padding-top:14px; padding-left:14px; padding-right:14px;" 
-				data-bind="template: { name: 'field-template', foreach: selectedFields }">
-			</div>
-
-			<div data-bind="visible: noHandSelected()" style="padding-left:14px; padding-right:14px;" >
-				<h2 style="color:#999; text-align:center;">Select which hand needs a prosthetic and we will gather your measurements</h2>
-			</div>
-
-		</div>
-	</div>
-</div>
-</script>
-<script type="text/html" id="reference-pane">
- <div class="col-md-4" id="third-pane" data-bind="visible: !noHandSelected()">
-  <ul class="nav nav-tabs" id="render_tab">
-   <li class="dropdown">
-    <a data-toggle="dropdown" class="dropdown-toggle" id="myTabDrop1" href="#">Reference <b class="caret"></b></a>
-    <ul aria-labelledby="myTabDrop1" role="menu" class="dropdown-menu">
-     <li><a data-toggle="tab" tabindex="-1"  href="#image" data-toggle="tab">Visual</a></li>
-     <li><a data-toggle="tab" tabindex="-1"  href="#descriptions" data-toggle="tab">Descriptions</a></li>
-    </ul>
-   </li>
-   <li id="preview_tab"><a href="#preview" data-toggle="tab">Preview</a></li>  
-  </ul>
-
-  <!-- Tab panes -->
-  <div class="tab-content">
-   <div class="tab-pane active" id="image" style="height:460px; padding-top:14px;">
-	<div class="thumbnail" data-bind="visible: !noHandSelected()">
-		<img src="./imgs/referece_rP.png" data-bind="visible: rightHandSelected" />
-		<img src="./imgs/referece_lP.png" data-bind="visible: leftHandSelected" />
-	</div>
-   </div>
-   <div class="tab-pane" id="descriptions" style="height:460px;">
-    <br><ol data-bind="template: { name: 'description-template', foreach: descriptions }"></ol>
-   </div>
-
-	<!-- TODO: move this elsewhere -->
-   <div class="tab-pane" id="preview" data-bind="text: render"></div>
-  </div>
- </div>
-</script>
-
-<script type="text/html" id="measurement-next-step">
-<div class="col-md-4" id="right-pane-step1"  data-bind="visible: !noHandSelected()">
-	<div class="panel panel-warning" id="side-select">
-		<div class="panel-heading">
-			<h3 class="panel-title">Next Steps</h3>
-		</div>
-		
-		<div style="height:460px;">	      	
-			<div style="padding:14px;" >
-                                <div style="height:360px">
-				        <h2 style="color:#999; text-align:center;">
-                                                After you enter your measurements, click "Next" below
-                                        <h2>
-                                </div>
-                                <div style="text-align:right;">
-                                        <a href="#" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
-                                </div>
-			</div>
-		</div>
-	</div>
-</div>
-</script>
-
-
-<script type="text/html" id="model-selection">
-<div class="col-md-4 config-col" id="first-pane" style="opacity:0">
-	<div class="panel panel-warning">
-		<div class="panel-heading">
-			<h3 class="panel-title">Model Selection</h3>
-		</div>
-		
-	      	<div class="panel-body" id="option-select-body">
-			<label for='part'>Generate</label>
-			<select name='part' class="form-control" id="generateSelect"
-				data-bind="options: partItems,optionsText: 'name',optionsValue: 'id',value: selectedPart">
-			</select>
-		
-			<div class="input-group incomplete" id="email"><span class="input-group-addon">
-				<span class="fa fa-cogs"></span>&nbsp;&nbsp; Email </span>
-				<input type="" step="any" min="0" name="email" data-bind="value: email" class="form-control">
-			</div>
-
-			  <label for='gauntletSelect'>Gauntlet Style</label>
-			  <select name='gauntletSelect' class="form-control"
-				data-bind="options: gauntletSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedGauntletSelect">
-			  </select>
-
-			  <label for='fingerSelect'>Finger Style</label>
-			  <select name='fingerSelect' class="form-control"
-				data-bind="options: fingerSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedFingerSelect">
-			  </select>
-
-			  <label for='palmSelect'>Palm Style</label>
-			  <select name='palmSelect' class="form-control"
-				data-bind="options: palmItems,optionsText: 'name',optionsValue: 'id',value: selectedPalm">
-			  </select>
-
-			  <label>Spacing</label>
-			  <div class="input-group"><span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
-				<input type="number" step="any" min="0" name="Padding" data-bind="value: paddingValue" class="form-control" />
-				<span class="input-group-addon">mm</span>
-			  </div>
-		</div>
-	</div>
-</div>
-</script>
-
-
 <script type="text/html" id="navbar-bottom">
 <div class="navbar  navbar-inverse navbar-fixed-bottom">
 	<div class="container" id="e_footer">
@@ -250,10 +83,85 @@
 </script>
 
 
+
+<!-- Welcome View Templates -->
+<script type="text/html" id="left-welcome-pane">
+<div class="col-md-8">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Welcome to Hand-o-matic!</h3>
+		</div>
+		
+		<div style="height:460px; padding:14px;">
+		      	<h1 style="color:#999; text-align:center;">Welcome to Hand-o-matic!</h1>
+                        <div style="text-align:center; padding:20px;">
+                                <iframe width="560" height="315" src="//www.youtube.com/embed/T9nngOrdPkg" frameborder="0" allowfullscreen></iframe>
+        		</div>
+		</div>
+	</div>
+</div>
+</script>
+<script type="text/html" id="right-welcome-pane">
+<div class="col-md-4" id="mid-pane">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Next Steps</h3>
+		</div>
+		
+		<div style="height:460px; padding:14px;" >
+                        <div style="height:375px">
+			        <h2 style="color:#999; text-align:center; margin:0">
+                                        Are you ready to start entering your measurements?
+                                <h2>
+                                <h4 style="text-align:center; color:#555;">Click the "Next" to begin!</h1>
+                        </div>
+                        <div style="text-align:right;">
+                                <a href="#" class="btn btn-lg btn-primary"
+                                        data-bind="click: navigateMeasurementsPage">Next <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+		</div>
+	</div>
+</div>
+</script>
+
+
+
+
+<!-- Measurements View Templates -->
+<script type="text/html" id="prosthetic-data-entry">
+<div class="col-md-4" id="mid-pane">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Prosthetic Selection</h3>
+		</div>
+				
+		<div style="height:460px; padding:14px;" >
+                        <div style="height:375px">
+	                      	<div class="panel-body" id="side-select-body">
+			                <select class="form-control" 
+				                data-bind="options: prostheticHandItems, 
+					                optionsText: 'name', 
+					                optionsValue: 'id', 
+					                value: selectedProstheticHand">
+			                </select>
+		                </div>
+		
+		                <div data-bind="template: { name: 'field-template', foreach: selectedFields }">
+		                </div>
+
+		                <div data-bind="visible: noHandSelected()">
+			                <h2 style="color:#999; text-align:center;">Select which hand needs a prosthetic and we will gather your measurements</h2>
+		                </div>
+                        </div>
+                        <a href="#" data-bind="click: navigateWelcomePage" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+	        </div>
+	</div>
+</div>
+</script>
+
 <script type="text/html" id="description-template">
 	<li data-bind="text: label"></li>
 </script>
-
 
 <script type="text/html" id="field-template">
 	<div data-bind="visible: isVisible" style="margin-bottom:36px;">
@@ -274,15 +182,115 @@
 	  <input type="hidden" data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value}">
 	</div>
 </script>
-	
 
 <script type="text/html" id="other-template">
 	<li data-bind="text: label"></li>
 </script>
 
+<script type="text/html" id="reference-pane">
+<div class="col-md-4" id="third-pane" data-bind="visible: !noHandSelected()">
+        <ul class="nav nav-tabs" id="render_tab">
+                <li class="active"><a data-toggle="tab" tabindex="-1"  href="#image" data-toggle="tab">Visual</a></li>
+                <li><a data-toggle="tab" tabindex="-1"  href="#descriptions" data-toggle="tab">Descriptions</a></li>
+        </ul>
 
-<script type="text/html" id="arrow-template">
-	<span class="hover-arrow" style="display:none" data-bind="attr: { id: id.toLowerCase()}"></span>
-</script>	
+        <!-- Tab panes -->
+        <div class="tab-content">
+           <div class="tab-pane active" id="image" style="height:460px; padding-top:14px;">
+                <div class="thumbnail" data-bind="visible: !noHandSelected()">
+	                <img src="./imgs/referece_rP.png" data-bind="visible: rightHandSelected" />
+	                <img src="./imgs/referece_lP.png" data-bind="visible: leftHandSelected" />
+                </div>
+           </div>
+           <div class="tab-pane" id="descriptions" style="height:460px;">
+            <br><ol data-bind="template: { name: 'description-template', foreach: descriptions }"></ol>
+           </div>
+        </div>
+</div>
+</script>
+<script type="text/html" id="measurement-next-step">
+<div class="col-md-4" id="right-pane-step1"  data-bind="visible: !noHandSelected()">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Next Steps</h3>
+		</div>
+		
+		<div style="height:460px; padding:14px;" >
+                        <div style="height:375px">
+			        <h2 style="color:#999; text-align:center; margin:0px;">
+                                        After you enter your measurements, click "Next" below
+                                <h2>
+                        </div>
+                        <div style="text-align:right;">
+                                <a href="#" data-bind="click:navigateModelPage" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+		</div>
+	</div>
+</div>
+</script>
 
+
+
+<!-- Model Selection View Templates -->
+<script type="text/html" id="model-selection">
+<div class="col-md-4 config-col">
+	<div class="panel panel-warning">
+		<div class="panel-heading">
+			<h3 class="panel-title">Model Selection</h3>
+		</div>
+		
+		<div style="height:460px; padding:14px;" >
+                        <div style="height:375px">
+	                      	<div class="panel-body" id="option-select-body">
+                                        <!--
+			                <label for='part'>Generate</label>
+			                <select name='part' class="form-control" id="generateSelect"
+				                data-bind="options: partItems,optionsText: 'name',optionsValue: 'id',value: selectedPart">
+			                </select>
+		
+			                <div class="input-group incomplete" id="email"><span class="input-group-addon">
+				                <span class="fa fa-cogs"></span>&nbsp;&nbsp; Email </span>
+				                <input type="" step="any" min="0" name="email" data-bind="value: email" class="form-control">
+			                </div>-->
+
+                                        
+			                  <label for='palmSelect'>Palm Style</label>
+			                  <select name='palmSelect' class="form-control"
+				                data-bind="options: palmItems,optionsText: 'name',optionsValue: 'id',value: selectedPalm">
+			                  </select>
+                                          <div style="height:20px;"></div>
+
+			                  <label for='fingerSelect'>Finger Style</label>
+			                  <select name='fingerSelect' class="form-control"
+				                data-bind="options: fingerSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedFingerSelect">
+			                  </select>
+                                          <div style="height:20px;"></div>
+
+			                  <label for='gauntletSelect'>Gauntlet Style</label>
+			                  <select name='gauntletSelect' class="form-control"
+				                data-bind="options: gauntletSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedGauntletSelect">
+			                  </select>
+                                          <div style="height:20px;"></div>
+
+			                  <label>Spacing</label>
+			                  <div class="input-group"><span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
+				                <input type="number" step="any" min="0" name="Padding" data-bind="value: paddingValue" class="form-control" />
+				                <span class="input-group-addon">mm</span>
+			                  </div>
+                                          <div style="height:20px;"></div>
+
+		                </div>
+	                </div>
+                        
+                        <!-- BACK BUTTON -->
+                        <a href="#" data-bind="click: navigateMeasurementsPage" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+                </div>
+	</div>
+</div>
+</script>
+
+
+<!-- TODO: move this elsewhere
+        <div class="tab-pane" id="preview" data-bind="text: render"></div>
+ -->
 

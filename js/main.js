@@ -175,6 +175,18 @@ var viewModel = function (descriptionData) {
 
 	self.currentStep = ko.observable(self.processSteps.welcomePage);
 		
+	self.navigateWelcomePage = function() {
+		self.currentStep(self.processSteps.welcomePage);
+	};
+
+	self.navigateMeasurementsPage = function() {
+		self.currentStep(self.processSteps.measurementsPage);
+	};
+
+	self.navigateModelPage = function() {
+		self.currentStep(self.processSteps.modelPage);
+	};
+
 
 	self.submitType = submitType;
 	self.isUnderProcessLimit = isUnderProcessLimit;
