@@ -23,18 +23,18 @@
 	<div data-bind="template: { name: 'navbar-bottom' }"></div>
 
 	<div class="container main-container">
-		<div class="row" data-bind="if: currentStep() == processSteps.welcomePage ">
+		<div class="row" data-bind="visible: currentStep() == processSteps.welcomePage ">
 			<div data-bind="template: { name: 'left-welcome-pane' }"></div>	
 			<div data-bind="template: { name: 'right-welcome-pane' }"></div>
 		</div>
 
-		<div class="row" data-bind="if: currentStep() == processSteps.measurementsPage ">
+		<div class="row" data-bind="visible: currentStep() == processSteps.measurementsPage ">
 			<div data-bind="template: { name: 'prosthetic-data-entry' }"></div>	
 			<div data-bind="template: { name: 'reference-pane' }"></div>
 			<div data-bind="template: { name: 'measurement-next-step' }"></div>  			
 		</div>
 
-		<div class="row" data-bind="if: currentStep() == processSteps.modelPage ">
+		<div class="row" data-bind="visible: currentStep() == processSteps.modelPage ">
                         <div data-bind="template: { name: 'model-selection' }"></div>			
                         <div data-bind="template: { name: 'model-preview' }"></div>			
                         <div data-bind="template: { name: 'model-generate' }"></div>			
@@ -64,9 +64,10 @@
    <div class="navbar-form navbar-right">
     <span id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
       <span class="fa fa-question-circle"></span> </span>
-      <a id="feedback" class="help btn btn-help" value='feedback' target='_blank'
-		href="https://docs.google.com/forms/d/1hqjed1x9NuTdLt5qNfGwx-YoK3H3JSgnu30vaF47mKs/viewform?edit_requested=true#">
-      <span class="fa fa-comments"></span> </a>
+      	<a id="feedback" class="help btn btn-help" value='feedback' target='_blank'
+			href="https://docs.google.com/forms/d/1hqjed1x9NuTdLt5qNfGwx-YoK3H3JSgnu30vaF47mKs/viewform?edit_requested=true#">
+      		<span class="fa fa-comment"></span> 
+	</a>
       <span id="action_buttons"></span>
     </div>
    </div>
@@ -140,7 +141,8 @@
 		<div style="height:460px; padding:14px;" >
                         <div style="height:375px">
 	                      	<div class="panel-body" id="side-select-body">
-			                <select class="form-control" 
+			                <select name="prostheticHand" 
+						class="form-control" 
 				                data-bind="options: prostheticHandItems, 
 					                optionsText: 'name', 
 					                optionsValue: 'id', 
@@ -176,7 +178,7 @@
 		<div style="color:#666;">
 	    <span data-bind="text: description,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
 		  style="font-size:13px; font-weight:bold;"></span>
-		<i style="font-size:20px" class="fa fa-question-circle"></i>
+		<i style="font-size:20px" class="fa  $('#generatorForm').serialize()fa-question-circle"></i>
 		</div>
 	</div>
 	
@@ -191,23 +193,17 @@
 
 <script type="text/html" id="reference-pane">
 <div class="col-md-4" id="third-pane" data-bind="visible: !noHandSelected()">
-        <ul class="nav nav-tabs" id="render_tab">
-                <li class="active"><a data-toggle="tab" tabindex="-1"  href="#image" data-toggle="tab">Visual</a></li>
-                <li><a data-toggle="tab" tabindex="-1"  href="#descriptions" data-toggle="tab">Descriptions</a></li>
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-           <div class="tab-pane active" id="image" style="height:460px; padding-top:14px;">
-                <div class="thumbnail" data-bind="visible: !noHandSelected()">
-	                <img src="./imgs/referece_rP.png" data-bind="visible: rightHandSelected" />
-	                <img src="./imgs/referece_lP.png" data-bind="visible: leftHandSelected" />
-                </div>
-           </div>
-           <div class="tab-pane" id="descriptions" style="height:460px;">
-            <br><ol data-bind="template: { name: 'description-template', foreach: descriptions }"></ol>
-           </div>
-        </div>
+	<div class="panel panel-warning" id="side-se $('#generatorForm').serialize()lect">
+		<div class="panel-heading">
+			<h3 class="panel-title">Visual</h3>
+		</div>
+		<div id="image" style="height:460px; padding:14px;">
+		        <div class="thumbnail" data-bind="visible: !noHandSelected()">
+			        <img src="./imgs/referece_rP.png" data-bind="visible: rightHandSelected" />
+			        <img src="./imgs/referece_lP.png" data-bind="visible: leftHandSelected" />
+		        </div>
+		</div>
+	</div>	
 </div>
 </script>
 <script type="text/html" id="measurement-next-step">
@@ -286,7 +282,23 @@
 		</div>
 		
 		<div style="height:460px; padding:14px;">
-			<img src="imagecache/fccd36dfa3de16303869f54f10b9d2dc.1324543605.Right.png" style="width:100%;" />
+			<label for='part'>What would you like to generate?</label>
+			<select name='part' class="form-control" id="generateSelect"
+				data-bind="	options: partItems,
+						optionsText: 'name',
+						optionsValue: 'id',
+						event: { change: preview },
+						value: selectedPart">
+			</select>
+			
+			<div style="height:20px;"></div>
+			
+			<div id="pleaseWaitForImage" style="color:#999;" data-bind="visible: waitingForResponse()">
+				<h3>Please wait while a preview is generated...</h3>
+			</div>
+			<img id="previewImage" src="" style="width:100%;" data-bind="visible: !waitingForResponse()"  />
+		</div>
+		<div id="ajaxCaddy" style="display:none;">
 		</div>
 	</div>
 </div>
@@ -301,19 +313,13 @@
 		<div style="height:460px; padding:14px;" >
                         <div style="height:375px">
 			        <h2 style="color:#999; text-align:center; margin:0px;">
-                                        Finally: choose the parts you want to generate, enter your email address and hit "Generate STL"!</h2>
-                                
-                                <div style="height:40px;"></div>
-
-		                <label for='part'>What would you like to generate?</label>
-		                <select name='part' class="form-control" id="generateSelect"
-			                data-bind="options: partItems,optionsText: 'name',optionsValue: 'id',value: selectedPart">
-		                </select>
-	                        
-                                <div style="height:20px;"></div>
-
+                                        Select your model style and select the parts to generate. Next, enter your email address and hit "Generate STL"
+				</h2>
+				                                
+                                <div style="height:60px;"></div>
+				
 		                <label for='part'>Where would you like the model emailed to?</label>
-
+				
 		                <div class="input-group incomplete" id="email"><span class="input-group-addon">
 
 			                <span class="fa fa-cogs"></span>&nbsp;&nbsp; Email </span>
@@ -321,7 +327,7 @@
 		                </div>
                         </div>
                         <div style="text-align:center;">
-                                <a href="#" data-bind="click:navigateModelPage" class="btn btn-lg btn-danger">Generate <i class="fa fa-bolt"></i></a>
+                                <a href="#" data-bind="click:navigateModelPage" class="btn btn-lg btn-danger">Generate STL <i class="fa fa-bolt"></i></a>
                         </div>
 		</div>
 	</div>

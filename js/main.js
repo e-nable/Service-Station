@@ -100,7 +100,9 @@ var sessionService = function(callback) {
 				handSessionValues: handSessionValues,
 			})
 		}, 1);
-}
+};
+
+
 
 var fieldsViewModelBuilder = function(descriptionReferenceData) {
 	var self = this;	
@@ -185,14 +187,15 @@ var viewModel = function (descriptionData) {
 
 	self.navigateModelPage = function() {
 		self.currentStep(self.processSteps.modelPage);
+		self.preview();
 	};
-
+	
 
 	self.submitType = submitType;
 	self.isUnderProcessLimit = isUnderProcessLimit;
 	self.processCount = processCount;
 	self.email = ko.observable();
-	self.paddingValue = ko.observable();
+	self.paddingValue = ko.observable(5);
 	self.render = ko.observable();	
 	
 	self.descriptions = descriptionData;
@@ -275,18 +278,34 @@ var viewModel = function (descriptionData) {
 			return item.right;
 		});
 	});
+
+
+	// OpenSCAD Ajax functions - running with JQuery for now
+	self.waitingForResponse = ko.observable(false);
+
+	self.preview = function() {
+		self.waitingForResponse(true);
+		$.get('preview.php?' + 'advanced=false&submit=preview&' + $('#generatorForm').serialize(), self.renderPreview);
+	};
+	
+	self.renderPreview = function(response) {
+		$("#ajaxCaddy").html(response);
+		var image = $("#ajaxCaddy img").attr("src");
+		$("#previewImage").attr("src", image);	// TODO: tie this to Knockout observable
+		self.waitingForResponse(false);
+	};
 };
 
 
 // Call this when we submit
 function submitForm(v){
-	submitVal =v;
+	submitVal = v;
 	
 	if (flagged){
 		$('#valueWarningModal').modal({backdrop:'static', keyboard: false, show:true});
 		return;
 	}
-
+	
 	flaggedError = flagged;
 }
 
@@ -294,24 +313,7 @@ function submitForm(v){
 // Render buttons when needed - leave out when process count
 // has gone over limit
 function conditionalButtonRender(){
-	var sampleDataURL = "./?Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97"
-		+ "&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5&Right1=62.67"
-		+ "&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0"
-		+ "&Right8=72.52&Right9=72.23&Right10=230.6&part=0&gauntletSelect=1"
-		+ "&fingerSelect=2&palmSelect=2&prostheticHand=0&Padding=5&WristBolt=5.5"
-		+ "&KnuckleBolt=3.3&JointBolt=3.3&ThumbBolt=3.3&submit=Preview";
-
-
-	$('#e_footer').append(
-		$('<a></a>').attr({
-			class:	"disclaimer btn btn-help",
-			href:	sampleDataURL	
-		}).click(function(){
-			submitForm('preview');
-			$('#loadingModal').modal({backdrop:'static', keyboard: false, show:true});
-		}).html('Sample Data')
-	);
-	
+		
 	if (isUnderProcessLimit == 1){
 		/*$('#action_buttons').append(
 			$('<button></button>').attr({
