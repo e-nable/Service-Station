@@ -40,8 +40,28 @@
                         <div data-bind="template: { name: 'model-generate' }"></div>			
                 </div>
 	</div>
+
 </script>
 
+
+<script type="text/html" id="validation-popup">
+<div class="modal fade" id="valueWarningModal" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">Missing Measurements</h4>
+			</div>
+			<div class="modal-body">
+				<p>There seems to be a few missing values from the required measurements. Please set the associated <b>numeric</b> values for those fields <span class="incomplete-span">colored in red</span> before submitting again.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div>
+</script>
 
 
 <!-- Navbar and Disclaimer View Templates -->
@@ -119,8 +139,7 @@
                                 <h4 style="text-align:center; color:#555;">Click the "Next" to begin!</h1>
                         </div>
                         <div style="text-align:right;">
-                                <a href="#" class="btn btn-lg btn-primary"
-                                        data-bind="click: navigateMeasurementsPage">Next <i class="fa fa-arrow-circle-right"></i></a>
+                                <a href="#measure" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
 		</div>
 	</div>
@@ -157,7 +176,7 @@
 			                <h2 style="color:#999; text-align:center;">Select which hand needs a prosthetic and we will gather your measurements</h2>
 		                </div>
                         </div>
-                        <a href="#" data-bind="click: navigateWelcomePage" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+                        <a href="#welcome" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
 	        </div>
 	</div>
 </div>
@@ -168,23 +187,24 @@
 </script>
 
 <script type="text/html" id="field-template">
-	<div data-bind="visible: isVisible" style="margin-bottom:36px;">
-	  <div class="input-group" style="margin-bottom:5px;">
+<div data-bind="visible: isVisible" style="margin-bottom:36px;">
+  	<div class="input-group" style="margin-bottom:5px;" data-bind="css: { incomplete: showValidation }">
 		<span class="input-group-addon" data-bind="text: id"></span>
 		<input type="number" step="any" min="0" class="form-control"
-		data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value, placeholder: description}"/>
+			data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, placeholder: description}, value: dataEntry"/>
 		<span class="input-group-addon">mm</span>
 	  </div>
-		<div style="color:#666;">
-	    <span data-bind="text: description,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
-		  style="font-size:13px; font-weight:bold;"></span>
-		<i style="font-size:20px" class="fa  $('#generatorForm').serialize()fa-question-circle"></i>
-		</div>
-	</div>
 	
-	<div data-bind="ko if: hidden">
-	  <input type="hidden" data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value}">
+	<div style="color:#666;">
+    		<span data-bind="text: description,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
+	  		style="font-size:13px; font-weight:bold;"></span>
+		<i style="font-size:20px" class="fa  $('#generatorForm').serialize()fa-question-circle"></i>
 	</div>
+</div>
+
+<div data-bind="ko if: hidden">
+  	<input type="hidden" data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value}">
+</div>
 </script>
 
 <script type="text/html" id="other-template">
@@ -217,10 +237,14 @@
                         <div style="height:375px">
 			        <h2 style="color:#999; text-align:center; margin:0px;">
                                         After you enter your measurements, click "Next" below
-                                <h2>
+                                </h2>
+				
+				<div style="margin-top:20px;" data-bind="visible: !measurementPageValid()">
+					<p>There seems to be a few missing values from the required measurements. Please set the associated <b>numeric</b> values for those fields <span class="incomplete-span">colored in red</span> before submitting again.</p>
+				</div>
                         </div>
                         <div style="text-align:right;">
-                                <a href="#" data-bind="click:navigateModelPage" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
+                                <a href="#model" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
 		</div>
 	</div>
@@ -242,25 +266,40 @@
 	                      	<div class="panel-body" id="option-select-body">                                        
 			                  <label for='palmSelect'>Palm Style</label>
 			                  <select name='palmSelect' class="form-control"
-				                data-bind="options: palmItems,optionsText: 'name',optionsValue: 'id',value: selectedPalm">
+				                data-bind="options: palmItems,
+							optionsText: 'name',
+							event: { change: preview },
+							optionsValue: 'id',
+							value: selectedPalm">
 			                  </select>
                                           <div style="height:20px;"></div>
 
 			                  <label for='fingerSelect'>Finger Style</label>
 			                  <select name='fingerSelect' class="form-control"
-				                data-bind="options: fingerSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedFingerSelect">
+				                data-bind="options: fingerSelectItems,
+							optionsText: 'name',
+							optionsValue: 'id',
+							event: { change: preview },
+							value: selectedFingerSelect">
 			                  </select>
                                           <div style="height:20px;"></div>
 
 			                  <label for='gauntletSelect'>Gauntlet Style</label>
 			                  <select name='gauntletSelect' class="form-control"
-				                data-bind="options: gauntletSelectItems,optionsText: 'name',optionsValue: 'id',value: selectedGauntletSelect">
+				                data-bind="options: gauntletSelectItems,
+							optionsText: 'name',
+							optionsValue: 'id',
+							event: { change: preview },
+							value: selectedGauntletSelect">
 			                  </select>
                                           <div style="height:20px;"></div>
 
 			                  <label>Spacing</label>
-			                  <div class="input-group"><span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
-				                <input type="number" step="any" min="0" name="Padding" data-bind="value: paddingValue" class="form-control" />
+			                  <div class="input-group" data-bind="css: { incomplete: !paddingValueValid() }">
+						<span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
+				                <input type="number" step="any" min="0" name="Padding" 
+							data-bind="value: paddingValue"" 
+							class="form-control" />
 				                <span class="input-group-addon">mm</span>
 			                  </div>
                                           <div style="height:20px;"></div>
@@ -269,7 +308,7 @@
 	                </div>
                         
                         <!-- BACK BUTTON -->
-                        <a href="#" data-bind="click: navigateMeasurementsPage" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+                        <a href="#measure" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
                 </div>
 	</div>
 </div>
@@ -320,14 +359,16 @@
 				
 		                <label for='part'>Where would you like the model emailed to?</label>
 				
-		                <div class="input-group incomplete" id="email"><span class="input-group-addon">
+		                <div class="input-group" id="email" data-bind="css: { incomplete: !emailValid() }"><span class="input-group-addon">
 
 			                <span class="fa fa-cogs"></span>&nbsp;&nbsp; Email </span>
-			                <input type="" step="any" min="0" name="email" data-bind="value: email" class="form-control">
+			                <input type="" step="any" min="0" name="email" 
+						data-bind="value: email" 
+						class="form-control">
 		                </div>
                         </div>
                         <div style="text-align:center;">
-                                <a href="#" data-bind="click:navigateModelPage" class="btn btn-lg btn-danger">Generate STL <i class="fa fa-bolt"></i></a>
+                                <a href="#model" data-bind="click: validateModelPage"  class="btn btn-lg btn-danger">Generate STL <i class="fa fa-bolt"></i></a>
                         </div>
 		</div>
 	</div>

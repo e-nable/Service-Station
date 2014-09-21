@@ -67,6 +67,11 @@ $.urlParam = function(name){
        return results[1] || 0;
     }
 }
+function isInt(value) {
+  return !isNaN(value) && 
+         parseInt(Number(value)) == value && 
+         !isNaN(parseInt(value, 10));
+}
 
 // TODO: make this a method of an object
 var optionValuesService = function(callback) {
@@ -160,36 +165,15 @@ var fieldsViewModelBuilder = function(descriptionReferenceData) {
 			// TODO: delete "legacy" properties
 			hidden: self.extractHiddenFromSession(handSession), 
 			value: handSession.value, 
+
+			showValidation: ko.observable(false),
 		};
 	};
 };
 
 // View Model content
 var viewModel = function (descriptionData) {
-	var self = this;
-	
-	// TODO - convert these into observables and isolate the loading of their state	
-	self.processSteps = {
-		welcomePage: 1,
-		measurementsPage: 2,
-		modelPage: 3,
-	};
-
-	self.currentStep = ko.observable(self.processSteps.welcomePage);
-		
-	self.navigateWelcomePage = function() {
-		self.currentStep(self.processSteps.welcomePage);
-	};
-
-	self.navigateMeasurementsPage = function() {
-		self.currentStep(self.processSteps.measurementsPage);
-	};
-
-	self.navigateModelPage = function() {
-		self.currentStep(self.processSteps.modelPage);
-		self.preview();
-	};
-	
+	var self = this;	
 
 	self.submitType = submitType;
 	self.isUnderProcessLimit = isUnderProcessLimit;
@@ -262,8 +246,9 @@ var viewModel = function (descriptionData) {
 
 	self.selectedFields = ko.computed(function() {
 		return ko.utils.arrayFilter(self.fields(), function(item) {
-			return (self.leftHandSelected() && item.right) ||
-				(self.rightHandSelected() && item.left);
+			return ((self.leftHandSelected() && item.right) ||
+				(self.rightHandSelected() && item.left)) &&
+				item.isVisible();
 		});
 	});
 
@@ -294,6 +279,76 @@ var viewModel = function (descriptionData) {
 		$("#previewImage").attr("src", image);	// TODO: tie this to Knockout observable
 		self.waitingForResponse(false);
 	};
+
+
+	// Navigation functions
+	self.processSteps = {
+		welcomePage: 1,
+		measurementsPage: 2,
+		modelPage: 3,
+	};
+	
+	self.currentStep = ko.observable(self.processSteps.welcomePage);
+	
+	self.navigateWelcomePage = function() {
+		self.currentStep(self.processSteps.welcomePage);
+	};
+
+	self.navigateMeasurementsPage = function() {
+		self.currentStep(self.processSteps.measurementsPage);
+	};
+
+	self.navigateModelPage = function() {
+		if (self.validateMeasurementsPage()) {
+			self.currentStep(self.processSteps.modelPage);
+			self.preview();
+		} else {
+			 location.hash = "#measure";
+		}
+	};
+	
+	// This bit of code allows us to use bookmarking, back button, etc. and do pure SPA-style navigation with hash tags
+	Sammy(function() {
+		this.get("#welcome", function() {
+			self.navigateWelcomePage();
+		});
+		this.get("#measure", function() {
+			self.navigateMeasurementsPage();
+		});
+		this.get("#model", function() {
+			self.navigateModelPage();
+		});
+	}).run();
+
+	// Validation functions
+	self.measurementPageValid = ko.observable(true);
+	self.modelPageValid = ko.observable(true);
+	self.paddingValueValid = ko.observable(true);
+	self.emailValid = ko.observable(true);
+
+	self.validateMeasurementsPage = function() {
+		self.measurementPageValid(true);
+		
+		ko.utils.arrayForEach(this.selectedFields(), function(field) {
+			field.showValidation(false);
+			
+			if (field.isVisible()) {
+				if (!isInt(field.dataEntry())) {
+					self.measurementPageValid(false);
+					field.showValidation(true);
+				}
+			}
+		});
+		return self.measurementPageValid();
+	};
+		
+	self.validateModelPage = function() {
+		self.paddingValueValid(isInt(self.paddingValue()));
+		self.emailValid(self.email() && true);
+		
+		self.modelPageValid(self.paddingValueValid() && self.emailValid());
+		return self.modelPageValid();
+	}
 };
 
 
