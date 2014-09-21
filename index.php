@@ -24,6 +24,7 @@ start_user_session( $assemblervars);
 $time = time();
 $sessionID = getSessionId();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,24 +49,22 @@ $sessionID = getSessionId();
 	<?php echo file_get_contents('js/knockout_templates.html'); ?>
 	<script src="./js/main.js"></script> <!-- ?_=<?php echo $time ?>"></script> DISABLE THIS FOR NOW TO MAKE DEBUGGING EASY IN CHROME-->
 	
-	<?php printHeaderSessionVariables(); ?>
-	
 	<script type="text/javascript">
 		// TODO: move this stuff into AJAX services, etc.
 		var server_email = function() { $("#email").val(); };
 		var server_paddingValue = function() { $("#paddingValue").val(); };
-		var server_render = function() { $("#render").val(); };
 	</script>
 </head>
 
 <?php
 	$render = render( $assemblervars);
 ?>
+<?php printHeaderSessionVariables(); ?>
+	
 
 <body id="index" class="home">
 <input id="email" type="hidden" value="{$email}" />
 <input id="paddingValue" type="hidden" value="{$paddingValue}" />
-<input id="render" type="hidden" value="{$render}" />
 
 <form id="generatorForm" name="generatorForm">
 	<div data-bind="template: { name: 'main-interface' }"></div>

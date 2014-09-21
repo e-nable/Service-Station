@@ -280,46 +280,6 @@ var viewModel = function (descriptionData) {
 		self.waitingForResponse(false);
 	};
 
-
-	// Navigation functions
-	self.processSteps = {
-		welcomePage: 1,
-		measurementsPage: 2,
-		modelPage: 3,
-	};
-	
-	self.currentStep = ko.observable(self.processSteps.welcomePage);
-	
-	self.navigateWelcomePage = function() {
-		self.currentStep(self.processSteps.welcomePage);
-	};
-
-	self.navigateMeasurementsPage = function() {
-		self.currentStep(self.processSteps.measurementsPage);
-	};
-
-	self.navigateModelPage = function() {
-		if (self.validateMeasurementsPage()) {
-			self.currentStep(self.processSteps.modelPage);
-			self.preview();
-		} else {
-			 location.hash = "#measure";
-		}
-	};
-	
-	// This bit of code allows us to use bookmarking, back button, etc. and do pure SPA-style navigation with hash tags
-	Sammy(function() {
-		this.get("#welcome", function() {
-			self.navigateWelcomePage();
-		});
-		this.get("#measure", function() {
-			self.navigateMeasurementsPage();
-		});
-		this.get("#model", function() {
-			self.navigateModelPage();
-		});
-	}).run();
-
 	// Validation functions
 	self.measurementPageValid = ko.observable(true);
 	self.modelPageValid = ko.observable(true);
@@ -329,6 +289,9 @@ var viewModel = function (descriptionData) {
 	self.validateMeasurementsPage = function() {
 		self.measurementPageValid(true);
 		
+		if (self.noHandSelected()) {
+			self.measurementPageValid(false);
+		}
 		ko.utils.arrayForEach(this.selectedFields(), function(field) {
 			field.showValidation(false);
 			
@@ -349,6 +312,34 @@ var viewModel = function (descriptionData) {
 		self.modelPageValid(self.paddingValueValid() && self.emailValid());
 		return self.modelPageValid();
 	}
+	
+
+	// Navigation functions
+	self.processSteps = {
+		welcomePage: 1,
+		measurementsPage: 2,
+		modelPage: 3,
+	};
+	
+	self.currentStep = ko.observable(self.processSteps.welcomePage);
+	
+	// This bit of code allows us to use bookmarking, back button, etc. and do pure SPA-style navigation with hash tags
+	Sammy(function() {
+		this.get("#welcome", function(context) {
+			self.currentStep(self.processSteps.welcomePage);
+		});
+		this.get("#measure", function(context) {
+			self.currentStep(self.processSteps.measurementsPage);
+		});
+		this.get("#model", function(context) {
+			if (self.validateMeasurementsPage()) {
+				self.currentStep(self.processSteps.modelPage);
+				self.preview();
+			} else {
+				 context.redirect("#measure");
+			}
+		});
+	}).run();
 };
 
 
@@ -392,34 +383,8 @@ function conditionalButtonRender(){
 	}
 }
 
-
 // configures UI on first render while we get knockout completed
 function firstRender() {
 	conditionalButtonRender();
-	
-	$('#generatorForm').submit(function (e) {
-		if (flaggedError == true)
-			return false;
-		else {
-			$("#loadingModal").modal({backdrop:'static', keyboard: false, show:true});
-			if (submitVal == 'preview'){
-				$('#stl-btn').addClass('disabled');
-			} else if (submitVal == 'stl'){
-				$('#preview-btn').addClass('disabled');
-			}
-			return true;
-		}
-	});
-	
-	$('#generateSelect').change(function(val){
-		if (this && this.value && this.value == 0){
-			$('#stl-btn').addClass('disabled');
-			$('#email').removeClass('hide');
-		} else {
-			$('#stl-btn').removeClass('disabled');
-			$('#email').addClass('hide');
-		}
-	});
-	
 }
 

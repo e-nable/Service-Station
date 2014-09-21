@@ -201,10 +201,6 @@
 		<i style="font-size:20px" class="fa  $('#generatorForm').serialize()fa-question-circle"></i>
 	</div>
 </div>
-
-<div data-bind="ko if: hidden">
-  	<input type="hidden" data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, value: value}">
-</div>
 </script>
 
 <script type="text/html" id="other-template">
@@ -332,8 +328,9 @@
 			
 			<div style="height:20px;"></div>
 			
-			<div id="pleaseWaitForImage" style="color:#999;" data-bind="visible: waitingForResponse()">
-				<h3>Please wait while a preview is generated...</h3>
+			<div id="pleaseWaitForImage" style="color:#999; text-align:center;" data-bind="visible: waitingForResponse()">
+				<h4>Please wait while a preview is generated...</h4>
+				<img src="imgs/spinner.gif" style="width:80%;" />
 			</div>
 			<img id="previewImage" src="" style="width:100%;" data-bind="visible: !waitingForResponse()"  />
 		</div>
