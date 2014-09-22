@@ -31,7 +31,7 @@ var descriptions = [
 	{ id: 8,  label: "Distance from Lateral and Medial sides of the distal part of the hand",
 		sublabel: "Width of full hand across knuckles. See picture at right." },
 	{ id: 9,  label: "Distance from wrist to proximal end of 1st phalange on pinky side (Medial)",
-		sublabel: "Length of palm, measured from center of wrist to center of knuckles." },
+		sublabel: "Length of palm, measured from center of wrist to center of knuckles. See picture at right." },
 
 	{ id: 10, label: "Length of Elbow to wrist joint"}
     ];

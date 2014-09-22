@@ -76,7 +76,7 @@
     <span class="icon-bar"></span>
    </button>
    <a href="#" class="navbar-brand">
-	<span id="product-title">e-NABLE Hand-o-Matic v1.2</span>
+	<span id="product-title">e-NABLE Hand-o-matic v1.2</span>
 	</a>
   </div>
 
@@ -148,6 +148,7 @@
                                 <h4 style="text-align:center; color:#555;">Click the "Next" button to begin!</h1>
                         </div>
                         <div style="text-align:right;">
+				
                                 <a href="#measure" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
 		</div>
@@ -187,6 +188,8 @@
 		                </div>
                         </div>
                         <a href="#welcome" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+			&nbsp;&nbsp;
+                       <a href="#measure" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#measurement-help"><span class="fa fa-question-circle"></span> Help</a>
 	        </div>
 	</div>
 </div>
@@ -251,6 +254,7 @@
 				</div>
                         </div>
                         <div style="text-align:right;">
+
                                 <a href="#model" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
 		</div>
@@ -270,6 +274,9 @@
 		
 		<div class="panel-content">
                         <div class="panel-content-inner">
+				<p>For more information about the different designs and options that are available, see 
+					<a target="_blank" href="http://enablingthefuture.org/upper-limb-prosthetics/">e-NABLE Upper Limb Prosthetics</a>. Note the link will take you to the e-NABLE web site.</p>
+				
 	                      	<div class="panel-body" id="option-select-body">                                        
 			                  <label for='palmSelect'>Palm Style</label>
 			                  <select name='palmSelect' class="form-control"
@@ -301,7 +308,7 @@
 			                  </select>
                                           <div style="height:20px;"></div>
 
-			                  <label>Spacing</label>
+			                  <label>Padding Thickness</label>
 			                  <div class="input-group" data-bind="css: { incomplete: !paddingValueValid() }">
 						<span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
 				                <input type="number" step="any" min="0" name="Padding" 
@@ -316,6 +323,8 @@
                         
                         <!-- BACK BUTTON -->
                         <a href="#measure" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+			&nbsp;&nbsp;
+                       <a href="#measure" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#model-help"><span class="fa fa-question-circle"></span> Help</a>
                 </div>
 	</div>
 </div>
@@ -328,7 +337,7 @@
 		</div>
 		
 		<div class="panel-content">
-			<label for='part'>What would you like to generate?</label>
+			<label for='part'>What would you like to view in the Preview Window?</label>
 			<select name='part' class="form-control" id="generateSelect"
 				data-bind="	options: partItems,
 						optionsText: 'name',
@@ -359,13 +368,13 @@
 		
 		<div class="panel-content">
                         <div class="panel-content-inner">
-			        <h2 style="color:#999; text-align:center; margin:0px;">
+			        <h3 style="color:#999; text-align:center; margin:0px;">
                                         Select your model style and select the parts to generate. Next, enter your email address and hit "Generate STL"
-				</h2>
+				</h3>
 				                                
                                 <div style="height:60px;"></div>
 				
-		                <label for='part'>Where would you like the model emailed to?</label>
+		                <label for='part' style="color:#555;">To have a set of printable files sent to you, enter your email address and click the generate button.</label>
 				
 		                <div class="input-group" id="email" data-bind="css: { incomplete: !emailValid() }"><span class="input-group-addon">
 
@@ -376,7 +385,7 @@
 		                </div>
                         </div>
                         <div style="text-align:center;">
-                                <a href="#model" data-bind="click: validateModelPage"  class="btn btn-lg btn-danger">Generate STL <i class="fa fa-bolt"></i></a>
+                                <a href="#model" data-bind="click: validateModelPage"  class="btn btn-lg btn-danger">Send <i class="fa fa-bolt"></i></a>
                         </div>
 		</div>
 	</div>
