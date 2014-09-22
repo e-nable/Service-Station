@@ -82,11 +82,12 @@
 
   <div class="navbar-collapse collapse">
    <div class="navbar-form navbar-right">
-    <span id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
-      <span class="fa fa-question-circle"></span> </span>
-      	<a id="feedback" class="help btn btn-help" value='feedback' target='_blank'
+    	<span id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
+      	<span class="fa fa-question-circle"></span> Help</span>
+		
+	<a id="feedback" class="help btn btn-help" value='feedback' target='_blank'
 			href="https://docs.google.com/forms/d/1hqjed1x9NuTdLt5qNfGwx-YoK3H3JSgnu30vaF47mKs/viewform?edit_requested=true#">
-      		<span class="fa fa-comment"></span> 
+      		<span class="fa fa-comment"></span> Feedback
 	</a>
       <span id="action_buttons"></span>
     </div>
@@ -100,7 +101,7 @@
 	<div class="container" id="e_footer">
 		&copy; e-NABLE 2014
 		<span id="disclaimer" class="disclaimer btn btn-help" value='help' data-toggle="modal" data-target=".disclaimer-modal">
-		Disclaimer</span>
+		Disclaimer &amp; Credits</span>
 	</div>
 </div>
 </script>
@@ -115,11 +116,19 @@
 			<h3 class="panel-title">Welcome to Hand-o-matic!</h3>
 		</div>
 		
-		<div style="height:460px; padding:14px;">
+		<div class="panel-content">
 		      	<h1 style="color:#999; text-align:center;">Welcome to Hand-o-matic!</h1>
-                        <div style="text-align:center; padding:20px;">
-                                <iframe width="560" height="315" src="//www.youtube.com/embed/T9nngOrdPkg" frameborder="0" allowfullscreen></iframe>
-        		</div>
+			<p><b>Hand-o-matic</b> is a web site that lets you create 3D printable prosthetics custom to your measurements and selected options. The prosthetics are intended for use by people with a partial hand.</p>
+
+			<p>The steps are:
+				<ol type="1">
+				<li>Enter Measurements</li>
+				<li>Select options</li>
+				<li>Deliver files that can be printed on a 3D printer. You can print them yourself, or we can help you find someone in your area who can help you.</li>
+				</ol>
+			</p>
+			<p>If you would like an e-NABLE volunteer to work with you through this process, or if your needs are not addressed by Hand-o-matic, please <a target="_blank" href="https://docs.google.com/a/3duniverse.org/forms/d/1fIiFAT8KN1qLPu8V9cxNRUPdifSHnGz0scQh4jykYSw/viewform">fill out the e-NABLE Intake Form</a>.</p>
+			
 		</div>
 	</div>
 </div>
@@ -131,12 +140,12 @@
 			<h3 class="panel-title">Next Steps</h3>
 		</div>
 		
-		<div style="height:460px; padding:14px;" >
-                        <div style="height:375px">
+		<div class="panel-content">
+                        <div class="panel-content-inner">
 			        <h2 style="color:#999; text-align:center; margin:0">
                                         Are you ready to start entering your measurements?
                                 <h2>
-                                <h4 style="text-align:center; color:#555;">Click the "Next" to begin!</h1>
+                                <h4 style="text-align:center; color:#555;">Click the "Next" button to begin!</h1>
                         </div>
                         <div style="text-align:right;">
                                 <a href="#measure" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
@@ -157,9 +166,9 @@
 			<h3 class="panel-title">Prosthetic Selection</h3>
 		</div>
 				
-		<div style="height:460px; padding:14px;" >
-                        <div style="height:375px">
-	                      	<div class="panel-body" id="side-select-body" style="margin-bottom:40px;">
+		<div class="panel-content">
+                        <div class="panel-content-inner">
+	                      	<div class="panel-body" id="side-select-body" style="margin-bottom:14px;">
 			                <select name="prostheticHand" 
 						class="form-control" 
 				                data-bind="options: prostheticHandItems, 
@@ -169,7 +178,8 @@
 			                </select>
 		                </div>
 		
-		                <div data-bind="template: { name: 'field-template', foreach: selectedFields }">
+				<div>Enter measurements from the hand that <em>doesn’t</em> need the prosthetic.</div>
+		                <div style="margin-top:28px;" data-bind="template: { name: 'field-template', foreach: selectedFields }">
 		                </div>
 
 		                <div data-bind="visible: noHandSelected()">
@@ -193,12 +203,13 @@
 		<input type="number" step="any" min="0" class="form-control"
 			data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, placeholder: description}, value: dataEntry"/>
 		<span class="input-group-addon">mm</span>
-	  </div>
+	</div>
 	
 	<div style="color:#666;">
-    		<span data-bind="text: description,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
-	  		style="font-size:13px; font-weight:bold;"></span>
-		<i style="font-size:20px" class="fa  $('#generatorForm').serialize()fa-question-circle"></i>
+    		<div data-bind="text: description,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
+	  		style="font-size:13px; font-weight:bold;"></div>
+    		<div data-bind="text: subDescription,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
+	  		style="font-size:13px;"></div>
 	</div>
 </div>
 </script>
@@ -213,7 +224,7 @@
 		<div class="panel-heading">
 			<h3 class="panel-title">Visual</h3>
 		</div>
-		<div id="image" style="height:460px; padding:14px;">
+		<div id="image" class="panel-content">
 		        <div class="thumbnail" data-bind="visible: !noHandSelected()">
 			        <img src="./imgs/referece_rP.png" data-bind="visible: rightHandSelected" />
 			        <img src="./imgs/referece_lP.png" data-bind="visible: leftHandSelected" />
@@ -229,8 +240,8 @@
 			<h3 class="panel-title">Next Steps</h3>
 		</div>
 		
-		<div style="height:460px; padding:14px;" >
-                        <div style="height:375px">
+		<div class="panel-content">
+                        <div class="panel-content-inner">
 			        <h2 style="color:#999; text-align:center; margin:0px;">
                                         After you enter your measurements, click "Next" below
                                 </h2>
@@ -257,8 +268,8 @@
 			<h3 class="panel-title">Model Selection</h3>
 		</div>
 		
-		<div style="height:460px; padding:14px;" >
-                        <div style="height:375px">
+		<div class="panel-content">
+                        <div class="panel-content-inner">
 	                      	<div class="panel-body" id="option-select-body">                                        
 			                  <label for='palmSelect'>Palm Style</label>
 			                  <select name='palmSelect' class="form-control"
@@ -316,7 +327,7 @@
 			<h3 class="panel-title">Preview Window</h3>
 		</div>
 		
-		<div style="height:460px; padding:14px;">
+		<div class="panel-content">
 			<label for='part'>What would you like to generate?</label>
 			<select name='part' class="form-control" id="generateSelect"
 				data-bind="	options: partItems,
@@ -346,8 +357,8 @@
 			<h3 class="panel-title">Generate Model</h3>
 		</div>
 		
-		<div style="height:460px; padding:14px;" >
-                        <div style="height:375px">
+		<div class="panel-content">
+                        <div class="panel-content-inner">
 			        <h2 style="color:#999; text-align:center; margin:0px;">
                                         Select your model style and select the parts to generate. Next, enter your email address and hit "Generate STL"
 				</h2>

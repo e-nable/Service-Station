@@ -18,6 +18,15 @@
 	.main-container {
 		padding: 70px 15px 0;
 	}
+
+	.panel-content {
+		height:490px; 
+		padding:14px;
+	}
+	.panel-content-inner {
+		height:405px; 
+	}
+
 	.nav-tabs li a, .tab-content div {
 		background-color: #DDD;
 	}
