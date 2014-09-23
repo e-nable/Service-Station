@@ -179,7 +179,7 @@
 			                </select>
 		                </div>
 		
-				<div>Enter measurements from the hand that <em>doesn’t</em> need the prosthetic.</div>
+				<div data-bind="visible: !noHandSelected()">Enter measurements from the hand that <em>doesn’t</em> need the prosthetic.</div>
 		                <div style="margin-top:28px;" data-bind="template: { name: 'field-template', foreach: selectedFields }">
 		                </div>
 
@@ -211,8 +211,6 @@
 	<div style="color:#666;">
     		<div data-bind="text: description,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
 	  		style="font-size:13px; font-weight:bold;"></div>
-    		<div data-bind="text: subDescription,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
-	  		style="font-size:13px;"></div>
 	</div>
 </div>
 </script>

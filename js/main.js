@@ -28,10 +28,8 @@ var descriptions = [
 	{ id: 6,  label: "Distance from wrist to distal end of finger on thumb side (Lateral)"},
 	{ id: 7,  label: "Distance from wrist to distal middle end of effected hand"},
 	
-	{ id: 8,  label: "Distance from Lateral and Medial sides of the distal part of the hand",
-		sublabel: "Width of full hand across knuckles. See picture at right." },
-	{ id: 9,  label: "Distance from wrist to proximal end of 1st phalange on pinky side (Medial)",
-		sublabel: "Length of palm, measured from center of wrist to center of knuckles. See picture at right." },
+	{ id: 8,  label: "Width of full hand across knuckles. See picture at right." },
+	{ id: 9,  label: "Length of palm, measured from center of wrist to center of knuckles. See picture at right." },
 
 	{ id: 10, label: "Length of Elbow to wrist joint"}
     ];
@@ -157,7 +155,6 @@ var fieldsViewModelBuilder = function(descriptionReferenceData) {
 			sequenceNo: self.extractSequenceNumFromSession(handSession),
 			name: self.extractNameFromSession(handSession),
 			description:  self.extractDescriptionFromSession(handSession).label,
-			subDescription: self.extractDescriptionFromSession(handSession).sublabel,
 			left: self.extractLeftFromSession(handSession),
 			right: self.extractRightFromSession(handSession),
 			
