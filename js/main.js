@@ -321,6 +321,7 @@ var viewModel = function (descriptionData) {
 		welcomePage: 1,
 		measurementsPage: 2,
 		modelPage: 3,
+		thankyouPage: 4,
 	};
 	
 	self.currentStep = ko.observable(self.processSteps.welcomePage);
@@ -339,6 +340,14 @@ var viewModel = function (descriptionData) {
 				self.preview();
 			} else {
 				 context.redirect("#measure");
+			}
+		});
+		this.get("#thankyou", function(context) {
+			if (self.validateModelPage()) {
+				// Add AJAX invocation
+				self.currentStep(self.processSteps.thankyouPage);
+			} else {
+				 context.redirect("#model");
 			}
 		});
 	}).run();

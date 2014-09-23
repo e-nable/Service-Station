@@ -252,11 +252,11 @@ function render( $assemblervars){
 			$downloadlink = '';
 			if ($_REQUEST['part'] >= 1){ // we are previewing a part, lets render it as well
 				$otherthingtodo = $exportfile;
-				$othercommand = "echo \" openscad -o {$otherthingtodo} {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad  \" | batch ";
+				$othercommand = "echo \" openscad -o --imgsize=428,400 {$otherthingtodo} {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad  \" | batch ";
 			}
 		}
 
-		$command = " openscad -o {$thingtodo} {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad ";
+		$command = " openscad -o {$thingtodo} --imgsize=856,760 {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad ";
 
 		// Lets do some disk caching. If we have already rendered this, lets use the pre-rendering
 		if(!file_exists($thingtodo) || filesize($thingtodo) == 0){
