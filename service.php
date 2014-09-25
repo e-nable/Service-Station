@@ -112,7 +112,6 @@ Web interface for back-end e-NABLE Assembler
 				$jsonArray = json_decode($json, true);
 				$vals = $jsonArray['part'];
 				$partname = "UknownType";
-				$email = "rogelio.ortiz@gmail.com";
 
 				$time_start = microtime(true);
 				exec( "echo '\n' >> log.txt");
@@ -136,15 +135,21 @@ Web interface for back-end e-NABLE Assembler
 				$url = 'http://' . $baseDNS . '/ticket/' .  $scalehash . '.zip';
 				
 				$exportfile .= "zip -j -r {$myPath}.zip {$myPath}/;";
-				$exportfile .= "mail  -a 'Content-type: text/html' -s 'e-NABLE Model' {$email} < {$myPath}/email.txt;";
+				$exportfile .= "mail  -a 'Content-type: text/html' -s 'e-NABLE Model' {$email} < {$myPath}/README.html;";
 				$exportfile .= "rm -r {$myPath} {$myPath}.sh;";
 
 				$file = fopen("{$myPath}.sh","x");
 				fwrite($file,$exportfile);
 				fclose($file);
+				$fullURL = $leftsidevars . ' ' . $rightsidevars . ' ' . $options ;
+				$fullURL = str_replace("-D","&",$fullURL);
+				$fullURL = str_replace(" ","",$fullURL);
+				$fullURL = 'email=' . str_replace("@","\@",$email) . '&part=' . $requestedPart . $fullURL;
 
-				exec("cp " . dirname(__FILE__) ."/emailTemplate.html {$myPath}/email.txt; echo {$url} >> {$myPath}/email.txt");
-				exec("cat " . dirname(__FILE__) ."/emailFooter.html >> {$myPath}/email.txt");
+				exec("cp " . dirname(__FILE__) ."/emailTemplate.html {$myPath}/README.html;");
+				exec("perl -i -pe's/DOMAIN/{$baseDNS}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/TICKET_ID/{$scalehash}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/URL_PARAMS/{$fullURL}/g' {$myPath}/README.html");
 
 				exec("chmod 755 {$myPath}.sh; {$myPath}.sh > /dev/null &");
 
