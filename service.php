@@ -74,12 +74,14 @@ Web interface for back-end e-NABLE Assembler
 
 			//$scalehash = md5($leftsidevars.$rightsidevars.$options) .'.'. crc32($leftsidevars.$rightsidevars.$options);
 			//$scalehash = time() .'.'. crc32($leftsidevars.$rightsidevars.$options);
-			$scalehash = crc32($leftsidevars.$rightsidevars.$options);
 
 			$pattern = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
 
 			$email = $_REQUEST['email'];
+			$requestedPart = $_REQUEST['part'];
 			$emailInvalid = 1;
+
+			$scalehash = crc32($requestedPart.$leftsidevars.$rightsidevars.$options);
 
 			if (preg_match($pattern, $email) === 1) {
     			// emailaddress is valid
@@ -120,7 +122,7 @@ Web interface for back-end e-NABLE Assembler
 					$partname = $key['filename'];
 					$myID = $key['id'];
 
-					if ($partname){
+					if (($requestedPart == 0 || $requestedPart == $myID ) && $partname){
 						$thisFile	= "{$myPath}/{$side}.{$partname}.stl";
 						if (! is_file($thisFile)){
 							$exportfile .= "time nice -n 0 openscad -o {$thisFile} {$leftsidevars} {$rightsidevars} -D part={$myID} {$options} {$assemblypath}Assembly.scad;";
@@ -129,11 +131,7 @@ Web interface for back-end e-NABLE Assembler
 							exec(" echo 'Already found: {$thisFile}' >> log.txt 2>&1");
 						}
 					}
-
-					//$results = exec( "export DISPLAY=:5; " . escapeshellcmd($exportfile) . " >> log.txt 2>&1");
 				}
-
-				//$results = exec( "export DISPLAY=:5; " . $exportfile . " >> log.txt 2>&1");
 
 				$url = 'http://' . $baseDNS . '/ticket/' .  $scalehash . '.zip';
 				$emailContent = "Hi! This is e-NABLE. We would like to inform you that your data build is ready. URL: " . $url ;
@@ -146,8 +144,6 @@ Web interface for back-end e-NABLE Assembler
 				fclose($file);
 
 				exec("chmod 755 {$myPath}.sh; {$myPath}.sh > /dev/null &");
-
-				//echo "<br/>". $exportfile;
 
 				$time_end = microtime(true);
 				$execution_time = ($time_end - $time_start);
