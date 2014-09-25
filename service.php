@@ -134,14 +134,17 @@ Web interface for back-end e-NABLE Assembler
 				}
 
 				$url = 'http://' . $baseDNS . '/ticket/' .  $scalehash . '.zip';
-				$emailContent = "Hi! This is e-NABLE. We would like to inform you that your data build is ready. URL: " . $url ;
 				
 				$exportfile .= "zip -j -r {$myPath}.zip {$myPath}/;";
-				$exportfile .= "echo '{$emailContent}' | mail -s 'e-NABLE Model' {$email}; rm -r {$myPath} {$myPath}.sh;";
+				$exportfile .= "mail  -a 'Content-type: text/html' -s 'e-NABLE Model' {$email} < {$myPath}/email.txt;";
+				$exportfile .= "rm -r {$myPath} {$myPath}.sh;";
 
 				$file = fopen("{$myPath}.sh","x");
 				fwrite($file,$exportfile);
 				fclose($file);
+
+				exec("cp " . dirname(__FILE__) ."/emailTemplate.html {$myPath}/email.txt; echo {$url} >> {$myPath}/email.txt");
+				exec("cat " . dirname(__FILE__) ."/emailFooter.html >> {$myPath}/email.txt");
 
 				exec("chmod 755 {$myPath}.sh; {$myPath}.sh > /dev/null &");
 
@@ -152,7 +155,6 @@ Web interface for back-end e-NABLE Assembler
 
 				$url = "";
 
-				//exec("echo '{$emailContent}' | mail -s 'Test Postfix' {$email}; rm -r {$myPath}");
   			} elseif ($emailInvalid == 0) {
   				exec( "'Build already completed! -> {$myPath}' >> log.txt");
   				$url = 'http://' . $baseDNS . '/ticket/' .  $scalehash . '.zip';
