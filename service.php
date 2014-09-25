@@ -145,9 +145,10 @@ Web interface for back-end e-NABLE Assembler
 				$fullURL = str_replace("-D","&",$fullURL);
 				$fullURL = str_replace(" ","",$fullURL);
 				$fullURL = 'email=' . str_replace("@","\@",$email) . '&part=' . $requestedPart . $fullURL;
+				$myDNS =  str_replace("/","\/",$baseDNS);
 
 				exec("cp " . dirname(__FILE__) ."/emailTemplate.html {$myPath}/README.html;");
-				exec("perl -i -pe's/DOMAIN/{$baseDNS}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/DOMAIN/{$myDNS}/g' {$myPath}/README.html");
 				exec("perl -i -pe's/TICKET_ID/{$scalehash}/g' {$myPath}/README.html");
 				exec("perl -i -pe's/URL_PARAMS/{$fullURL}/g' {$myPath}/README.html");
 
