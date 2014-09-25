@@ -23,6 +23,8 @@ Web interface for back-end e-NABLE Assembler
 	require_once('config.php');
 	require_once('backend.php');
 
+	start_user_session( $assemblervars);
+
 	//header('Content-Type: application/json');
 
 	$submitType	=  isset($_GET["type"])? strtolower(trim($_GET["type"])): null;

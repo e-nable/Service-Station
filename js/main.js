@@ -51,11 +51,15 @@ $(function(){
 	// Instance the ViewModel
 	var vm = new viewModel(descriptions);
 	window.tmpViewModelReferenceForDebug = vm;
-
-	ko.applyBindings(vm);
 	
-	sessionService(function(session) { vm.loadSession(session) });
-	optionValuesService(function(options) { vm.loadOptions(options); });
+	sessionService(function(session) { 
+		vm.loadSession(session); 
+		optionValuesService(function(options) { 
+			vm.loadOptions(options); 
+			ko.applyBindings(vm);
+			vm.sammy.run();
+		});
+	});
 	
  	firstRender();
 });
@@ -89,24 +93,19 @@ var optionValuesService = function(callback) {
 	});	
 };
 
-// TODO: make this a method of an object
-// We'll use this adapter to disintermediate the global session variables until we integrate with Ro's new session service
 var sessionService = function(callback) {
-	// Simulate async
-	setTimeout(
-		function() {
-			callback({
-				submitType: submitType,
-				prostheticHandSession: prostheticHandSession,
-				partSession: partSession,
-				palmSelectSession: palmSelectSession,
-				gauntletSelectSession: gauntletSelectSession,
-				fingerSelectSession: fingerSelectSession,
-				isUnderProcessLimit: isUnderProcessLimit,
-				processCount: processCount,
-				handSessionValues: handSessionValues,
-			})
-		}, 1);
+	callback({
+		submitType: submitType,
+		prostheticHandSession: prostheticHandSession,
+		partSession: partSession,
+		palmSelectSession: palmSelectSession,
+		gauntletSelectSession: gauntletSelectSession,
+		fingerSelectSession: fingerSelectSession,
+		isUnderProcessLimit: isUnderProcessLimit,
+		processCount: processCount,
+		handSessionValues: handSessionValues,
+		email: email,
+	});
 };
 
 
@@ -205,6 +204,7 @@ var viewModel = function (descriptionData) {
 		self.selectedFingerSelect(session.fingerSelectSession);
 		self.selectedPart(session.partSession);
 		self.selectedPalm(session.palmSelectSession);
+		self.email(session.email);
 		
 		var builder = new fieldsViewModelBuilder(self.descriptions);			
 		$.each(session.handSessionValues, function(index, item){
@@ -272,7 +272,7 @@ var viewModel = function (descriptionData) {
 
 	self.preview = function() {
 		self.waitingForResponse(true);
-		$.get('preview.php?' + 'advanced=false&submit=preview&' + $('#generatorForm').serialize(), self.renderPreview);
+		$.get('preview.php?advanced=false&submit=preview&' + $('#generatorForm').serialize(), self.renderPreview);
 	};
 	
 	self.renderPreview = function(response) {
@@ -281,6 +281,11 @@ var viewModel = function (descriptionData) {
 		$("#previewImage").attr("src", image);	// TODO: tie this to Knockout observable
 		self.waitingForResponse(false);
 	};
+	
+	self.sendEmail = function() {
+		var url = 'service.php?type=make&' + $('#generatorForm').serialize();
+		$.get(url, function(resp) { });
+	}
 
 	// Validation functions
 	self.measurementPageValid = ko.observable(true);
@@ -327,7 +332,7 @@ var viewModel = function (descriptionData) {
 	self.currentStep = ko.observable(self.processSteps.welcomePage);
 	
 	// This bit of code allows us to use bookmarking, back button, etc. and do pure SPA-style navigation with hash tags
-	Sammy(function() {
+	self.sammy = Sammy(function() {
 		this.get("#welcome", function(context) {
 			self.currentStep(self.processSteps.welcomePage);
 		});
@@ -342,6 +347,10 @@ var viewModel = function (descriptionData) {
 				 context.redirect("#measure");
 			}
 		});
+		this.get("#sendemail", function(context) {
+			self.sendEmail();
+			context.redirect("#thankyou");
+		});
 		this.get("#thankyou", function(context) {
 			if (self.validateModelPage()) {
 				// Add AJAX invocation
@@ -350,7 +359,7 @@ var viewModel = function (descriptionData) {
 				 context.redirect("#model");
 			}
 		});
-	}).run();
+	});
 };
 
 
