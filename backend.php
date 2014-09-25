@@ -1,4 +1,6 @@
-<!-- Web interface for back-end e-NABLE Assembler
+<?php
+/*
+Web interface for back-end e-NABLE Assembler
 
     Copyright (C) 2014, e-NABLE / Rogelio Ortiz, Mike Creuzer
 
@@ -14,8 +16,8 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
--->
-<?php
+*/
+
 
 $processCountLimit = 2;
 $processCount = 0;
