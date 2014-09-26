@@ -37,7 +37,7 @@ $sessionID = getSessionId();
 	<!--[if IE]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 	<!-- Latest compiled and minified CSS -->
 
-	<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap.min.css?_=<?php echo $time ?>">
+	<link rel="stylesheet" href="./lib/bootstrap-3.2-minus-responsive.css?_=<?php echo $time ?>">
 	<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap-theme.min.css?_=<?php echo $time ?>">
 	<link rel="stylesheet" href="./lib/font-awesome-4.0.3/css/font-awesome.min.css?_=<?php echo $time ?>">
 	<link rel="stylesheet" href="./css/main.css?_=<?php echo $time ?>">

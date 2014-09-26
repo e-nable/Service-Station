@@ -204,7 +204,7 @@ var viewModel = function (descriptionData) {
 		self.selectedFingerSelect(session.fingerSelectSession);
 		self.selectedPart(session.partSession);
 		self.selectedPalm(session.palmSelectSession);
-		self.email(session.email);
+		self.email(session.email == "undefined" ? "" : session.email);
 		
 		var builder = new fieldsViewModelBuilder(self.descriptions);			
 		$.each(session.handSessionValues, function(index, item){
@@ -222,13 +222,7 @@ var viewModel = function (descriptionData) {
 		self.partItems(optionValuesData.part);
 		self.palmItems(optionValuesData.palm);
 	};
-
-	// Temporary function until we get that stuff sorted
-	self.loadServerStuffFromShim = function() {
-		self.email(server_email());
-		self.paddingValue(server_paddingValue());
-		self.render(server_render());
-	};
+	
 	
 	self.leftHandSelected = ko.computed(function() {
 		return self.selectedProstheticHand() == "0";
