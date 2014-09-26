@@ -92,7 +92,7 @@
 		background-image: linear-gradient(to bottom, #666666 0px, #222222 100%);
     		background-color: #666666;
 		border-color: #666666;
-		float:right;
+		float:left;
 	}
 	.disclaimer span, .pro_novice span{
 		font-size: 18px;
