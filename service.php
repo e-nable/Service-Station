@@ -83,7 +83,7 @@ Web interface for back-end e-NABLE Assembler
 			$requestedPart = $_REQUEST['part'];
 			$emailInvalid = 1;
 
-			$scalehash = crc32($requestedPart.$leftsidevars.$rightsidevars.$options);
+			$scalehash = crc32($baseDNS) . '-' . crc32($email.$requestedPart.$leftsidevars.$rightsidevars.$options);
 
 			if (preg_match($pattern, $email) === 1) {
     			// emailaddress is valid
@@ -137,7 +137,7 @@ Web interface for back-end e-NABLE Assembler
 				$url = 'http://' . $baseDNS . '/ticket/' .  $scalehash . '.zip';
 				
 				$exportfile .= "zip -j -r {$myPath}.zip {$myPath}/;";
-				$exportfile .= "mail  -a 'Content-type: text/html' -s 'e-NABLE Model' {$email} < {$myPath}/README.html;";
+				$exportfile .= "mail  -a 'Content-type: text/html' -a 'CC:enablematcher@gmail.com' -a 'From: e-NABLE' -s 'e-NABLE Model' {$email} < {$myPath}/README.html;";
 				$exportfile .= "rm -r {$myPath} {$myPath}.sh;";
 
 				$file = fopen("{$myPath}.sh","x");
