@@ -34,6 +34,7 @@ Web interface for back-end e-NABLE Assembler
 	switch($submitType){
 		case "make":
 			$url 	= "";
+			$description = "";
 			$status = "";
 			// Clean up the passed in $_REQUEST vars to make sure everything is set.
 			foreach($assemblervars AS $a) {
@@ -83,7 +84,7 @@ Web interface for back-end e-NABLE Assembler
 			$requestedPart = 0; //$_REQUEST['part'];
 			$emailInvalid = 1;
 
-			$scalehash = crc32($baseDNS) . '-' . crc32($email.$requestedPart.$leftsidevars.$rightsidevars.$options);
+			$scalehash = crc32($baseDNS) . '-' . crc32($email) . '-' . crc32($requestedPart.$leftsidevars.$rightsidevars.$options);
 
 			if (preg_match($pattern, $email) === 1) {
     			// emailaddress is valid
@@ -95,10 +96,14 @@ Web interface for back-end e-NABLE Assembler
 
 			$myPath = dirname(__FILE__) . '/ticket/' .  $scalehash;
 
+			$ticketLogPath = $myPath . '/log.txt';
+			$generalLogPath = dirname(__FILE__) . '/log.txt';
+
 			if (! is_file($myPath . '.zip') && !mkdir($myPath, 0777, true) && $emailInvalid == 0) {
 				//die('Failed to create folder...');
-				 exec( "'Already currently in progress: {$myPath}' >> log.txt");
-				 $status = 'In Progress';
+				 exec( "'Already currently in progress: {$myPath}' >> {$ticketLogPath}");
+				 $description = 'In Progress';
+				 $status = 200;
 			} elseif (! is_file($myPath . '.zip') && $emailInvalid == 0){
 				// add handidness to the human reaale file name
 				$side = "Unknown";
@@ -116,8 +121,10 @@ Web interface for back-end e-NABLE Assembler
 				$partname = "UknownType";
 
 				$time_start = microtime(true);
-				exec( "echo '\n' >> log.txt");
-				exec( "date >> log.txt");
+				exec( "echo '\nStarting Full Assembly: \n Email: {$email} \n Ticket: {$scalehash}' >> {$generalLogPath}");
+				exec( "echo '\n Params: {$requestedPart}{$leftsidevars}{$rightsidevars}{$options}' >> {$generalLogPath}");
+				exec( "echo '\nStarting: ' >> {$ticketLogPath}");
+				exec( "date >> {$ticketLogPath}");
 
 				foreach ($vals AS $key){
 					$partname = $key['filename'];
@@ -127,22 +134,26 @@ Web interface for back-end e-NABLE Assembler
 						$thisFile	= "{$myPath}/{$side}.{$partname}.stl";
 						if (! is_file($thisFile)){
 							$exportfile .= "time nice -n 0 openscad -o {$thisFile} {$leftsidevars} {$rightsidevars} -D part={$myID} {$options} {$assemblypath}Assembly.scad;";
-							exec( "echo 'NEW: " . escapeshellcmd($exportfile) . "' >> log.txt");
+							exec( "echo 'NEW: " . escapeshellcmd($exportfile) . "' >> {$ticketLogPath}");
 						} else {
-							exec(" echo 'Already found: {$thisFile}' >> log.txt 2>&1");
+							exec(" echo 'Already found: {$thisFile}' >> {$ticketLogPath} 2>&1");
 						}
 					}
 				}
 
 				$url = 'http://' . $baseDNS . '/ticket/' .  $scalehash . '.zip';
 				
+				$exportfile .= "echo '\nCompleted: ' `date` >> {$generalLogPath} ;";
+				$exportfile .= "echo '\nCompleted: ' `date` >> {$ticketLogPath} ;";
+				//$exportfile .= "cp {$myPath}.sh {$myPath}/exec.txt ;";
 				$exportfile .= "zip -j -r {$myPath}.zip {$myPath}/;";
-				$exportfile .= "mail  -a 'Content-type: text/html' -a 'CC:enablematcher@gmail.com' -a 'From: e-NABLE' -s 'e-NABLE Model' {$email} < {$myPath}/README.html;";
+				//$exportfile .= "mail  -a 'Content-type: text/html' -a 'CC:enablematcher@gmail.com' -a 'From: e-NABLE' -s 'e-NABLE Model' {$email} < {$myPath}/README.html;";
 				$exportfile .= "rm -r {$myPath} {$myPath}.sh;";
 
 				$file = fopen("{$myPath}.sh","x");
 				fwrite($file,$exportfile);
 				fclose($file);
+
 				$fullURL = $leftsidevars . ' ' . $rightsidevars . ' ' . $options ;
 				$fullURL = str_replace("-D","&",$fullURL);
 				$fullURL = str_replace(" ","",$fullURL);
@@ -159,19 +170,23 @@ Web interface for back-end e-NABLE Assembler
 				$time_end = microtime(true);
 				$execution_time = ($time_end - $time_start);
 
-				$status = 'Initiated';
+				$description = 'Initiated';
+				$status = 206;
 
 				$url = "";
 
   			} elseif ($emailInvalid == 0) {
-  				exec( "'Build already completed! -> {$myPath}' >> log.txt");
+				exec( "'Build already completed! -> {$myPath}' >> {$ticketLogPath}");
   				$url = 'http://' . $baseDNS . '/ticket/' .  $scalehash . '.zip';
-  				$status = 'Completed';
+
+				$description = 'Completed';
+				$status = 200;
   			} else {
-  				$status = 'Email Error';
+				$description = 'Email Error';
+				$status = 400;
   			}
 
-			echo '{ticket: "' . $scalehash . '", status: "' . $status .'", url: "'. $url .'"}';
+			echo '{ticket: "' . $scalehash . '", description: "' . $description . '", status: "' . $status . '", url: "'. $url .'"}';
 
 			break;
 		case "sessionid":
