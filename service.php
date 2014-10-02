@@ -143,11 +143,11 @@ Web interface for back-end e-NABLE Assembler
 
 				$url = 'http://' . $baseDNS . '/ticket/' .  $scalehash . '.zip';
 				
-				$exportfile .= "echo '\nCompleted: ' `date` >> {$generalLogPath} ;";
+				$exportfile .= "echo '\nCompleted ({$email}): ' `date` >> {$generalLogPath} ;";
 				$exportfile .= "echo '\nCompleted: ' `date` >> {$ticketLogPath} ;";
 				//$exportfile .= "cp {$myPath}.sh {$myPath}/exec.txt ;";
 				$exportfile .= "zip -j -r {$myPath}.zip {$myPath}/;";
-				//$exportfile .= "mail  -a 'Content-type: text/html' -a 'CC:enablematcher@gmail.com' -a 'From: e-NABLE' -s 'e-NABLE Model' {$email} < {$myPath}/README.html;";
+				$exportfile .= "mail  -a 'Content-type: text/html' -a 'CC:enablematcher@gmail.com' -a 'From: e-NABLE' -s 'e-NABLE Model' {$email} < {$myPath}/README.html;";
 				$exportfile .= "rm -r {$myPath} {$myPath}.sh;";
 
 				$file = fopen("{$myPath}.sh","x");
