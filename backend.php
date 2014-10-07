@@ -111,7 +111,7 @@ function printHeaderSessionVariables(){
 	$fingerSelect	=  !empty($_SESSION['fingerSelect'])	? $_SESSION['fingerSelect']	: 0;
 	$paddingValue	=  !empty($_SESSION['Padding']) 	? $_SESSION['Padding']		: 5;
 	$advanced 	=  !empty($_SESSION['advanced'])	? $_SESSION['advanced']		: 'false';
-	$email	 	=  !empty($_SESSION['email'])		? $_SESSION['email']		: '';
+	$email	 	=  !empty($_SESSION['email'])		? $_SESSION['email']		: 'undefined';
 
 	$r1	=  $_SESSION['Right1'];		$r2	=  $_SESSION['Right2'];
 	$r3	=  $_SESSION['Right3'];		$r4	=  $_SESSION['Right4'];
@@ -135,7 +135,7 @@ function printHeaderSessionVariables(){
 		var fingerSelectSession		= {$fingerSelect};
 		var isUnderProcessLimit		= {$isUnderProcessLimit};
 		var processCount		= {$processCount};
-		var email			= "{$email}";
+		var email			= '{$email}';
 		var handSessionValues		= [
 			{id: 'R1', value: '{$r1}'},	{id: 'R2', value: '{$r2}'},
 			{id: 'R3', value: '{$r3}'},	{id: 'R4', value: '{$r4}'},
@@ -254,15 +254,11 @@ function render( $assemblervars){
 			$downloadlink = '';
 			if ($_REQUEST['part'] >= 1){ // we are previewing a part, lets render it as well
 				$otherthingtodo = $exportfile;
-				$othercommand = "echo \" openscad -o {$otherthingtodo} {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad  \" | batch ";
+				$othercommand = "echo \" openscad -o --imgsize=428,400 {$otherthingtodo} {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad  \" | batch ";
 			}
 		}
 
-		if($_REQUEST['submit'] == 'stl' && $_REQUEST['part'] == 0){
-			return '<h4 style="padding:20px">Thank you <br/><br/> You will receive an email once the jobs have completed at the following address:<br/><br/>' . $_REQUEST['email'] .'</h4>';
-		}
-
-		$command = " openscad -o {$thingtodo} {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad ";
+		$command = " openscad -o {$thingtodo} --imgsize=856,760 {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad ";
 
 		// Lets do some disk caching. If we have already rendered this, lets use the pre-rendering
 		if(!file_exists($thingtodo) || filesize($thingtodo) == 0){

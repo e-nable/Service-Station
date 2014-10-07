@@ -23,6 +23,8 @@ Web interface for back-end e-NABLE Assembler
 	require_once('config.php');
 	require_once('backend.php');
 
+	start_user_session( $assemblervars);
+
 	//header('Content-Type: application/json');
 
 	$submitType	=  isset($_GET["type"])? strtolower(trim($_GET["type"])): null;
@@ -32,6 +34,7 @@ Web interface for back-end e-NABLE Assembler
 	switch($submitType){
 		case "make":
 			$url 	= "";
+			$description = "";
 			$status = "";
 			// Clean up the passed in $_REQUEST vars to make sure everything is set.
 			foreach($assemblervars AS $a) {
@@ -74,12 +77,14 @@ Web interface for back-end e-NABLE Assembler
 
 			//$scalehash = md5($leftsidevars.$rightsidevars.$options) .'.'. crc32($leftsidevars.$rightsidevars.$options);
 			//$scalehash = time() .'.'. crc32($leftsidevars.$rightsidevars.$options);
-			$scalehash = crc32($leftsidevars.$rightsidevars.$options);
 
 			$pattern = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
 
 			$email = $_REQUEST['email'];
+			$requestedPart = 0; //$_REQUEST['part'];
 			$emailInvalid = 1;
+
+			$scalehash = crc32($baseDNS) . '-' . crc32($email) . '-' . crc32($requestedPart.$leftsidevars.$rightsidevars.$options);
 
 			if (preg_match($pattern, $email) === 1) {
     			// emailaddress is valid
@@ -91,10 +96,14 @@ Web interface for back-end e-NABLE Assembler
 
 			$myPath = dirname(__FILE__) . '/ticket/' .  $scalehash;
 
+			$ticketLogPath = $myPath . '/log.txt';
+			$generalLogPath = dirname(__FILE__) . '/log.txt';
+
 			if (! is_file($myPath . '.zip') && !mkdir($myPath, 0777, true) && $emailInvalid == 0) {
 				//die('Failed to create folder...');
-				 exec( "'Already currently in progress: {$myPath}' >> log.txt");
-				 $status = 'In Progress';
+				 exec( "'Already currently in progress: {$myPath}' >> {$ticketLogPath}");
+				 $description = 'In Progress';
+				 $status = 200;
 			} elseif (! is_file($myPath . '.zip') && $emailInvalid == 0){
 				// add handidness to the human reaale file name
 				$side = "Unknown";
@@ -110,62 +119,74 @@ Web interface for back-end e-NABLE Assembler
 				$jsonArray = json_decode($json, true);
 				$vals = $jsonArray['part'];
 				$partname = "UknownType";
-				$email = "rogelio.ortiz@gmail.com";
 
 				$time_start = microtime(true);
-				exec( "echo '\n' >> log.txt");
-				exec( "date >> log.txt");
+				exec( "echo '\nStarting Full Assembly: \n Email: {$email} \n Ticket: {$scalehash}' >> {$generalLogPath}");
+				exec( "echo '\n Params: {$requestedPart}{$leftsidevars}{$rightsidevars}{$options}' >> {$generalLogPath}");
+				exec( "echo '\nStarting: ' >> {$ticketLogPath}");
+				exec( "date >> {$ticketLogPath}");
 
 				foreach ($vals AS $key){
 					$partname = $key['filename'];
 					$myID = $key['id'];
 
-					if ($partname){
+					if (($requestedPart == 0 || $requestedPart == $myID ) && $partname){
 						$thisFile	= "{$myPath}/{$side}.{$partname}.stl";
 						if (! is_file($thisFile)){
 							$exportfile .= "time nice -n 0 openscad -o {$thisFile} {$leftsidevars} {$rightsidevars} -D part={$myID} {$options} {$assemblypath}Assembly.scad;";
-							exec( "echo 'NEW: " . escapeshellcmd($exportfile) . "' >> log.txt");
+							exec( "echo 'NEW: " . escapeshellcmd($exportfile) . "' >> {$ticketLogPath}");
 						} else {
-							exec(" echo 'Already found: {$thisFile}' >> log.txt 2>&1");
+							exec(" echo 'Already found: {$thisFile}' >> {$ticketLogPath} 2>&1");
 						}
 					}
-
-					//$results = exec( "export DISPLAY=:5; " . escapeshellcmd($exportfile) . " >> log.txt 2>&1");
 				}
 
-				//$results = exec( "export DISPLAY=:5; " . $exportfile . " >> log.txt 2>&1");
-
 				$url = 'http://' . $baseDNS . '/ticket/' .  $scalehash . '.zip';
-				$emailContent = "Hi! This is e-NABLE. We would like to inform you that your data build is ready. URL: " . $url ;
 				
+				$exportfile .= "echo '\nCompleted ({$email}): ' `date` >> {$generalLogPath} ;";
+				$exportfile .= "echo '\nCompleted: ' `date` >> {$ticketLogPath} ;";
+				//$exportfile .= "cp {$myPath}.sh {$myPath}/exec.txt ;";
 				$exportfile .= "zip -j -r {$myPath}.zip {$myPath}/;";
-				$exportfile .= "echo '{$emailContent}' | mail -s 'e-NABLE Model' {$email}; rm -r {$myPath} {$myPath}.sh;";
+				$exportfile .= "mail  -a 'Content-type: text/html' -a 'CC:enablematcher@gmail.com' -a 'From: e-NABLE' -s 'e-NABLE Model' {$email} < {$myPath}/README.html;";
+				$exportfile .= "rm -r {$myPath} {$myPath}.sh;";
 
 				$file = fopen("{$myPath}.sh","x");
 				fwrite($file,$exportfile);
 				fclose($file);
 
-				exec("chmod 755 {$myPath}.sh; {$myPath}.sh > /dev/null &");
+				$fullURL = $leftsidevars . ' ' . $rightsidevars . ' ' . $options ;
+				$fullURL = str_replace("-D","&",$fullURL);
+				$fullURL = str_replace(" ","",$fullURL);
+				$fullURL = 'email=' . str_replace("@","\@",$email) . '&part=' . $requestedPart . $fullURL;
+				$myDNS =  str_replace("/","\/",$baseDNS);
 
-				//echo "<br/>". $exportfile;
+				exec("cp " . dirname(__FILE__) ."/emailTemplate.html {$myPath}/README.html;");
+				exec("perl -i -pe's/DOMAIN/{$myDNS}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/TICKET_ID/{$scalehash}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/URL_PARAMS/{$fullURL}/g' {$myPath}/README.html");
+
+				exec("chmod 755 {$myPath}.sh; {$myPath}.sh > /dev/null &");
 
 				$time_end = microtime(true);
 				$execution_time = ($time_end - $time_start);
 
-				$status = 'Initiated';
+				$description = 'Initiated';
+				$status = 206;
 
 				$url = "";
 
-				//exec("echo '{$emailContent}' | mail -s 'Test Postfix' {$email}; rm -r {$myPath}");
   			} elseif ($emailInvalid == 0) {
-  				exec( "'Build already completed! -> {$myPath}' >> log.txt");
+				exec( "'Build already completed! -> {$myPath}' >> {$ticketLogPath}");
   				$url = 'http://' . $baseDNS . '/ticket/' .  $scalehash . '.zip';
-  				$status = 'Completed';
+
+				$description = 'Completed';
+				$status = 200;
   			} else {
-  				$status = 'Email Error';
+				$description = 'Email Error';
+				$status = 400;
   			}
 
-			echo '{ticket: "' . $scalehash . '", status: "' . $status .'", url: "'. $url .'"}';
+			echo '{ticket: "' . $scalehash . '", description: "' . $description . '", status: "' . $status . '", url: "'. $url .'"}';
 
 			break;
 		case "sessionid":

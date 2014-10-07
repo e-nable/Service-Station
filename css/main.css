@@ -18,6 +18,15 @@
 	.main-container {
 		padding: 70px 15px 0;
 	}
+
+	.panel-content {
+		height:490px; 
+		padding:14px;
+	}
+	.panel-content-inner {
+		height:405px; 
+	}
+
 	.nav-tabs li a, .tab-content div {
 		background-color: #DDD;
 	}
@@ -83,7 +92,7 @@
 		background-image: linear-gradient(to bottom, #666666 0px, #222222 100%);
     		background-color: #666666;
 		border-color: #666666;
-		float:right;
+		float:left;
 	}
 	.disclaimer span, .pro_novice span{
 		font-size: 18px;
