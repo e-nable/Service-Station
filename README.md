@@ -5,6 +5,12 @@ Web Frontend for openscad generation of models given arm measurements.
 
 This tool leverages the Assembly.scad found at https://github.com/e-nable/e-NABLE-Assembler to make an easy to use interface for generating 3d hand models.
 
+The overall control flow is:
+
+<img src="https://docs.google.com/drawings/d/1fMVuwL2IDA7K7xmZVibVewTpJstXPqoUx9exW6ODkQM/pub?w=960&amp;h=720">
+
+This repository contains the web UI.
+
 NOTE: Currently in alpha development. Minimal security is currently implimented.
 
 More information regarding e-NABLE can be found at http://enablingthefuture.org 
