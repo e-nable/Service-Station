@@ -3,7 +3,7 @@ e-NABLE Handomatic Web Interface
 
 Web Frontend for openscad generation of models given arm measurements.
 
-This tool leverages the Assembly.scad found at https://github.com/e-nable/e-NABLE-Assembler to make an easy to use interface for generating 3d hand models.
+This tool leverages the Assembly.scad found at https://github.com/e-nable/Assembler to make an easy to use interface for generating 3d hand models.
 
 The overall control flow is:
 
@@ -19,7 +19,7 @@ Installation
 ========
 Requires a Linux LAMP stack - at minimum:
 
-- [x] linux x64
+- [x] linux x64 - ex. Ubuntu Desktop 64-bit v14+ LTS
 - [x] html server
 - [x] php engine
 - [x] openSCAD 2014.03 (prefer 2014.05.31 and above)
@@ -28,7 +28,7 @@ This will run in a headless server through: Xvfb.
 
 Ubuntu install guide provided under installNotes.txt (https://github.com/e-nable/Service-Station/blob/master/installNotes.txt).
 
-Service-Station acts as the root or base directory for the web directory being served up. The provided PHP scripts assume e-NABLE-Assembler project is linked as [web-directory]/e-NABLE. Check installer notes for more details.
+Service-Station acts as the root or base directory for the web directory being served up. The provided PHP scripts assume Assembler project is linked as [web-directory]/e-NABLE. Check installer notes for more details.
 
 Resources
 ========
