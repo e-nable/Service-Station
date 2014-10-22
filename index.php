@@ -61,7 +61,7 @@ $sessionID = getSessionId();
 		
 		/* ga('create', 'UA-55621004-1', { 'cookieDomain': 'none' });	// FOR DEBUGGING PURPOSES ON LOCAL*/
 		ga('create', 'UA-55621004-1', 'auto');
-
+		
 		window.ga_sendPath = function() {
 			ga('send', 'pageview', window.location.href.replace(window.location.origin, ""));
 		};
