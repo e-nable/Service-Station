@@ -60,7 +60,7 @@ $sessionID = getSessionId();
 		})(window,document,'script','//www.google-analytics.com/analytics.js', 'ga');
 		
 		/* ga('create', 'UA-55621004-1', { 'cookieDomain': 'none' });	// FOR DEBUGGING PURPOSES ON LOCAL*/
-		ga('create', 'UA-55621004-1', 'auto');
+		ga('create', 'UA-55621004-1', { 'cookieDomain': 'webapp.e-nable.me' });
 		
 		window.ga_sendPath = function() {
 			ga('send', 'pageview', window.location.href.replace(window.location.origin, ""));
