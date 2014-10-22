@@ -326,16 +326,16 @@ var viewModel = function (descriptionData) {
 	// This bit of code allows us to use bookmarking, back button, etc. and do pure SPA-style navigation with hash tags
 	self.sammy = Sammy(function() {
 		this.get("#welcome", function(context) {
-			ga('send', 'pageview', window.location.href);
+			window.ga_sendPath();
 			self.currentStep(self.processSteps.welcomePage);
 		});
 		this.get("#measure", function(context) {
-			ga('send', 'pageview', window.location.href);
+			window.ga_sendPath();
 			self.currentStep(self.processSteps.measurementsPage);			
 		});
 		this.get("#model", function(context) {
 			if (self.validateMeasurementsPage()) {				
-				ga('send', 'pageview', window.location.href);
+				window.ga_sendPath();
 				
 				self.currentStep(self.processSteps.modelPage);
 				self.preview();
@@ -344,7 +344,7 @@ var viewModel = function (descriptionData) {
 			}
 		});
 		this.get("#sendemail", function(context) {
-			ga('send', 'pageview', window.location.href);
+			window.ga_sendPath();
 			self.sendEmail();
 			
 			context.redirect("#thankyou");
@@ -352,7 +352,7 @@ var viewModel = function (descriptionData) {
 		this.get("#thankyou", function(context) {
 			if (self.validateModelPage()) {
 				// Add AJAX invocation
-				ga('send', 'pageview', window.location.href);
+				window.ga_sendPath();
 				self.currentStep(self.processSteps.thankyouPage);
 			} else {
 				 context.redirect("#model");
