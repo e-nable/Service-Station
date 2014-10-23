@@ -59,13 +59,25 @@ $sessionID = getSessionId();
 		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		})(window,document,'script','//www.google-analytics.com/analytics.js', 'ga');
 		
-		/* ga('create', 'UA-55621004-1', { 'cookieDomain': 'none' });	// FOR DEBUGGING PURPOSES ON LOCAL*/
-		ga('create', 'UA-55621004-1', { 'cookieDomain': 'webapp.e-nable.me' });
+		if (window.location.href.indexOf('e-nable.me') > -1) {
+			ga('create', 'UA-55621004-1', 'auto', {'allowLinker': true});
+			ga('require', 'linker');
+			ga('linker:autoLink', ['youmagine.com'] );
+		}
+		if (window.location.href.indexOf('youmagine.com') > -1) {
+			ga('create', 'UA-55621004-1', 'auto', {'allowLinker': true});
+			ga('require', 'linker');
+			ga('linker:autoLink', ['e-nable.me'] );
+		}
+		if (window.location.href.indexOf('e-nable.me') == -1 &&
+		    window.location.href.indexOf('youmagine.com') == -1) {
+			ga('create', 'UA-55621004-1', { 'cookieDomain': 'none' });
+		}
 		
 		window.ga_sendPath = function() {
-			ga('send', 'pageview', window.location.href.replace(window.location.origin, ""));
+			/* ga('send', 'pageview', window.location.href.replace(window.location.origin, "")); */
+			ga('send', 'pageview', window.location.href);
 		};
-		
 		window.ga_sendPath();
 	</script>
 	<script src="./js/main.js?_=<?php echo $time ?>"></script> <!-- REMOVE THE PHP ECHO TO MAKE DEBUGGING EASIER IN CHROME-->
