@@ -101,9 +101,12 @@ Web interface for back-end e-NABLE Assembler
 
 			if (! is_file($myPath . '.zip') && !mkdir($myPath, 0777, true) && $emailInvalid == 0) {
 				//die('Failed to create folder...');
-				 exec( "'Already currently in progress: {$myPath}' >> {$ticketLogPath}");
-				 $description = 'In Progress';
-				 $status = 200;
+				exec( "'Already currently in progress: {$myPath}' >> {$ticketLogPath}");
+				$description = 'In Progress';
+				$status = 200;
+				exec( "echo '\nMarked as already in Progress: \n Email: {$email} \n Ticket: {$scalehash}' >> {$generalLogPath}");
+				exec( "date >> {$generalLogPath}");
+				exec( "echo ' Params: {$requestedPart}{$leftsidevars}{$rightsidevars}{$options}' >> {$generalLogPath}");
 			} elseif (! is_file($myPath . '.zip') && $emailInvalid == 0){
 				// add handidness to the human reaale file name
 				$side = "Unknown";
@@ -181,6 +184,9 @@ Web interface for back-end e-NABLE Assembler
 
 				$description = 'Completed';
 				$status = 200;
+				exec( "echo '\nMarked as COMPLETED: \n Email: {$email} \n Ticket: {$scalehash}' >> {$generalLogPath}");
+				exec( "date >> {$generalLogPath}");
+				exec( "echo ' Params: {$requestedPart}{$leftsidevars}{$rightsidevars}{$options}' >> {$generalLogPath}");
   			} else {
 				$description = 'Email Error';
 				$status = 400;

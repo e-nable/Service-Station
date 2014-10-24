@@ -47,7 +47,7 @@ $sessionID = getSessionId();
 	<script src="./lib/sammy-latest.min.js"></script>
 	
 	<?php echo file_get_contents('js/knockout_templates.html'); ?>
-	<script src="./js/main.js"></script> <!-- ?_=<?php echo $time ?>"></script> DISABLE THIS FOR NOW TO MAKE DEBUGGING EASY IN CHROME-->
+	<script src="./js/main.js?_=<?php echo $time ?>"></script>
 	
 	<script type="text/javascript">
 		// TODO: move this stuff into AJAX services, etc.
