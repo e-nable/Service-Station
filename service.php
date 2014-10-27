@@ -39,6 +39,7 @@ Web interface for back-end e-NABLE Assembler
 				if(!isset($_REQUEST[$a]) || empty($_REQUEST[$a])) {
 					$_REQUEST[$a] = 0;
 				}
+				//print $a . '='. $_REQUEST[$a] .'; ';
 			}
 
 			$assemblypath = dirname(__FILE__)."/e-NABLE/Assembly/";
@@ -118,9 +119,9 @@ Web interface for back-end e-NABLE Assembler
 				$side = "Unknown";
 				$urlString = $_SERVER['QUERY_STRING'];
 
-				if ($_REQUEST['prostheticHand'] = 0){
+				if ($_REQUEST['prostheticHand'] == 0){
 					$side='Left';
-				} elseif ($_REQUEST['prostheticHand'] = 1){
+				} elseif ($_REQUEST['prostheticHand'] == 1){
 					$side='Right';
 				}
 
