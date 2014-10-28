@@ -140,12 +140,12 @@ var fieldsViewModelBuilder = function(descriptionReferenceData) {
 	
 	self.extractHiddenFromSession = function(handSession) {
 		var id = self.extractSequenceNumFromSession(handSession);
-		return !(id == 8 || id == 9);
+		return !(id == 8);
 	};
 	
 	self.extractVisibleFromSession = function(handSession) {
 		var id = self.extractSequenceNumFromSession(handSession);
-		return (id == 8 || id == 9);
+		return (id == 8);
 	};
 	
 	self.buildViewModel = function(handSession) {
