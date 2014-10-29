@@ -73,6 +73,7 @@ $sessionID = getSessionId();
 		    window.location.href.indexOf('youmagine.com') == -1) {
 			ga('create', 'UA-55621004-1', { 'cookieDomain': 'none' });
 		}
+		ga('require', 'displayfeatures');
 		
 		window.ga_sendPath = function() {
 			/* ga('send', 'pageview', window.location.href.replace(window.location.origin, "")); */
