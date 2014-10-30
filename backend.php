@@ -246,6 +246,11 @@ function render( $assemblervars){
 		$previewimage = "imagecache/{$scalehash}.{$partname}.png";
 		$exportfile   = "imagecache/{$scalehash}.{$partname}.stl";
 
+		$specialView ='';
+		if ($_REQUEST['part'] == 0 || $_REQUEST['part'] == -1){
+			$specialView ='--camera=0,0,400,0,0,0';
+		}
+
 		if($_REQUEST['submit'] == 'stl'){
 			$thingtodo = $exportfile;
 			$downloadlink = "<p class='download_stl'><a class='btn btn-success' href='{$exportfile}'>Download .STL file</a></p>\n";
@@ -258,7 +263,7 @@ function render( $assemblervars){
 			}
 		}
 
-		$command = " openscad -o {$thingtodo} --imgsize=856,760 {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad ";
+		$command = " openscad -o {$thingtodo} --imgsize=856,760 {$specialView} {$leftsidevars} {$rightsidevars} {$options} {$assemblypath}Assembly.scad ";
 
 		// Lets do some disk caching. If we have already rendered this, lets use the pre-rendering
 		if(!file_exists($thingtodo) || filesize($thingtodo) == 0){
