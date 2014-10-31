@@ -39,7 +39,7 @@ frontendUpdate (){
         cd $webDir
         git pull
         chmod -R 755 *
-        chmod -R 777 imagecache log.txt ticket
+        chmod -R 777 imagecache log.txt ticket update.log
 };
 
 backendUpdate (){
