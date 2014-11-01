@@ -71,10 +71,15 @@ $.urlParam = function(name){
        return results[1] || 0;
     }
 }
+
 function isInt(value) {
   return !isNaN(value) && 
          parseInt(Number(value)) == value && 
          !isNaN(parseInt(value, 10));
+}
+
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 // TODO: make this a method of an object
@@ -295,7 +300,7 @@ var viewModel = function (descriptionData) {
 			field.showValidation(false);
 			
 			if (field.isVisible()) {
-				if (!isInt(field.dataEntry())) {
+				if (!isNumber(field.dataEntry())) {
 					self.measurementPageValid(false);
 					field.showValidation(true);
 				}
@@ -305,7 +310,7 @@ var viewModel = function (descriptionData) {
 	};
 		
 	self.validateModelPage = function() {
-		self.paddingValueValid(isInt(self.paddingValue()));
+		self.paddingValueValid(isNumber(self.paddingValue()));
 		self.emailValid(self.email() && true);
 		
 		self.modelPageValid(self.paddingValueValid() && self.emailValid());
