@@ -122,12 +122,19 @@ Web interface for back-end e-NABLE Assembler
 			} elseif ($emailInvalid == 0 && ! is_file($myPath . '.zip')){
 				// add handidness to the human reaale file name
 				$side = "Unknown";
+				$build_side = "UNK";
+				$measurement8 = 0;
+				$timestamp = date('Y-m-d H:i:s');
 				$urlString = $_SERVER['QUERY_STRING'];
 
 				if ($_REQUEST['prostheticHand'] == 0){
 					$side='Left';
+					$build_side = "R";
+					$measurement8 = $_REQUEST['Right8'];
 				} elseif ($_REQUEST['prostheticHand'] == 1){
 					$side='Right';
+					$build_side = "L";
+					$measurement8 = $_REQUEST['Left8'];
 				}
 
 				// Give the file a human readable name, search options
@@ -195,6 +202,51 @@ Web interface for back-end e-NABLE Assembler
 				exec("perl -i -pe's/DOMAIN/{$myDNS}/g' {$myPath}/README.html");
 				exec("perl -i -pe's/TICKET_ID/{$ticketNo}/g' {$myPath}/README.html");
 				exec("perl -i -pe's/URL_PARAMS/{$fullURL}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/PROSTHETIC_HAND/{$side}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/BUILD_SIDE/{$build_side}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/MEASUREMENT8/{$measurement8}/g' {$myPath}/README.html");
+				//exec("perl -i -pe's/EMAIL/{$email}/g' {$myPath}/README.html");
+
+				$palmStyle 		= $_REQUEST['palmSelect'];
+				$fingerStyle 	= $_REQUEST['fingerSelect'];
+				$gauntletStyle 	= $_REQUEST['gauntletSelect'];
+
+				$palmVars 		= $jsonArray['palm'];
+				$fingerVars 	= $jsonArray['finger'];
+				$gauntletVars 	= $jsonArray['gauntlet'];
+
+				foreach ($palmVars AS $key){
+					$partname = $key['name'];
+					$myID = $key['id'];
+
+					if (($palmStyle == $myID ) && $partname){
+						$palmStyle = $partname;
+					}
+				}
+
+				foreach ($fingerVars AS $key){
+					$partname = $key['name'];
+					$myID = $key['id'];
+
+					if (($fingerStyle == $myID ) && $partname){
+						$fingerStyle = $partname;
+					}
+				}
+
+				foreach ($gauntletVars AS $key){
+					$partname = $key['name'];
+					$myID = $key['id'];
+
+					if (($gauntletStyle == $myID ) && $partname){
+						$gauntletStyle = $partname;
+					}
+				}
+
+				exec("perl -i -pe's/PALM_STYLE/{$palmStyle}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/FINGER_STYLE/{$fingerStyle}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/GAUNTLET_STYLE/{$gauntletStyle}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/PADDING/{$_REQUEST['Padding']}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/TIMESTAMP/{$timestamp}/g' {$myPath}/README.html");
 
 				exec("chmod 755 {$myPath}.sh; {$myPath}.sh > /dev/null &");
 
