@@ -20,5 +20,10 @@ Web interface for back-end e-NABLE Assembler
 
 
 
-	$baseDNS = 'localhost';
+    // Set this to www.MY_WEB_HOST_NAME.com or www.MY_WEB_HOST_NAME.com/LOCATION
+    // It is used in email string when notifying users
+    $baseDNS = 'localhost';
+
+    // ONLY set to TRUE if 'openscad --version' is 2014.10.02 or over
+    $enable_camera = FALSE;
 ?>

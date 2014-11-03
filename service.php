@@ -27,6 +27,11 @@ Web interface for back-end e-NABLE Assembler
 
 	$submitType	=  isset($_GET["type"])? strtolower(trim($_GET["type"])): null;
 
+
+	if (empty($baseDNS)){
+		$baseDNS = 'PLEASE_FIX';
+	} 
+
 	getSessionId();
 
 	switch($submitType){

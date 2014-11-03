@@ -17,7 +17,7 @@ Web interface for back-end e-NABLE Assembler
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
+require_once('config.php');
 
 $processCountLimit = 2;
 $processCount = 0;
@@ -175,6 +175,8 @@ function start_user_session( $assemblervars){
 }
 
 function render( $assemblervars){
+	global $enable_camera;
+
 	$return = '';
 	if(isset($_REQUEST['submit']) ){
 
@@ -246,9 +248,11 @@ function render( $assemblervars){
 		$previewimage = "imagecache/{$scalehash}.{$partname}.png";
 		$exportfile   = "imagecache/{$scalehash}.{$partname}.stl";
 
+		$cameraFlag	 =  !empty($enable_camera)? $enable_camera : false;
+
 		$specialView ='';
-		if ($_REQUEST['part'] == 0 || $_REQUEST['part'] == -1){
-			$specialView ='--camera=0,0,400,0,0,0';
+		if ($cameraFlag && ($_REQUEST['part'] == 0 || $_REQUEST['part'] == -1)){
+			$specialView ='--camera=0,0,460,0,0,0';
 		}
 
 		if($_REQUEST['submit'] == 'stl'){
