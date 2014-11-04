@@ -28,7 +28,6 @@ sudo apt-get install apache2 mysql-server php5 php5-mysql libapache2-mod-php5
 # install openScad latest dev snapshot manually
 # source: http://www.openscad.org/downloads.html
 cd /var/tmp/
-wget http://files.openscad.org/snapshots/openscad-2014.05.31.x86-64.tar.gz
 wget http://files.openscad.org/snapshots/openscad-2014.10.02.x86-64.tar.gz
 tar xvf openscad-2014.10.02.x86-64.tar.gz
 cd openscad-2014.10.02
