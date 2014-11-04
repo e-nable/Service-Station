@@ -28,9 +28,9 @@ sudo apt-get install apache2 mysql-server php5 php5-mysql libapache2-mod-php5
 # install openScad latest dev snapshot manually
 # source: http://www.openscad.org/downloads.html
 cd /var/tmp/
-wget http://files.openscad.org/snapshots/openscad-2014.05.31.x86-64.tar.gz
-tar xvf openscad-2014.05.31.x86-64.tar.gz
-cd openscad-2014.05.31
+wget http://files.openscad.org/snapshots/openscad-2014.10.02.x86-64.tar.gz
+tar xvf openscad-2014.10.02.x86-64.tar.gz
+cd openscad-2014.10.02
 
 # just hit enter when asked where the lib should install
 sudo ./install.sh
@@ -48,6 +48,11 @@ sudo git clone https://github.com/e-nable/Assembler.git
 sudo git clone https://github.com/e-nable/Service-Station.git
 
 cd Service-Station
+cp config_default.php config.php
+# make sure and edit the config.php
+# set enable_camera to TRUE
+# set baseDNS to the full URL where the app is reached
+# this value is used for webMail
 
 # this helps when doing git diff / pull / check-ins
 sudo git config core.fileMode false
@@ -67,6 +72,7 @@ sudo chmod 755 * -R
 # create image cache directory and log file
 sudo mkdir Service-Station/imagecache; sudo chmod 777 Service-Station/imagecache;
 sudo touch Service-Station/log.txt; sudo chmod 777 Service-Station/log.txt;
+sudo chmod 777 Service-Station/ticket;
 
 # assumes apache2 - we're about to use the default html directory
 cd /var/www

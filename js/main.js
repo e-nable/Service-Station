@@ -60,8 +60,6 @@ $(function(){
 			vm.sammy.run();
 		});
 	});
-	
- 	firstRender();
 });
 
 // URL parser addition to jQuery
@@ -73,10 +71,15 @@ $.urlParam = function(name){
        return results[1] || 0;
     }
 }
+
 function isInt(value) {
   return !isNaN(value) && 
          parseInt(Number(value)) == value && 
          !isNaN(parseInt(value, 10));
+}
+
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 // TODO: make this a method of an object
@@ -140,12 +143,12 @@ var fieldsViewModelBuilder = function(descriptionReferenceData) {
 	
 	self.extractHiddenFromSession = function(handSession) {
 		var id = self.extractSequenceNumFromSession(handSession);
-		return !(id == 8 || id == 9);
+		return !(id == 8);
 	};
 	
 	self.extractVisibleFromSession = function(handSession) {
 		var id = self.extractSequenceNumFromSession(handSession);
-		return (id == 8 || id == 9);
+		return (id == 8);
 	};
 	
 	self.buildViewModel = function(handSession) {
@@ -297,7 +300,7 @@ var viewModel = function (descriptionData) {
 			field.showValidation(false);
 			
 			if (field.isVisible()) {
-				if (!isInt(field.dataEntry())) {
+				if (!isNumber(field.dataEntry())) {
 					self.measurementPageValid(false);
 					field.showValidation(true);
 				}
@@ -307,7 +310,7 @@ var viewModel = function (descriptionData) {
 	};
 		
 	self.validateModelPage = function() {
-		self.paddingValueValid(isInt(self.paddingValue()));
+		self.paddingValueValid(isNumber(self.paddingValue()));
 		self.emailValid(self.email() && true);
 		
 		self.modelPageValid(self.paddingValueValid() && self.emailValid());
@@ -328,13 +331,17 @@ var viewModel = function (descriptionData) {
 	// This bit of code allows us to use bookmarking, back button, etc. and do pure SPA-style navigation with hash tags
 	self.sammy = Sammy(function() {
 		this.get("#welcome", function(context) {
+			window.ga_sendPath();
 			self.currentStep(self.processSteps.welcomePage);
 		});
 		this.get("#measure", function(context) {
-			self.currentStep(self.processSteps.measurementsPage);
+			window.ga_sendPath();
+			self.currentStep(self.processSteps.measurementsPage);			
 		});
 		this.get("#model", function(context) {
-			if (self.validateMeasurementsPage()) {
+			if (self.validateMeasurementsPage()) {				
+				window.ga_sendPath();
+				
 				self.currentStep(self.processSteps.modelPage);
 				self.preview();
 			} else {
@@ -342,12 +349,15 @@ var viewModel = function (descriptionData) {
 			}
 		});
 		this.get("#sendemail", function(context) {
+			window.ga_sendPath();
 			self.sendEmail();
+			
 			context.redirect("#thankyou");
 		});
 		this.get("#thankyou", function(context) {
 			if (self.validateModelPage()) {
 				// Add AJAX invocation
+				window.ga_sendPath();
 				self.currentStep(self.processSteps.thankyouPage);
 			} else {
 				 context.redirect("#model");
@@ -356,49 +366,4 @@ var viewModel = function (descriptionData) {
 	});
 };
 
-
-// Call this when we submit
-function submitForm(v){
-	submitVal = v;
-	
-	if (flagged){
-		$('#valueWarningModal').modal({backdrop:'static', keyboard: false, show:true});
-		return;
-	}
-	
-	flaggedError = flagged;
-}
-
-
-// Render buttons when needed - leave out when process count
-// has gone over limit
-function conditionalButtonRender(){
-		
-	if (isUnderProcessLimit == 1){
-		/*$('#action_buttons').append(
-			$('<button></button>').attr({
-				id:'stl-btn',
-				'data-loading-text':'Loading STL...',
-				class:'download btn btn-danger' +((partSession == 0)?' disabled':''),
-				type: 'submit',
-				name: 'submit',
-				value: 'stl'})
-			.click(function(){submitForm('stl');})
-			.html('<span class="glyphicon glyphicon-download"></span> Generate STL')
-		);*/
-		
-	} else {
-		$('#action_buttons').append(
-			$('<h5></h5>').attr({
-				style:'color:white; font-weight:bold;',
-				'data-loading-text':'Loading Preview...',
-				value: 'Preview'}).html('Processing limit reached. Please try again in a few minutes')
-		);
-	}
-}
-
-// configures UI on first render while we get knockout completed
-function firstRender() {
-	conditionalButtonRender();
-}
 

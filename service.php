@@ -25,9 +25,12 @@ Web interface for back-end e-NABLE Assembler
 
 	start_user_session( $assemblervars);
 
-	//header('Content-Type: application/json');
-
 	$submitType	=  isset($_GET["type"])? strtolower(trim($_GET["type"])): null;
+
+
+	if (empty($baseDNS)){
+		$baseDNS = 'PLEASE_FIX';
+	} 
 
 	getSessionId();
 
@@ -41,9 +44,17 @@ Web interface for back-end e-NABLE Assembler
 				if(!isset($_REQUEST[$a]) || empty($_REQUEST[$a])) {
 					$_REQUEST[$a] = 0;
 				}
+				//print $a . '='. $_REQUEST[$a] .'; ';
 			}
 
 			$assemblypath = dirname(__FILE__)."/e-NABLE/Assembly/";
+
+                        $assemblyHash = '';
+                        $return_var = '';
+                        $basePath = dirname(__FILE__);
+                        exec("cd $assemblypath; git log -n 1 --pretty=format:'%h %s' | awk '{print $1}' 2>&1; cd $basePath;", $assemblyHash, $return_var);
+                        $assemblyHash = $assemblyHash[0];
+
 			$exportfile = "";
 			$leftsidevars =  " -D Left1={$_REQUEST['Left1']} "
 				. "-D Left2={$_REQUEST['Left2']} "
@@ -65,7 +76,7 @@ Web interface for back-end e-NABLE Assembler
 				. "-D Right8={$_REQUEST['Right8']} "
 				. "-D Right9={$_REQUEST['Right9']} "
 				. "-D Right10={$_REQUEST['Right10']}";
-			$options = "-D prostheticHand={$_REQUEST['prostheticHand']} "
+			$options = " -D prostheticHand={$_REQUEST['prostheticHand']} "
 				. "-D gauntletSelect={$_REQUEST['gauntletSelect']} "
 				. "-D fingerSelect={$_REQUEST['fingerSelect']} "
 				. "-D palmSelect={$_REQUEST['palmSelect']} "
@@ -75,8 +86,8 @@ Web interface for back-end e-NABLE Assembler
 				. "-D JointBolt={$_REQUEST['JointBolt']} "
 				. "-D ThumbBolt={$_REQUEST['ThumbBolt']} ";
 
-			//$scalehash = md5($leftsidevars.$rightsidevars.$options) .'.'. crc32($leftsidevars.$rightsidevars.$options);
-			//$scalehash = time() .'.'. crc32($leftsidevars.$rightsidevars.$options);
+			//$ticketNo = md5($leftsidevars.$rightsidevars.$options) .'.'. crc32($leftsidevars.$rightsidevars.$options);
+			//$ticketNo = time() .'.'. crc32($leftsidevars.$rightsidevars.$options);
 
 			$pattern = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
 
@@ -84,7 +95,7 @@ Web interface for back-end e-NABLE Assembler
 			$requestedPart = 0; //$_REQUEST['part'];
 			$emailInvalid = 1;
 
-			$scalehash = crc32($baseDNS) . '-' . crc32($email) . '-' . crc32($requestedPart.$leftsidevars.$rightsidevars.$options);
+			$ticketNo = crc32($baseDNS) . '-' . crc32($email) . '-' . crc32($requestedPart.$leftsidevars.$rightsidevars.$options). '-' . $assemblyHash;
 
 			if (preg_match($pattern, $email) === 1) {
     			// emailaddress is valid
@@ -94,24 +105,36 @@ Web interface for back-end e-NABLE Assembler
 			}
 
 
-			$myPath = dirname(__FILE__) . '/ticket/' .  $scalehash;
+			$myPath = dirname(__FILE__) . '/ticket/' .  $ticketNo;
+			$buildLogPath = $myPath . '/build.log';
 
 			$ticketLogPath = $myPath . '/log.txt';
 			$generalLogPath = dirname(__FILE__) . '/log.txt';
 
 			if (! is_file($myPath . '.zip') && !mkdir($myPath, 0777, true) && $emailInvalid == 0) {
 				//die('Failed to create folder...');
-				 exec( "'Already currently in progress: {$myPath}' >> {$ticketLogPath}");
-				 $description = 'In Progress';
-				 $status = 200;
-			} elseif (! is_file($myPath . '.zip') && $emailInvalid == 0){
+				//exec( "'Already currently in progress: {$myPath}' >> {$ticketLogPath}");
+				$description = 'In Progress';
+				$status = 200;
+				exec( "echo '\nMarked as already in Progress: \n Email: {$email} \n Ticket: {$ticketNo}' >> {$generalLogPath}");
+				exec( "date >> {$generalLogPath}");
+			//} elseif (! is_file($myPath . '.zip') && $emailInvalid == 0){
+			} elseif ($emailInvalid == 0 && ! is_file($myPath . '.zip')){
 				// add handidness to the human reaale file name
 				$side = "Unknown";
+				$build_side = "UNK";
+				$measurement8 = 0;
+				$timestamp = date('Y-m-d H:i:s');
+				$urlString = $_SERVER['QUERY_STRING'];
 
-				if ($_REQUEST['prostheticHand'] = 0){
+				if ($_REQUEST['prostheticHand'] == 0){
 					$side='Left';
-				} elseif ($_REQUEST['prostheticHand'] = 1){
+					$build_side = "R";
+					$measurement8 = $_REQUEST['Right8'];
+				} elseif ($_REQUEST['prostheticHand'] == 1){
 					$side='Right';
+					$build_side = "L";
+					$measurement8 = $_REQUEST['Left8'];
 				}
 
 				// Give the file a human readable name, search options
@@ -121,10 +144,16 @@ Web interface for back-end e-NABLE Assembler
 				$partname = "UknownType";
 
 				$time_start = microtime(true);
-				exec( "echo '\nStarting Full Assembly: \n Email: {$email} \n Ticket: {$scalehash}' >> {$generalLogPath}");
-				exec( "echo '\n Params: {$requestedPart}{$leftsidevars}{$rightsidevars}{$options}' >> {$generalLogPath}");
-				exec( "echo '\nStarting: ' >> {$ticketLogPath}");
-				exec( "date >> {$ticketLogPath}");
+				exec( "echo '' >> {$generalLogPath}");
+				exec( "date >> {$generalLogPath}");
+				exec( "echo 'Starting Full Assembly: \n Email: {$email} \n Ticket: {$ticketNo}' >> {$generalLogPath};");
+				exec( "echo ' URL: {$urlString}' >> {$generalLogPath}");
+				exec( "echo ' Params: {$requestedPart}{$leftsidevars}{$rightsidevars}{$options}' >> {$generalLogPath}");
+				//exec( "echo '\nStarting: ' >> {$ticketLogPath}");
+				exec( "date >> {$buildLogPath}");
+				exec( "echo TicketID: {$ticketNo} >> {$buildLogPath}");
+
+				$exportfile  .= "\n date >> {$generalLogPath}; \n";
 
 				foreach ($vals AS $key){
 					$partname = $key['filename'];
@@ -133,22 +162,31 @@ Web interface for back-end e-NABLE Assembler
 					if (($requestedPart == 0 || $requestedPart == $myID ) && $partname){
 						$thisFile	= "{$myPath}/{$side}.{$partname}.stl";
 						if (! is_file($thisFile)){
-							$exportfile .= "time nice -n 0 openscad -o {$thisFile} {$leftsidevars} {$rightsidevars} -D part={$myID} {$options} {$assemblypath}Assembly.scad;";
-							exec( "echo 'NEW: " . escapeshellcmd($exportfile) . "' >> {$ticketLogPath}");
+							$scadCommand  = "openscad -o {$thisFile} {$leftsidevars} {$rightsidevars} -D part={$myID} {$options} {$assemblypath}Assembly.scad";
+							$exportfile  .= "\necho ' ' >> {$buildLogPath};";
+							$exportfile  .= "\necho '{$scadCommand}' >> {$buildLogPath};";
+							$exportfile  .= "\n\ntime nice -n 0 {$scadCommand} >> {$buildLogPath} 2>&1;";
+							//exec( "echo 'NEW: " . escapeshellcmd($exportfile) . "' >> {$buildLogPath}");
 						} else {
-							exec(" echo 'Already found: {$thisFile}' >> {$ticketLogPath} 2>&1");
+							exec(" echo 'Already found: {$thisFile}' >> {$buildLogPath} 2>&1");
 						}
 					}
 				}
 
-				$url = 'http://' . $baseDNS . '/ticket/' .  $scalehash . '.zip';
+				$url = 'http://' . $baseDNS . '/ticket/' .  $ticketNo . '.zip';
 				
-				$exportfile .= "echo '\nCompleted ({$email}): ' `date` >> {$generalLogPath} ;";
-				$exportfile .= "echo '\nCompleted: ' `date` >> {$ticketLogPath} ;";
-				//$exportfile .= "cp {$myPath}.sh {$myPath}/exec.txt ;";
-				$exportfile .= "zip -j -r {$myPath}.zip {$myPath}/;";
-				$exportfile .= "mail  -a 'Content-type: text/html' -a 'CC:enablematcher@gmail.com' -a 'From: e-NABLE' -s 'e-NABLE Model' {$email} < {$myPath}/README.html;";
-				$exportfile .= "rm -r {$myPath} {$myPath}.sh;";
+				$exportfile .= "\necho 'Completed: ' `date` >> {$buildLogPath} ;";
+				$exportfile .= "\necho ' ' >> {$generalLogPath};";
+				$exportfile .= "\necho 'Completed {$ticketNo} ({$email}): ' `date` >> {$generalLogPath};";
+				$exportfile .= "\nzip -j -r {$myPath}.zip {$myPath}/ >> {$generalLogPath} 2>&1;";
+				$exportfile .= "\nmail  -a 'Content-type: text/html' -a 'CC:enablematcher@gmail.com' -a 'From: e-NABLE' -s 'e-NABLE Model' {$email} < {$myPath}/README.html >> {$generalLogPath} 2>&1;";
+				$exportfile .= "\necho ' [ Stack ]=---------------------------------------------------' >> {$generalLogPath};";
+				$exportfile .= "\ncat {$buildLogPath} >> {$generalLogPath};";
+				$exportfile .= "\necho '[ -------------------------- DONE --------------------------- ]' >> {$generalLogPath};";
+				$exportfile .= "\necho 'Emailed {$ticketNo} ({$email}): ' `date` >> {$generalLogPath};";
+				$exportfile .= "\necho ' ' >> {$generalLogPath};";
+				$exportfile .= "\necho ' ' >> {$generalLogPath};";
+				$exportfile .= "rm -r {$myPath} {$myPath}.sh >> {$generalLogPath} 2>&1;";
 
 				$file = fopen("{$myPath}.sh","x");
 				fwrite($file,$exportfile);
@@ -162,8 +200,53 @@ Web interface for back-end e-NABLE Assembler
 
 				exec("cp " . dirname(__FILE__) ."/emailTemplate.html {$myPath}/README.html;");
 				exec("perl -i -pe's/DOMAIN/{$myDNS}/g' {$myPath}/README.html");
-				exec("perl -i -pe's/TICKET_ID/{$scalehash}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/TICKET_ID/{$ticketNo}/g' {$myPath}/README.html");
 				exec("perl -i -pe's/URL_PARAMS/{$fullURL}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/PROSTHETIC_HAND/{$side}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/BUILD_SIDE/{$build_side}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/MEASUREMENT8/{$measurement8}/g' {$myPath}/README.html");
+				//exec("perl -i -pe's/EMAIL/{$email}/g' {$myPath}/README.html");
+
+				$palmStyle 		= $_REQUEST['palmSelect'];
+				$fingerStyle 	= $_REQUEST['fingerSelect'];
+				$gauntletStyle 	= $_REQUEST['gauntletSelect'];
+
+				$palmVars 		= $jsonArray['palm'];
+				$fingerVars 	= $jsonArray['finger'];
+				$gauntletVars 	= $jsonArray['gauntlet'];
+
+				foreach ($palmVars AS $key){
+					$partname = $key['name'];
+					$myID = $key['id'];
+
+					if (($palmStyle == $myID ) && $partname){
+						$palmStyle = $partname;
+					}
+				}
+
+				foreach ($fingerVars AS $key){
+					$partname = $key['name'];
+					$myID = $key['id'];
+
+					if (($fingerStyle == $myID ) && $partname){
+						$fingerStyle = $partname;
+					}
+				}
+
+				foreach ($gauntletVars AS $key){
+					$partname = $key['name'];
+					$myID = $key['id'];
+
+					if (($gauntletStyle == $myID ) && $partname){
+						$gauntletStyle = $partname;
+					}
+				}
+
+				exec("perl -i -pe's/PALM_STYLE/{$palmStyle}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/FINGER_STYLE/{$fingerStyle}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/GAUNTLET_STYLE/{$gauntletStyle}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/PADDING/{$_REQUEST['Padding']}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/TIMESTAMP/{$timestamp}/g' {$myPath}/README.html");
 
 				exec("chmod 755 {$myPath}.sh; {$myPath}.sh > /dev/null &");
 
@@ -176,17 +259,20 @@ Web interface for back-end e-NABLE Assembler
 				$url = "";
 
   			} elseif ($emailInvalid == 0) {
-				exec( "'Build already completed! -> {$myPath}' >> {$ticketLogPath}");
-  				$url = 'http://' . $baseDNS . '/ticket/' .  $scalehash . '.zip';
+				//exec( "'Build already completed! -> {$myPath}' >> {$ticketLogPath}");
+  				$url = 'http://' . $baseDNS . '/ticket/' .  $ticketNo . '.zip';
 
 				$description = 'Completed';
 				$status = 200;
+				exec( "echo '\nMarked as COMPLETED: \n Email: {$email} \n Ticket: {$ticketNo}' >> {$generalLogPath}");
+				exec( "date >> {$generalLogPath}");
+				exec( "echo ' Params: {$requestedPart}{$leftsidevars}{$rightsidevars}{$options}' >> {$generalLogPath}");
   			} else {
 				$description = 'Email Error';
 				$status = 400;
   			}
 
-			echo '{ticket: "' . $scalehash . '", description: "' . $description . '", status: "' . $status . '", url: "'. $url .'"}';
+			echo '{ticket: "' . $ticketNo . '", description: "' . $description . '", status: "' . $status . '", url: "'. $url .'"}';
 
 			break;
 		case "sessionid":
@@ -195,6 +281,17 @@ Web interface for back-end e-NABLE Assembler
 		case "processcount":
 			echo "{count: $processCount, isUnderLimit: " . ($isUnderProcessLimit?'true':'false') ."}";
 			$partname='Gauntlet';
+			break;
+		case "test":
+			$assemblyHash = '';
+			$return_var = '';
+			$assemblypath = dirname(__FILE__)."/e-NABLE/Assembly/";
+			$basePath = dirname(__FILE__);
+			exec("cd $assemblypath; git log -n 1 --pretty=format:'%h %s' | awk '{print $1}' 2>&1; cd $basePath;", $assemblyHash, $return_var);
+			$assemblyHash = $assemblyHash[0];
+			#print_r ($output);
+			#echo $output;
+			echo "{output: '$assemblyHash', return: '$return_var'}";
 			break;
 		case "sessionvars":
 			echo printJSONHeaderSessionVariables();

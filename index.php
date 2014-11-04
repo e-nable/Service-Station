@@ -47,8 +47,42 @@ $sessionID = getSessionId();
 	<script src="./lib/sammy-latest.min.js"></script>
 	
 	<?php echo file_get_contents('js/knockout_templates.html'); ?>
-	<script src="./js/main.js"></script> <!-- ?_=<?php echo $time ?>"></script> DISABLE THIS FOR NOW TO MAKE DEBUGGING EASY IN CHROME-->
 	
+	<script type="text/javascript">
+		// TODO: move this stuff into AJAX services, etc.
+		var server_email = function() { $("#email").val(); };
+		var server_paddingValue = function() { $("#paddingValue").val(); };
+		
+		// Google Analytics
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js', 'ga');
+		
+		if (window.location.href.indexOf('e-nable.me') > -1) {
+			ga('create', 'UA-55621004-1', 'auto', {'allowLinker': true});
+			ga('require', 'linker');
+			ga('linker:autoLink', ['youmagine.com'] );
+		}
+		if (window.location.href.indexOf('youmagine.com') > -1) {
+			ga('create', 'UA-55621004-1', 'auto', {'allowLinker': true});
+			ga('require', 'linker');
+			ga('linker:autoLink', ['e-nable.me'] );
+		}
+		if (window.location.href.indexOf('e-nable.me') == -1 &&
+		    window.location.href.indexOf('youmagine.com') == -1) {
+			ga('create', 'UA-55621004-1', { 'cookieDomain': 'none' });
+		}
+		ga('require', 'displayfeatures');
+		
+		window.ga_sendPath = function() {
+			/* ga('send', 'pageview', window.location.href.replace(window.location.origin, "")); */
+			ga('send', 'pageview', window.location.href);
+		};
+		window.ga_sendPath();
+	</script>
+	
+	<script src="./js/main.js?_=<?php echo $time ?>"></script> <!-- REMOVE THE PHP ECHO TO MAKE DEBUGGING EASIER IN CHROME-->	
 	<script type="text/javascript">
 		// TODO: move this stuff into AJAX services, etc.
 		var server_email = function() { $("#email").val(); };
