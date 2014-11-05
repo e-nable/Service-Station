@@ -1,0 +1,40 @@
+[ Hand-o-matic Webapp Release notes ]==========================================
+
+--------------------------------------------------------
+ Version 1.2.1
+--------------------------------------------------------
+
+ User Interface:
+ - Google Analytics deployed. Uses path binding, added configuration
+   tweaks to track pages. Cross-domain tracking.
+ - Hiding L/R 9 per new requirements
+ - Added Google Display analytics initializer
+ - Changing camera perspective on Exploded and New Assembly View
+ - Fixed model page language, changed validation to allow decimal values input
+
+ Service:
+ - Added logging for debugging / referencing, correcting JS cache centric
+   issue for live servers
+ - Introducing assembly git repo hash to ticketID, augmented logging   
+ - Correcting logic issue in naming convention for files (Left / Right)
+ - Handling issues when expected config is not available. Configurable
+   scad angles for exploded and assembly views to help builds with old
+   openscad versions
+ - Enhanced email to include text for measurements and params
+
+Deployment Scripts / Documentation:
+ - Config: Updated documentation to include latest opescad dev release
+ - Config: Added dev environment setup scripts
+
+System:
+ - System: Upgraded openscad to development v2014.10.02
+
+Core Models  / Assembler:
+ - Added support to Raptor fingers and proximal
+ - Added label to palm
+ - Scale pins even larger on large hands so joints are less loose
+ - Color coding of parts in preview
+ - Scale length and width the same (simplify UI/UX)
+ - Tons of debugging of combinations
+ - Added RIT arm (experimental)
+ - Better logging
