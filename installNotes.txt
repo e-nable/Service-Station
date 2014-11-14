@@ -139,7 +139,7 @@ vim config.php
 
 # First, install all necessary packages:
 
-sudo apt-get install zip postfix mailutils libsasl2-2 ca-certificates libsasl2-modules
+sudo apt-get install php5-curl zip postfix mailutils libsasl2-2 ca-certificates libsasl2-modules
 
 # If you do not have postfix installed before, postfix configuration wizard
 # will ask you some questions. Select your server as 'Internet Site' 
