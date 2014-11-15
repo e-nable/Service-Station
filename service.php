@@ -26,12 +26,13 @@ Web interface for back-end e-NABLE Assembler
 	// -- Yourl Request
 	$timeout_ms	= 2500;
 
-	$api_url	= 'http://u.e-nable.me/yourls-api.php';
+	$api_url				= 'http://u.e-nable.me/yourls-api.php';
+	$defaultInventoryFile	= 'options.json';
 
 	start_user_session( $assemblervars);
 
-	$submitType	=  isset($_GET["type"])? strtolower(trim($_GET["type"])): null;
-
+	$submitType		=  isset($_GET["type"])? strtolower(trim($_GET["type"])): null;
+	$inventoryFile	=  isset($_GET["inventory"])? strtolower(trim($_GET["inventory"])): $defaultInventoryFile;
 
 	if (empty($baseDNS)){
 		$baseDNS = 'PLEASE_FIX';
@@ -46,6 +47,13 @@ Web interface for back-end e-NABLE Assembler
 			$description = "";
 			$status = "";
 			$urlLabel = "";
+
+			// We're about to exit with an error if we can't find the inventory file
+			if (!file_exists(dirname(__FILE__).'/e-NABLE/' .$inventoryFile)){
+				echo "{description: 'Inventory file not found', status:'500'}";
+			}
+
+			// CONTINUED - file found
 
 			// Clean up the passed in $_REQUEST vars to make sure everything is set.
 			foreach($assemblervars AS $a) {
@@ -103,7 +111,7 @@ Web interface for back-end e-NABLE Assembler
 			$requestedPart = 0; //$_REQUEST['part'];
 			$emailInvalid = 1;
 
-			$ticketNo = crc32($baseDNS) . '-' . crc32($email) . '-' . crc32($requestedPart.$leftsidevars.$rightsidevars.$options). '-' . $assemblyHash;
+			$ticketNo = crc32($baseDNS) . '-' . crc32($email) . '-' . crc32($requestedPart.$leftsidevars.$rightsidevars.$options.$inventoryFile). '-' . $assemblyHash;
 
 			if (preg_match($pattern, $email) === 1) {
     			// emailaddress is valid
@@ -114,7 +122,6 @@ Web interface for back-end e-NABLE Assembler
 
 			$url = 'http://' . $baseDNS . '/ticket/' .  $ticketNo . '.zip';
 			$isTranslatedURL = FALSE;
-
 
 			$translatedURL = $url;
 
@@ -194,7 +201,7 @@ Web interface for back-end e-NABLE Assembler
 				}
 
 				// Give the file a human readable name, search options
-				$json = file_get_contents (dirname(__FILE__).'/e-NABLE/options.json');
+				$json = file_get_contents (dirname(__FILE__) . '/e-NABLE/' . $inventoryFile);
 				$jsonArray = json_decode($json, true);
 				$vals = $jsonArray['part'];
 				$partname = "UknownType";
@@ -203,11 +210,13 @@ Web interface for back-end e-NABLE Assembler
 				exec( "echo '' >> {$generalLogPath}");
 				exec( "date >> {$generalLogPath}");
 				exec( "echo 'Starting Full Assembly: \n Email: {$email} \n Ticket: {$ticketNo}' >> {$generalLogPath};");
+				exec( "echo ' Inventory File: {$inventoryFile}' >> {$generalLogPath}");
 				exec( "echo ' URL: {$urlString}' >> {$generalLogPath}");
 				exec( "echo ' Params: {$requestedPart}{$leftsidevars}{$rightsidevars}{$options}' >> {$generalLogPath}");
 				//exec( "echo '\nStarting: ' >> {$ticketLogPath}");
 				exec( "date >> {$buildLogPath}");
-				exec( "echo TicketID: {$ticketNo} >> {$buildLogPath}");
+				exec( "echo 'TicketID: {$ticketNo}' >> {$buildLogPath}");
+				exec( "echo 'Inventory File: {$inventoryFile}' >> {$buildLogPath}");
 
 				$exportfile  .= "\n date >> {$generalLogPath}; \n";
 
