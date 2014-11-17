@@ -99,7 +99,6 @@ $sessionID = getSessionId();
 <body id="index" class="home">
 <input id="email" type="hidden" value="{$email}" />
 <input id="paddingValue" type="hidden" value="{$paddingValue}" />
-
 <form id="generatorForm" name="generatorForm">
 	<div data-bind="template: { name: 'main-interface' }"></div>
 

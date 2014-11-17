@@ -36,6 +36,7 @@ var descriptions = [
 
 var submitVal = 0;
 var flaggedError = true;
+var vm;
 
 
 // DOM Ready method
@@ -49,16 +50,22 @@ $(function(){
 	}
 	
 	// Instance the ViewModel
-	var vm = new viewModel(descriptions);
+	vm = new viewModel(descriptions);
 	window.tmpViewModelReferenceForDebug = vm;
 	
 	sessionService(function(session) { 
-		vm.loadSession(session); 
-		optionValuesService(function(options) { 
-			vm.loadOptions(options); 
+		vm.loadSession(session);
+		masterValuesService(function(options) {
+			vm.loadInventory(options);
+			//vm.loadOptions(options);
 			ko.applyBindings(vm);
 			vm.sammy.run();
 		});
+		/*optionValuesService(function(options) {
+			vm.loadOptions(options);
+			ko.applyBindings(vm);
+			vm.sammy.run();
+		});*/
 	});
 });
 
@@ -83,8 +90,23 @@ function isNumber(n) {
 }
 
 // TODO: make this a method of an object
-var optionValuesService = function(callback) {
-	$.ajax({url:"e-NABLE/options.json",
+var masterValuesService = function(callback) {
+	$.ajax({cache: false, url:"e-NABLE/master-options.json",
+		success: function(jqXHR) {
+			if (jqXHR){
+				optionValues = jqXHR;
+				callback(optionValues);
+			}
+		},error: function(jqXHR){
+
+		}
+	});
+};
+// TODO: make this a method of an object
+var optionValuesService = function(callback, data) {
+	if (!(data && data.file)) return;
+	var urlToCategoryFile = "e-NABLE/" + data.file;
+	$.ajax({cache: false, url: urlToCategoryFile,
 		success: function(jqXHR) {
 			if (jqXHR){
 				optionValues = jqXHR;
@@ -108,10 +130,9 @@ var sessionService = function(callback) {
 		processCount: processCount,
 		handSessionValues: handSessionValues,
 		email: email,
+		inventory: inventory
 	});
 };
-
-
 
 var fieldsViewModelBuilder = function(descriptionReferenceData) {
 	var self = this;	
@@ -184,17 +205,19 @@ var viewModel = function (descriptionData) {
 	self.processCount = processCount;
 	self.email = ko.observable();
 	self.paddingValue = ko.observable(5);
-	self.render = ko.observable();	
+	self.render = ko.observable();
+	self.inventory = ko.observable();
 	
 	self.descriptions = descriptionData;
 	self.fields = ko.observableArray();
-	
+
 	self.prostheticHandItems = ko.observableArray();
 	self.gauntletSelectItems = ko.observableArray();
 	self.fingerSelectItems = ko.observableArray();
 	self.partItems = ko.observableArray();
 	self.palmItems = ko.observableArray();
 
+	self.selectedInventory = ko.observable();
 	self.selectedProstheticHand = ko.observable();
 	self.selectedGauntletSelect = ko.observable();
 	self.selectedFingerSelect = ko.observable();
@@ -202,6 +225,7 @@ var viewModel = function (descriptionData) {
 	self.selectedPalm = ko.observable();
 	
 	self.loadSession = function(session) {
+		self.inventory(session.inventory);
 		self.selectedProstheticHand(session.prostheticHandSession);
 		self.selectedGauntletSelect(session.gauntletSelectSession);
 		self.selectedFingerSelect(session.fingerSelectSession);
@@ -215,6 +239,10 @@ var viewModel = function (descriptionData) {
 		});
 	};
 
+	self.loadInventory = function(optionValuesData) {
+		self.inventory(optionValuesData.inventory);
+	};
+
 	self.loadOptions = function(optionValuesData) {
 		optionValuesData.prostheticHand.unshift({ 
 			id: null, name: "Select the Hand..." 
@@ -226,6 +254,20 @@ var viewModel = function (descriptionData) {
 		self.palmItems(optionValuesData.palm);
 	};
 	
+	self.inventorySelected = ko.computed(function() {
+		if (self.previousSelected){
+			self.previousSelected.isSelected = false;
+		}
+		self.previousSelected = self.selectedInventory();
+		if (self.previousSelected){
+			self.previousSelected.isSelected = true;
+		}
+		optionValuesService(function(options) {
+			vm.loadOptions(options); 
+		}, self.selectedInventory());
+
+		return self.selectedInventory()?self.selectedInventory().id: self.selectedInventory();
+	});
 	
 	self.leftHandSelected = ko.computed(function() {
 		return self.selectedProstheticHand() == "0";
@@ -280,7 +322,8 @@ var viewModel = function (descriptionData) {
 	};
 	
 	self.sendEmail = function() {
-		var url = 'service.php?type=make&' + $('#generatorForm').serialize();
+		var inventory = self.selectedInventory();
+		var url = 'service.php?type=make&' + 'inventory=' + inventory.file + '&' + $('#generatorForm').serialize();
 		$.get(url, function(resp) { });
 	}
 
@@ -321,9 +364,10 @@ var viewModel = function (descriptionData) {
 	// Navigation functions
 	self.processSteps = {
 		welcomePage: 1,
-		measurementsPage: 2,
-		modelPage: 3,
-		thankyouPage: 4,
+		modelTypePage: 2,
+		measurementsPage: 3,
+		modelPage: 4,
+		thankyouPage: 5
 	};
 	
 	self.currentStep = ko.observable(self.processSteps.welcomePage);
@@ -333,6 +377,10 @@ var viewModel = function (descriptionData) {
 		this.get("#welcome", function(context) {
 			window.ga_sendPath();
 			self.currentStep(self.processSteps.welcomePage);
+		});
+		this.get("#modeltype", function(context) {
+			window.ga_sendPath();
+			self.currentStep(self.processSteps.modelTypePage);
 		});
 		this.get("#measure", function(context) {
 			window.ga_sendPath();

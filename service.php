@@ -25,6 +25,7 @@ Web interface for back-end e-NABLE Assembler
 
 	// -- Yourl Request
 	$timeout_ms	= 2500;
+	$status = 400;
 
 	$api_url				= 'http://u.e-nable.me/yourls-api.php';
 	$defaultInventoryFile	= 'options.json';
@@ -50,7 +51,9 @@ Web interface for back-end e-NABLE Assembler
 
 			// We're about to exit with an error if we can't find the inventory file
 			if (!file_exists(dirname(__FILE__).'/e-NABLE/' .$inventoryFile)){
-				echo "{description: 'Inventory file not found', status:'500'}";
+				$status = 500;
+				echo "{description: 'Inventory file not found', statusCode: 500}";
+				break;
 			}
 
 			// CONTINUED - file found
@@ -346,7 +349,7 @@ Web interface for back-end e-NABLE Assembler
 			}
 
 			// printing status
-			echo '{ticket: "' . $ticketNo . '", description: "' . $description . '", status: "' . $status . '"'. $urlOUT .'}';
+			echo '{ticket: "' . $ticketNo . '", description: "' . $description . '", statusCode: ' . $status . $urlOUT .'}';
 
 			break;
 		case "sessionid":
@@ -371,7 +374,10 @@ Web interface for back-end e-NABLE Assembler
 			echo printJSONHeaderSessionVariables();
 			break;
 		default:
-			echo "{description: 'No matching action', status:'500'}";
+			$status = 500;
+			echo "{description: 'No matching action', statusCode: 500}";
+			break;
 	}
 
+	http_response_code($status);
 ?>

@@ -28,6 +28,11 @@
 			<div data-bind="template: { name: 'right-welcome-pane' }"></div>
 		</div>
 
+		<div class="row" data-bind="visible: currentStep() == processSteps.modelTypePage ">
+			<div data-bind="template: { name: 'left-modeltype-pane' }"></div>
+			<div data-bind="template: { name: 'right-modeltype-pane' }"></div>
+		</div>
+
 		<div class="row" data-bind="visible: currentStep() == processSteps.measurementsPage ">
 			<div data-bind="template: { name: 'prosthetic-data-entry' }"></div>	
 			<div data-bind="template: { name: 'reference-pane' }"></div>
@@ -81,7 +86,7 @@
     <span class="icon-bar"></span>
    </button>
    <a href="#" class="navbar-brand">
-	<span id="product-title">e-NABLE Hand-o-matic v1.2.1</span>
+	<span id="product-title">e-NABLE Hand-o-matic v1.3.0</span>
 	</a>
   </div>
 
@@ -128,6 +133,7 @@
 
 				<p>The steps are:
 					<ol type="1">
+					<li>Select Model Type</li>
 					<li>Enter Measurements</li>
 					<li>Select options</li>
 					<li>Deliver files that can be printed on a 3D printer. You can print them yourself, or we can help you find someone in your area who can help you.</li>
@@ -141,24 +147,91 @@
 </div>
 
 </script>
+
 <script type="text/html" id="right-welcome-pane">
 <div class="col-md-4" id="mid-pane">
 	<div class="panel panel-warning" id="side-select">
 		<div class="panel-heading">
-			<h3 class="panel-title">Next Steps</h3>
+			<h3 class="panel-title">Next Step: Model Selection</h3>
 		</div>
 		
 		<div class="panel-content">
-                        <div class="panel-content-inner">
-			        <h2 style="color:#999; text-align:center; margin:0">
-                                        Are you ready to start entering your measurements?
-                                <h2>
-                                <h4 style="text-align:center; color:#555;">Click the "Start" button to begin!</h1>
-                        </div>
-                        <div style="text-align:right;">
-				
-                                <a href="#measure" class="btn btn-lg btn-primary">Start <i class="fa fa-arrow-circle-right"></i></a>
-                        </div>
+			<div class="panel-content-inner">
+				<h2 style="color:#999; text-align:center; margin:0">
+					Are you ready to select your model?
+				<h2>
+				<h4 style="text-align:center; color:#555;">Click the "Start" button to begin!</h1>
+			</div>
+			<div style="text-align:right;">
+				<a href="#modeltype" class="btn btn-lg btn-primary">Start <i class="fa fa-arrow-circle-right"></i></a>
+			</div>
+		</div>
+	</div>
+</div>
+</script>
+
+
+
+
+<!-- Model Type View Templates -->
+<script type="text/html" id="left-modeltype-pane">
+<div class="col-md-8">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Step 1 - Select Model Type</h3>
+		</div>
+
+		<div class="panel-content">
+			<div style="float:left; width:100%; height: 405px;">
+				<div data-bind="foreach: inventory">
+					<div style="float:left; width:48%; height: 305px;">
+						<a data-bind="click: $parent.selectedInventory" style="cursor: pointer;">
+							<img data-bind="attr: {src: image, title: description }" class="img-rounded"/>
+							<h3 data-bind="attr: { class: 'selected-category-' + ($parent.selectedInventory() == $data) }" >
+								<span data-bind="if: $parent.selectedInventory() == $data"><i class="fa fa-check-circle-o"></i></span>
+								<span data-bind="text: title"></span>
+							</h3>
+						</a><br/>
+						<!-- div data-bind="if: $parent.selectedInventory() == $data, attr: { class: 'selected-category-' + ($parent.selectedInventory() == $data) }">
+							<i class="fa fa-check-circle-o"></i> Selected
+						</div -->
+					</div>
+					<!-- div data-bind="with: selectedInventory">
+						Selected
+					</div -->
+				</div>
+			</div>
+			<!-- div style="float:left; width:100%; height: 98px;">
+				<div data-bind="with: selectedInventory">
+					Selected:<h3 data-bind="text: title"></h3>
+					<span data-bind="text: description"></span>
+				</div>
+			</div -->
+			<a href="#welcome" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+			&nbsp;&nbsp;
+			<a href="#modeltype" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#measurement-help"><span class="fa fa-question-circle"></span> Help</a>
+		</div>
+	</div>
+</div>
+
+</script>
+
+<script type="text/html" id="right-modeltype-pane">
+<div class="col-md-4" id="mid-pane">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Next Step: Prosthetic Selection</h3>
+		</div>
+
+		<div class="panel-content">
+			<div class="panel-content-inner">
+				<h2 style="color:#999; text-align:center; margin:0">
+					After you select your model, click "Next" to start entering your measurements.
+				<h2>
+			</div>
+			<div style="text-align:right;">
+				<a href="#measure" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
+			</div>
 		</div>
 	</div>
 </div>
@@ -172,7 +245,7 @@
 <div class="col-md-4" id="mid-pane">
 	<div class="panel panel-warning" id="side-select">
 		<div class="panel-heading">
-			<h3 class="panel-title">Step 1 - Prosthetic Selection</h3>
+			<h3 class="panel-title">Step 2 - Prosthetic Selection</h3>
 		</div>
 				
 		<div class="panel-content">
@@ -195,9 +268,9 @@
 			                <h2 style="color:#999; text-align:center;">Select which hand needs a prosthetic and we will gather your measurements</h2>
 		                </div>
                         </div>
-                        <a href="#welcome" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
-			&nbsp;&nbsp;
-                       <a href="#measure" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#measurement-help"><span class="fa fa-question-circle"></span> Help</a>
+                        <a href="#modeltype" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+						&nbsp;&nbsp;
+						<a href="#measure" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#measurement-help"><span class="fa fa-question-circle"></span> Help</a>
 	        </div>
 	</div>
 </div>
@@ -246,23 +319,25 @@
 <div class="col-md-4" id="right-pane-step1"  data-bind="visible: !noHandSelected()">
 	<div class="panel panel-warning" id="side-select">
 		<div class="panel-heading">
-			<h3 class="panel-title">Next Steps</h3>
+			<h3 class="panel-title">Next Step: Part Selection</h3>
 		</div>
 		
 		<div class="panel-content">
-                        <div class="panel-content-inner">
-			        <h2 style="color:#999; text-align:center; margin:0px;">
-                                        After you enter your measurements, click "Next" below
-                                </h2>
+			<div class="panel-content-inner">
+				<h2 style="color:#999; text-align:center; margin:0px;">
+					After you enter your measurements, click "Next" below.
+				</h2>
 				
 				<div style="margin-top:20px;" data-bind="visible: !measurementPageValid()">
-					<p>There seems to be a few missing values from the required measurements. Please set the associated <b>numeric</b> values for those fields <span class="incomplete-span">colored in red</span> before submitting again.</p>
+					<p>There seems to be a few missing values from the required measurements.
+						Please set the associated <b>numeric</b> values for those fields
+						<span class="incomplete-span">colored in red</span> before submitting again.
+					</p>
 				</div>
-                        </div>
-                        <div style="text-align:right;">
-
-                                <a href="#model" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
-                        </div>
+			</div>
+			<div style="text-align:right;">
+				<a href="#model" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
+			</div>
 		</div>
 	</div>
 </div>
@@ -275,7 +350,7 @@
 <div class="col-md-4 config-col">
 	<div class="panel panel-warning">
 		<div class="panel-heading">
-			<h3 class="panel-title">Step 2 - Model Selection</h3>
+			<h3 class="panel-title">Step 3 - Part Selection</h3>
 		</div>
 		
 		<div class="panel-content">

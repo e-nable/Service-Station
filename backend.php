@@ -34,7 +34,7 @@ $assemblervars = array(
 	'Left1', 'Left2', 'Left3', 'Left4', 'Left5', 'Left6', 'Left7', 'Left8', 'Left9', 'Left10',
 	'Right1', 'Right2', 'Right3', 'Right4', 'Right5', 'Right6', 'Right7', 'Right8', 'Right9', 'Right10',
 	'part', 'gauntletSelect', 'fingerSelect', 'palmSelect', 'prostheticHand', 'Padding',
-	'WristBolt', 'KnuckleBolt', 'JointBolt', 'ThumbBolt', 'advanced', 'email'
+	'WristBolt', 'KnuckleBolt', 'JointBolt', 'ThumbBolt', 'advanced', 'email','inventory'
 );
 
 processCount();
@@ -53,13 +53,14 @@ function printJSONHeaderSessionVariables(){
 	$submitType	=  isset($_GET["submit"])? "'" . strtolower(trim($_GET["submit"])) . "'" : 'undefined';
 
 	$prostheticHand =  !empty($_SESSION['prostheticHand'])	? $_SESSION['prostheticHand']	: 0;
-	$part 		=  !empty($_SESSION['part']) 		? $_SESSION['part']		: 0;
+	$part 			=  !empty($_SESSION['part']) 		? $_SESSION['part']			: 0;
 	$palmSelect 	=  !empty($_SESSION['palmSelect'])	? $_SESSION['palmSelect']	: 0;
 	$gauntletSelect =  !empty($_SESSION['gauntletSelect'])	? $_SESSION['gauntletSelect']	: 0;
-	$fingerSelect	=  !empty($_SESSION['fingerSelect'])	? $_SESSION['fingerSelect']	: 0;
+	$fingerSelect	=  !empty($_SESSION['fingerSelect'])	? $_SESSION['fingerSelect']		: 0;
 	$paddingValue	=  !empty($_SESSION['Padding']) 	? $_SESSION['Padding']		: 5;
-	$advanced 	=  !empty($_SESSION['advanced'])	? $_SESSION['advanced']		: 'false';
-	$email	 	=  !empty($_SESSION['email'])		? $_SESSION['email']		: 'undefined';
+	$advanced 		=  !empty($_SESSION['advanced'])	? $_SESSION['advanced']		: 'false';
+	$email	 		=  !empty($_SESSION['email'])		? $_SESSION['email']		: 'undefined';
+	$inventory		=  !empty($_SESSION['inventory'])	? $_SESSION['inventory']	: 0;
 
 	$r1	=  $_SESSION['Right1'];		$r2	=  $_SESSION['Right2'];
 	$r3	=  $_SESSION['Right3'];		$r4	=  $_SESSION['Right4'];
@@ -82,7 +83,8 @@ function printJSONHeaderSessionVariables(){
 		  fingerSelectSession	: '{$fingerSelect}',
 		  isUnderProcessLimit	: '{$isUnderProcessLimit}',
 		  processCount		: '{$processCount}',
-		  email			: '{$email}',
+		  email				: '{$email}',
+		  inventory			: '{$inventory}',
 		  handSessionValues	: [
 			{id: 'R1', value: '{$r1}'},	{id: 'R2', value: '{$r2}'},
 			{id: 'R3', value: '{$r3}'},	{id: 'R4', value: '{$r4}'},
@@ -105,13 +107,14 @@ function printHeaderSessionVariables(){
 	$submitType	=  isset($_GET["submit"])? "'" . strtolower(trim($_GET["submit"])) . "'" : 'undefined';
 
 	$prostheticHand =  !empty($_SESSION['prostheticHand'])	? $_SESSION['prostheticHand']	: 0;
-	$part 		=  !empty($_SESSION['part']) 		? $_SESSION['part']		: 0;
-	$palmSelect 	=  !empty($_SESSION['palmSelect'])	? $_SESSION['palmSelect']	: 0;
+	$part 			=  !empty($_SESSION['part']) 			? $_SESSION['part']			: 0;
+	$palmSelect 	=  !empty($_SESSION['palmSelect'])		? $_SESSION['palmSelect']	: 0;
 	$gauntletSelect =  !empty($_SESSION['gauntletSelect'])	? $_SESSION['gauntletSelect']	: 0;
 	$fingerSelect	=  !empty($_SESSION['fingerSelect'])	? $_SESSION['fingerSelect']	: 0;
 	$paddingValue	=  !empty($_SESSION['Padding']) 	? $_SESSION['Padding']		: 5;
-	$advanced 	=  !empty($_SESSION['advanced'])	? $_SESSION['advanced']		: 'false';
-	$email	 	=  !empty($_SESSION['email'])		? $_SESSION['email']		: 'undefined';
+	$advanced 		=  !empty($_SESSION['advanced'])	? $_SESSION['advanced']		: 'false';
+	$email	 		=  !empty($_SESSION['email'])		? $_SESSION['email']		: 'undefined';
+	$inventory		=  !empty($_SESSION['inventory'])	? $_SESSION['inventory']	: 0;
 
 	$r1	=  $_SESSION['Right1'];		$r2	=  $_SESSION['Right2'];
 	$r3	=  $_SESSION['Right3'];		$r4	=  $_SESSION['Right4'];
@@ -127,15 +130,16 @@ function printHeaderSessionVariables(){
 
 	echo <<<HTML
 	<script>
-		var submitType		 	= {$submitType};
+		var submitType		 		= {$submitType};
 		var prostheticHandSession 	= {$prostheticHand};
-		var partSession 		= {$part};
+		var partSession 			= {$part};
 		var palmSelectSession 		= {$palmSelect};
 		var gauntletSelectSession	= {$gauntletSelect};
 		var fingerSelectSession		= {$fingerSelect};
 		var isUnderProcessLimit		= {$isUnderProcessLimit};
-		var processCount		= {$processCount};
-		var email			= '{$email}';
+		var processCount			= {$processCount};
+		var email					= '{$email}';
+		var inventory				= '{$inventory}';
 		var handSessionValues		= [
 			{id: 'R1', value: '{$r1}'},	{id: 'R2', value: '{$r2}'},
 			{id: 'R3', value: '{$r3}'},	{id: 'R4', value: '{$r4}'},
@@ -244,6 +248,7 @@ function render( $assemblervars){
 				}
 			break;
 		}
+		$partname = str_replace(" ","_",$partname);
 
 		$previewimage = "imagecache/{$scalehash}.{$partname}.png";
 		$exportfile   = "imagecache/{$scalehash}.{$partname}.stl";
