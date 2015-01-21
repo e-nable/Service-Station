@@ -223,6 +223,10 @@ var viewModel = function (descriptionData) {
 	self.selectedFingerSelect = ko.observable();
 	self.selectedPart = ko.observable();
 	self.selectedPalm = ko.observable();
+	self.termsOfUse = ko.observable(false);
+	self.haveReadTermsOfUse = function() {
+       return true;
+    }
 	
 	self.loadSession = function(session) {
 		self.inventory(session.inventory);
@@ -419,7 +423,7 @@ ko.bindingHandlers.trimText = {
     init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
         var trimmedText = ko.computed(function () {
             var untrimmedText = ko.utils.unwrapObservable(valueAccessor());
-            var defaultMaxLength = 220;
+            var defaultMaxLength = 160;
             var minLength = 5;
             var maxLength = ko.utils.unwrapObservable(allBindingsAccessor().trimTextLength) || defaultMaxLength;
             if (maxLength < minLength) maxLength = minLength;

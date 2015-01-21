@@ -159,11 +159,20 @@
 			<div class="panel-content-inner">
 				<h2 style="color:#999; text-align:center; margin:0">
 					Are you ready to select your model?
-				<h2>
-				<h4 style="text-align:center; color:#555;">Click the "Start" button to begin!</h1>
+				</h2>
+				<h4 style="text-align:center; color:#555;">Click the "Start" button to begin!</h4>
+				<br/><br/><br/><br/><br/>
+				<div data-bind="" style="padding: 15px; border-radius: 4px; background-color: rgb(221, 221, 221);text-align: center !important; font-size:16px !important;">
+				<h4><b>PLEASE CONFIRM</b></h4>
+					<input type="checkbox" data-bind="checked: termsOfUse, click: haveReadTermsOfUse" style="zoom: 1.6 !important;"/>
+					I have read and accept the <br/> <a href="#" onClick="javascript: $('#disclaimerModal').modal()">TERMS OF USE</a>.
+					<br/><br/>
+				</div>
 			</div>
 			<div style="text-align:right;">
-				<a href="#modeltype" class="btn btn-lg btn-primary">Start <i class="fa fa-arrow-circle-right"></i></a>
+				<a href="#modeltype" data-bind="visible: $root.termsOfUse()" class="btn btn-lg btn-primary">
+					Start <i class="fa fa-arrow-circle-right"></i>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -188,14 +197,19 @@
 						<a data-bind="click: $parent.selectedInventory" style="cursor: pointer;">
 							<img data-bind="attr: {src: image, title: description }" class="img-rounded" width="90%" height="75%"/>
 						</a>
-						<a data-bind="click: $parent.selectedInventory" style="cursor: pointer;background-color: black !important;">
-							<h3 data-bind="attr: { class: 'selected-category-' + ($parent.selectedInventory() == $data) }" >
+						<a data-bind="click: $parent.selectedInventory" style="cursor: pointer;">
+							<div data-bind="attr: { class: 'btn btn-catalog' + (($parent.selectedInventory() == $data)?'-selected':'') }" >
 								<span data-bind="if: $parent.selectedInventory() == $data"><i class="fa fa-check-circle-o"></i></span>
 								<span data-bind="text: title"></span>
-							</h3>
+							</div>
 						</a>
-						<div style="width:95% !important;"><a data-bind="attr: { href: url }" style="text-decoration:none;" target='_blank'><i class="fa fa-info-circle"></i> <span data-bind="trimText: description" ></span></a></div>
-							<br/>
+						<div class="e-info-box">
+							<a data-bind="attr: { href: url }" style="text-decoration:none;" target='_blank'>
+								<i class="fa fa-info-circle"></i>
+								<span data-bind="trimText: description" ></span>
+							</a>
+						</div>
+						<br/>
 						<!-- div data-bind="if: $parent.selectedInventory() == $data, attr: { class: 'selected-category-' + ($parent.selectedInventory() == $data) }">
 							<i class="fa fa-check-circle-o"></i> Selected
 						</div -->
@@ -234,7 +248,7 @@
 				<h2>
 			</div>
 			<div style="text-align:right;">
-				<a href="#measure" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
+				<a href="#measure" data-bind="visible: $root.selectedInventory()" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
 			</div>
 		</div>
 	</div>
@@ -253,29 +267,43 @@
 		</div>
 				
 		<div class="panel-content">
-                        <div class="panel-content-inner">
-	                      	<div class="panel-body" id="side-select-body" style="margin-bottom:14px;">
-			                <select name="prostheticHand" 
+			<div class="panel-content-inner">
+				<div class="panel-body" id="side-select-body" style="margin-bottom:14px;">
+					<select name="prostheticHand" 
 						class="form-control" 
-				                data-bind="options: prostheticHandItems, 
-					                optionsText: 'name', 
+						data-bind="options: prostheticHandItems,
+									optionsText: 'name', 
 					                optionsValue: 'id', 
 					                value: selectedProstheticHand">
-			                </select>
-		                </div>
+					</select>
+				</div>
 		
-				<div data-bind="visible: !noHandSelected()">Enter measurements from the hand that <em>doesn’t</em> need the prosthetic.</div>
-		                <div style="margin-top:28px;" data-bind="template: { name: 'field-template', foreach: selectedFields }">
-		                </div>
+				<div data-bind="visible: !noHandSelected()">
+					Enter measurements from the hand that <em>doesn’t</em> need the prosthetic.
+				</div>
+		        <div style="margin-top:28px;" data-bind="template: { name: 'field-template', foreach: selectedFields }">
+		        </div>
 
-		                <div data-bind="visible: noHandSelected()">
-			                <h2 style="color:#999; text-align:center;">Select which hand needs a prosthetic and we will gather your measurements</h2>
-		                </div>
-                        </div>
-                        <a href="#modeltype" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
-						&nbsp;&nbsp;
-						<a href="#measure" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#measurement-help"><span class="fa fa-question-circle"></span> Help</a>
-	        </div>
+				<div data-bind="visible: !noHandSelected()" style="background-color: #DDD; padding: 15px; border-radius: 4px;">
+					<a href="http://e-nable.youmagine.com/measure/" class="btn btn-lg btn-info"
+						target="_blank" style="margin-left: 14px;"><span class="fa fa-camera"></span>
+						Beta: Web Measuring Tool
+					</a>
+					<br/><br/>
+					YouMagine provides an excellent web only solution to help measure directly from images. Don't worry, we don't store the images!
+				</div>
+
+		        <div data-bind="visible: noHandSelected()">
+			        <h2 style="color:#999; text-align:center;">Select which hand needs a prosthetic and we will gather your measurements</h2>
+		        </div>
+
+			</div>
+			<a href="#modeltype" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+			&nbsp;&nbsp;
+			<a href="#measure" class="btn btn-lg btn-warning" data-toggle="modal"
+				data-target="#measurement-help"><span class="fa fa-question-circle"></span> Help
+			</a>
+		</div>
 	</div>
 </div>
 </script>

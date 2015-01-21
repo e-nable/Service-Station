@@ -392,3 +392,32 @@
 		/* W3C Markup, IE10 Release Preview */
 		background-image: linear-gradient(to bottom, #18C457 0%, #087300 100%);
 	}
+	.btn-catalog {
+		background-image: linear-gradient(to bottom,#C8C8C8 0,#A0A0A0 100%);
+		border-color: #9B9B9B;
+		background-color: #D0D0D0;
+		color: #ffffff;
+		font-size: 20px;
+		margin: 12px 0;
+		width: 91%;
+	}
+	.btn-catalog-selected {
+		background-image: linear-gradient(to bottom,#42CA68 0,#2DA264 100%);
+		border-color: #2B9A39;
+		background-color: #42CA82;
+		color: #ffffff;
+		font-size: 20px;
+		margin: 12px 0;
+		width: 91%;
+	}
+	.e-info-box {
+		margin: 0px 30px 0 0;
+		padding: 10px;
+		border-radius: 4px;
+		background-color: rgb(231, 231, 231);
+	}
+	.generic-info-box {
+		padding: 15px;
+		border-radius: 4px;
+		background-color: rgb(221, 221, 221);
+	}
