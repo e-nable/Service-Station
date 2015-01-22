@@ -23,10 +23,17 @@ Web interface for back-end e-NABLE Assembler
 	require_once('config.php');
 	require_once('backend.php');
 
+	// -- Yourl Request
+	$timeout_ms	= 2500;
+	$status = 400;
+
+	$api_url				= 'http://u.e-nable.me/yourls-api.php';
+	$defaultInventoryFile	= 'options.json';
+
 	start_user_session( $assemblervars);
 
-	$submitType	=  isset($_GET["type"])? strtolower(trim($_GET["type"])): null;
-
+	$submitType		=  isset($_GET["type"])? strtolower(trim($_GET["type"])): null;
+	$inventoryFile	=  isset($_GET["inventory"])? strtolower(trim($_GET["inventory"])): $defaultInventoryFile;
 
 	if (empty($baseDNS)){
 		$baseDNS = 'PLEASE_FIX';
@@ -37,8 +44,20 @@ Web interface for back-end e-NABLE Assembler
 	switch($submitType){
 		case "make":
 			$url 	= "";
+			$translatedURL = ""; //this is the variable we actually use for email, etc
 			$description = "";
 			$status = "";
+			$urlLabel = "";
+
+			// We're about to exit with an error if we can't find the inventory file
+			if (!file_exists(dirname(__FILE__).'/e-NABLE/' .$inventoryFile)){
+				$status = 500;
+				echo "{description: 'Inventory file not found', statusCode: 500}";
+				break;
+			}
+
+			// CONTINUED - file found
+
 			// Clean up the passed in $_REQUEST vars to make sure everything is set.
 			foreach($assemblervars AS $a) {
 				if(!isset($_REQUEST[$a]) || empty($_REQUEST[$a])) {
@@ -95,7 +114,7 @@ Web interface for back-end e-NABLE Assembler
 			$requestedPart = 0; //$_REQUEST['part'];
 			$emailInvalid = 1;
 
-			$ticketNo = crc32($baseDNS) . '-' . crc32($email) . '-' . crc32($requestedPart.$leftsidevars.$rightsidevars.$options). '-' . $assemblyHash;
+			$ticketNo = crc32($baseDNS) . '-' . crc32($email) . '-' . crc32($requestedPart.$leftsidevars.$rightsidevars.$options.$inventoryFile). '-' . $assemblyHash;
 
 			if (preg_match($pattern, $email) === 1) {
     			// emailaddress is valid
@@ -104,6 +123,52 @@ Web interface for back-end e-NABLE Assembler
 				$emailInvalid = 1;
 			}
 
+			$url = 'http://' . $baseDNS . '/ticket/' .  $ticketNo . '.zip';
+			$isTranslatedURL = FALSE;
+
+			$translatedURL = $url;
+
+			if (isset($partnerTinyURLID)){
+
+				// Init the CURL session
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $api_url);
+				curl_setopt($ch, CURLOPT_HEADER, 0);            // No header in the result
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return, do not echo result
+				curl_setopt($ch, CURLOPT_POST, 1);              // This is a POST request
+				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout_ms); // Timeout
+				curl_setopt($ch, CURLOPT_POSTFIELDS, array(     // Data to POST
+					'url'           => $url,
+					'signature'     => $partnerTinyURLID,
+					'format'        => 'json',
+					'action'        => 'shorturl'
+				));
+
+				// Fetch and return content
+				$data = curl_exec($ch);
+				curl_close($ch);
+
+				// Parse JSON
+				$data_a = json_decode( $data );
+
+				// Make sure we have a translation
+				$sURL =  strval($data_a->shorturl);
+
+				$position = strpos($sURL, "e-nable.me");
+
+				if ($position !== false) {
+					$translatedURL = $sURL;
+					$urlLabel = " -D 'label=". '"' . str_replace("http://","",$sURL). '"' ."'";
+				} else {
+					$urlLabel = "";
+				}
+
+				// -- done YourL Request
+
+				#foreach($data_a->url as $key => $value){
+				#  echo "<BR> - [" . $key."] -- [". $value . "]";
+				#}
+			}
 
 			$myPath = dirname(__FILE__) . '/ticket/' .  $ticketNo;
 			$buildLogPath = $myPath . '/build.log';
@@ -118,6 +183,7 @@ Web interface for back-end e-NABLE Assembler
 				$status = 200;
 				exec( "echo '\nMarked as already in Progress: \n Email: {$email} \n Ticket: {$ticketNo}' >> {$generalLogPath}");
 				exec( "date >> {$generalLogPath}");
+				$translatedURL = "";
 			//} elseif (! is_file($myPath . '.zip') && $emailInvalid == 0){
 			} elseif ($emailInvalid == 0 && ! is_file($myPath . '.zip')){
 				// add handidness to the human reaale file name
@@ -138,7 +204,7 @@ Web interface for back-end e-NABLE Assembler
 				}
 
 				// Give the file a human readable name, search options
-				$json = file_get_contents (dirname(__FILE__).'/e-NABLE/options.json');
+				$json = file_get_contents (dirname(__FILE__) . '/e-NABLE/' . $inventoryFile);
 				$jsonArray = json_decode($json, true);
 				$vals = $jsonArray['part'];
 				$partname = "UknownType";
@@ -147,11 +213,13 @@ Web interface for back-end e-NABLE Assembler
 				exec( "echo '' >> {$generalLogPath}");
 				exec( "date >> {$generalLogPath}");
 				exec( "echo 'Starting Full Assembly: \n Email: {$email} \n Ticket: {$ticketNo}' >> {$generalLogPath};");
+				exec( "echo ' Inventory File: {$inventoryFile}' >> {$generalLogPath}");
 				exec( "echo ' URL: {$urlString}' >> {$generalLogPath}");
 				exec( "echo ' Params: {$requestedPart}{$leftsidevars}{$rightsidevars}{$options}' >> {$generalLogPath}");
 				//exec( "echo '\nStarting: ' >> {$ticketLogPath}");
 				exec( "date >> {$buildLogPath}");
-				exec( "echo TicketID: {$ticketNo} >> {$buildLogPath}");
+				exec( "echo 'TicketID: {$ticketNo}' >> {$buildLogPath}");
+				exec( "echo 'Inventory File: {$inventoryFile}' >> {$buildLogPath}");
 
 				$exportfile  .= "\n date >> {$generalLogPath}; \n";
 
@@ -159,10 +227,12 @@ Web interface for back-end e-NABLE Assembler
 					$partname = $key['filename'];
 					$myID = $key['id'];
 
+					$partname = str_replace(" ","_",$partname);
+
 					if (($requestedPart == 0 || $requestedPart == $myID ) && $partname){
 						$thisFile	= "{$myPath}/{$side}.{$partname}.stl";
 						if (! is_file($thisFile)){
-							$scadCommand  = "openscad -o {$thisFile} {$leftsidevars} {$rightsidevars} -D part={$myID} {$options} {$assemblypath}Assembly.scad";
+							$scadCommand  = "openscad -o {$thisFile} ${urlLabel} {$leftsidevars} {$rightsidevars} -D part={$myID} {$options} {$assemblypath}Assembly.scad";
 							$exportfile  .= "\necho ' ' >> {$buildLogPath};";
 							$exportfile  .= "\necho '{$scadCommand}' >> {$buildLogPath};";
 							$exportfile  .= "\n\ntime nice -n 0 {$scadCommand} >> {$buildLogPath} 2>&1;";
@@ -172,8 +242,6 @@ Web interface for back-end e-NABLE Assembler
 						}
 					}
 				}
-
-				$url = 'http://' . $baseDNS . '/ticket/' .  $ticketNo . '.zip';
 				
 				$exportfile .= "\necho 'Completed: ' `date` >> {$buildLogPath} ;";
 				$exportfile .= "\necho ' ' >> {$generalLogPath};";
@@ -196,16 +264,18 @@ Web interface for back-end e-NABLE Assembler
 				$fullURL = str_replace("-D","&",$fullURL);
 				$fullURL = str_replace(" ","",$fullURL);
 				$fullURL = 'email=' . str_replace("@","\@",$email) . '&part=' . $requestedPart . $fullURL;
-				$myDNS =  str_replace("/","\/",$baseDNS);
+				//$myDNS =  str_replace("/","\/",$baseDNS);
+				$myURL =  str_replace("/","\/",$translatedURL);
 
 				exec("cp " . dirname(__FILE__) ."/emailTemplate.html {$myPath}/README.html;");
-				exec("perl -i -pe's/DOMAIN/{$myDNS}/g' {$myPath}/README.html");
+				//exec("perl -i -pe's/DOMAIN/{$myDNS}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/FULL_URL/{$myURL}/g' {$myPath}/README.html");
 				exec("perl -i -pe's/TICKET_ID/{$ticketNo}/g' {$myPath}/README.html");
 				exec("perl -i -pe's/URL_PARAMS/{$fullURL}/g' {$myPath}/README.html");
 				exec("perl -i -pe's/PROSTHETIC_HAND/{$side}/g' {$myPath}/README.html");
 				exec("perl -i -pe's/BUILD_SIDE/{$build_side}/g' {$myPath}/README.html");
 				exec("perl -i -pe's/MEASUREMENT8/{$measurement8}/g' {$myPath}/README.html");
-				//exec("perl -i -pe's/EMAIL/{$email}/g' {$myPath}/README.html");
+				exec("perl -i -pe's/EMAIL/{$email}/g' {$myPath}/README.html");
 
 				$palmStyle 		= $_REQUEST['palmSelect'];
 				$fingerStyle 	= $_REQUEST['fingerSelect'];
@@ -257,10 +327,10 @@ Web interface for back-end e-NABLE Assembler
 				$status = 206;
 
 				$url = "";
+				$translatedURL = "";
 
   			} elseif ($emailInvalid == 0) {
 				//exec( "'Build already completed! -> {$myPath}' >> {$ticketLogPath}");
-  				$url = 'http://' . $baseDNS . '/ticket/' .  $ticketNo . '.zip';
 
 				$description = 'Completed';
 				$status = 200;
@@ -272,7 +342,14 @@ Web interface for back-end e-NABLE Assembler
 				$status = 400;
   			}
 
-			echo '{ticket: "' . $ticketNo . '", description: "' . $description . '", status: "' . $status . '", url: "'. $url .'"}';
+			// this prevent us from printing the URL in the response when there isn't one to show
+			$urlOUT = "";
+			if (isset($translatedURL) && $translatedURL != ""){
+				$urlOUT = ', url:"' . $translatedURL . '"';
+			}
+
+			// printing status
+			echo '{ticket: "' . $ticketNo . '", description: "' . $description . '", statusCode: ' . $status . $urlOUT .'}';
 
 			break;
 		case "sessionid":
@@ -297,7 +374,10 @@ Web interface for back-end e-NABLE Assembler
 			echo printJSONHeaderSessionVariables();
 			break;
 		default:
-			echo "None";
+			$status = 500;
+			echo "{description: 'No matching action', statusCode: 500}";
+			break;
 	}
 
+	http_response_code($status);
 ?>
