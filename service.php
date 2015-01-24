@@ -52,7 +52,7 @@ Web interface for back-end e-NABLE Assembler
 			// We're about to exit with an error if we can't find the inventory file
 			if (!file_exists(dirname(__FILE__).'/e-NABLE/' .$inventoryFile)){
 				$status = 500;
-				echo "{description: 'Inventory file not found', statusCode: 500}";
+				echo '{"description": "Inventory file not found", "statusCode": 500}';
 				break;
 			}
 
@@ -345,18 +345,18 @@ Web interface for back-end e-NABLE Assembler
 			// this prevent us from printing the URL in the response when there isn't one to show
 			$urlOUT = "";
 			if (isset($translatedURL) && $translatedURL != ""){
-				$urlOUT = ', url:"' . $translatedURL . '"';
+				$urlOUT = ', "url": "' . $translatedURL . '"';
 			}
 
 			// printing status
-			echo '{ticket: "' . $ticketNo . '", description: "' . $description . '", statusCode: ' . $status . $urlOUT .'}';
+			echo '{"ticket": "' . $ticketNo . '", "description": "' . $description . '", "statusCode": ' . $status . $urlOUT .'}';
 
 			break;
 		case "sessionid":
-			echo "{sessionId: '" .getSessionId() . "'}";
+			echo '{"sessionId": "' .getSessionId() . '"}';
 			break;
 		case "processcount":
-			echo "{count: $processCount, isUnderLimit: " . ($isUnderProcessLimit?'true':'false') ."}";
+			echo '{"count": '.$processCount.', "isUnderLimit": "' . ($isUnderProcessLimit?'true':'false') .'"}';
 			$partname='Gauntlet';
 			break;
 		case "test":
@@ -368,14 +368,14 @@ Web interface for back-end e-NABLE Assembler
 			$assemblyHash = $assemblyHash[0];
 			#print_r ($output);
 			#echo $output;
-			echo "{output: '$assemblyHash', return: '$return_var'}";
+			echo '{"output": "'.$assemblyHash.'", "return": "'.$return_var.'"}';
 			break;
 		case "sessionvars":
 			echo printJSONHeaderSessionVariables();
 			break;
 		default:
 			$status = 500;
-			echo "{description: 'No matching action', statusCode: 500}";
+			echo '{"description": "No matching action", "statusCode": 500}';
 			break;
 	}
 

@@ -328,7 +328,21 @@ var viewModel = function (descriptionData) {
 	self.sendEmail = function() {
 		var inventory = self.selectedInventory();
 		var url = 'service.php?type=make&' + 'inventory=' + inventory.file + '&' + $('#generatorForm').serialize();
-		$.get(url, function(resp) { });
+		var doneFunc = function(data ) {
+			if(data.description == "Initiated") {
+				$('.download-files-panel').html("<i class=\"fa fa-3x fa-cog fa-spin\"></i> Requested 3D files to be generated. Please wait... ");
+				setTimeout(function () { $.get(url, function(resp) { }).done(doneFunc); },5000);
+			}
+			if(data.description == "In Progress") {
+				$('.download-files-panel').html("<i class=\"fa fa-3x fa-cog fa-spin\"></i> 3D files are being generated. Please wait...");
+				setTimeout(function () { $.get(url, function(resp) { }).done(doneFunc); },5000);
+			}
+                        if(data.url) {
+                                $('.download-files-panel').html($('<a href="'+data.url+'" class="btn btn-primary"><i class="fa fa-download"></i> Download files!</a>'));
+                        }
+                };
+
+		$.get(url, function(resp) { }).done(doneFunc);
 	}
 
 	// Validation functions
