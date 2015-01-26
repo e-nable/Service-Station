@@ -16,6 +16,10 @@ User Interface:
    only show when user agrees.
  - Added container and link to measurement page detailing YouMagine's web
    measurement tool
+ - Ticket polling via service on Thank you page. When completed, download
+   link appears.
+ - Added link to known issues google doc on app footer.
+ - Updated (c) year.
 
 Service:
  - Added consumption of selected catalog parameter from selected Category
