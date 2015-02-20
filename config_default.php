@@ -26,4 +26,7 @@ Web interface for back-end e-NABLE Assembler
 
     // ONLY set to TRUE if 'openscad --version' is 2014.10.02 or over
     $enable_camera = FALSE;
+
+    // Set the below to local email config if setup
+    //$fromEmail = 'local@email.com';
 ?>

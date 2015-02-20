@@ -247,7 +247,10 @@ Web interface for back-end e-NABLE Assembler
 				$exportfile .= "\necho ' ' >> {$generalLogPath};";
 				$exportfile .= "\necho 'Completed {$ticketNo} ({$email}): ' `date` >> {$generalLogPath};";
 				$exportfile .= "\nzip -j -r {$myPath}.zip {$myPath}/ >> {$generalLogPath} 2>&1;";
-				$exportfile .= "\nmail  -a 'Content-type: text/html' -a 'CC:enablematcher@gmail.com' -a 'From: e-NABLE' -s 'e-NABLE Model' {$email} < {$myPath}/README.html >> {$generalLogPath} 2>&1;";
+				if(!isset($fromEmail)) {
+					$fromEmail = "enablematcher@gmail.com";
+				}
+				$exportfile .= "\nmail  -a 'Content-type: text/html' -a 'CC:enablematcher@gmail.com' -a 'From: ".$fromEmail."' -s 'e-NABLE Model' {$email} < {$myPath}/README.html >> {$generalLogPath} 2>&1;";
 				$exportfile .= "\necho ' [ Stack ]=---------------------------------------------------' >> {$generalLogPath};";
 				$exportfile .= "\ncat {$buildLogPath} >> {$generalLogPath};";
 				$exportfile .= "\necho '[ -------------------------- DONE --------------------------- ]' >> {$generalLogPath};";
