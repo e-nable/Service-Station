@@ -189,8 +189,13 @@ Web interface for back-end e-NABLE Assembler
 					$renderType = 0;
 
 					if (! is_file($previewFile)){
+						$specialView ='';
+						if ($cameraFlag && ($_REQUEST['part'] == 0 || $_REQUEST['part'] == -1)){
+							$specialView ='--camera=0,0,460,0,0,0';
+						}
+
 						$time_start = microtime(true);
-						$scadCommand  = "openscad -o {$previewFile} --imgsize=856,760 ${urlLabel} {$leftsidevars} {$rightsidevars} -D part={$requestedPart} {$options} {$assemblypath}Assembly.scad";
+						$scadCommand  = "openscad -o {$previewFile} --imgsize=856,760  {$specialView} {$urlLabel} {$leftsidevars} {$rightsidevars} -D part={$requestedPart} {$options} {$assemblypath}Assembly.scad";
 						$results = exec( "export DISPLAY=:5; time nice -n 0 " . escapeshellcmd($scadCommand) . " >> log.txt 2>&1");
 						$time_end = microtime(true);
 						$execution_time = ($time_end - $time_start);
@@ -392,9 +397,11 @@ Web interface for back-end e-NABLE Assembler
 			}
 			break;
 		case "sessionid":
+			$status = 200;
 			echo '{"sessionId": "' .getSessionId() . '"}';
 			break;
 		case "processcount":
+			$status = 200;
 			echo '{"count": '.$processCount.', "isUnderLimit": "' . ($isUnderProcessLimit?'true':'false') .'"}';
 			$partname='Gauntlet';
 			break;
@@ -410,6 +417,7 @@ Web interface for back-end e-NABLE Assembler
 			echo '{"output": "'.$assemblyHash.'", "return": "'.$return_var.'"}';
 			break;
 		case "sessionvars":
+			$status = 200;
 			echo printJSONHeaderSessionVariables();
 			break;
 		case "version":
@@ -424,12 +432,12 @@ Web interface for back-end e-NABLE Assembler
 			$webRepo = $webRepo[0] . '<br/>' . $webRepo[1]  . '<br/>' . $webRepo[2];
 			#print_r ($output);
 			#echo $output;
-			$status = 500;
+			$status = 200;
 			echo '{"assembly": "'.$assemblyRepo.'","web": "'.$webRepo.'", "status": "200"}';
 			break;
 		default:
 			$status = 500;
-			echo '{"description": "No matching action", "status": 500}';
+			echo '{"description": "No matching action: ' . $submitType. '", "status": 500}';
 			break;
 	}
 
