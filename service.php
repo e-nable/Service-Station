@@ -26,6 +26,7 @@ Web interface for back-end e-NABLE Assembler
 	// -- Yourl Request
 	$timeout_ms	= 2500;
 	$status = 400;
+	$debug_file = 'debug.log';
 
 	$api_url				= 'http://u.e-nable.me/yourls-api.php';
 	$defaultInventoryFile	= 'options.json';
@@ -40,9 +41,8 @@ Web interface for back-end e-NABLE Assembler
 	} 
 
 	getSessionId();
-
 	switch($submitType){
-		case "make":
+		case "make": case "preview":
 			$url 	= "";
 			$translatedURL = ""; //this is the variable we actually use for email, etc
 			$description = "";
@@ -52,7 +52,7 @@ Web interface for back-end e-NABLE Assembler
 			// We're about to exit with an error if we can't find the inventory file
 			if (!file_exists(dirname(__FILE__).'/e-NABLE/' .$inventoryFile)){
 				$status = 500;
-				echo '{"description": "Inventory file not found", "statusCode": 500}';
+				echo '{"description": "Inventory file not found", "status": 500}';
 				break;
 			}
 
@@ -68,11 +68,11 @@ Web interface for back-end e-NABLE Assembler
 
 			$assemblypath = dirname(__FILE__)."/e-NABLE/Assembly/";
 
-                        $assemblyHash = '';
-                        $return_var = '';
-                        $basePath = dirname(__FILE__);
-                        exec("cd $assemblypath; git log -n 1 --pretty=format:'%h %s' | awk '{print $1}' 2>&1; cd $basePath;", $assemblyHash, $return_var);
-                        $assemblyHash = $assemblyHash[0];
+            $assemblyHash = '';
+            $return_var = '';
+            $basePath = dirname(__FILE__);
+            exec("cd $assemblypath; git log -n 1 --pretty=format:'%h %s' | awk '{print $1}' 2>&1; cd $basePath;", $assemblyHash, $return_var);
+            $assemblyHash = $assemblyHash[0];
 
 			$exportfile = "";
 			$leftsidevars =  " -D Left1={$_REQUEST['Left1']} "
@@ -114,7 +114,8 @@ Web interface for back-end e-NABLE Assembler
 			$requestedPart = 0; //$_REQUEST['part'];
 			$emailInvalid = 1;
 
-			$ticketNo = crc32($baseDNS) . '-' . crc32($email) . '-' . crc32($requestedPart.$leftsidevars.$rightsidevars.$options.$inventoryFile). '-' . $assemblyHash;
+			$previewID = crc32($requestedPart.$leftsidevars.$rightsidevars.$options.$inventoryFile). '-' . $assemblyHash;
+			$ticketNo = crc32($baseDNS) . '-' . crc32($email) . '-' . $previewID;
 
 			if (preg_match($pattern, $email) === 1) {
     			// emailaddress is valid
@@ -176,184 +177,219 @@ Web interface for back-end e-NABLE Assembler
 			$ticketLogPath = $myPath . '/log.txt';
 			$generalLogPath = dirname(__FILE__) . '/log.txt';
 
-			if (! is_file($myPath . '.zip') && !mkdir($myPath, 0777, true) && $emailInvalid == 0) {
-				//die('Failed to create folder...');
-				//exec( "'Already currently in progress: {$myPath}' >> {$ticketLogPath}");
-				$description = 'In Progress';
-				$status = 200;
-				exec( "echo '\nMarked as already in Progress: \n Email: {$email} \n Ticket: {$ticketNo}' >> {$generalLogPath}");
-				exec( "date >> {$generalLogPath}");
-				$translatedURL = "";
-			//} elseif (! is_file($myPath . '.zip') && $emailInvalid == 0){
-			} elseif ($emailInvalid == 0 && ! is_file($myPath . '.zip')){
-				// add handidness to the human reaale file name
-				$side = "Unknown";
-				$build_side = "UNK";
-				$measurement8 = 0;
-				$timestamp = date('Y-m-d H:i:s');
-				$urlString = $_SERVER['QUERY_STRING'];
 
-				if ($_REQUEST['prostheticHand'] == 0){
-					$side='Left';
-					$build_side = "R";
-					$measurement8 = $_REQUEST['Right8'];
-				} elseif ($_REQUEST['prostheticHand'] == 1){
-					$side='Right';
-					$build_side = "L";
-					$measurement8 = $_REQUEST['Left8'];
-				}
+			// Start
+			switch($submitType){
+				case "preview":
+					$requestedPart ;//= $_REQUEST['part'];
+					$previewID = $previewID .'-' . $requestedPart;
+					$relativePath = "/imagecache/{$previewID}.png";
+					$previewFile = dirname(__FILE__) . $relativePath;
+					$imageURL = $baseDNS . $relativePath;
+					$renderType = 0;
 
-				// Give the file a human readable name, search options
-				$json = file_get_contents (dirname(__FILE__) . '/e-NABLE/' . $inventoryFile);
-				$jsonArray = json_decode($json, true);
-				$vals = $jsonArray['part'];
-				$partname = "UknownType";
+					if (! is_file($previewFile)){
+						$time_start = microtime(true);
+						$scadCommand  = "openscad -o {$previewFile} --imgsize=856,760 ${urlLabel} {$leftsidevars} {$rightsidevars} -D part={$requestedPart} {$options} {$assemblypath}Assembly.scad";
+						$results = exec( "export DISPLAY=:5; time nice -n 0 " . escapeshellcmd($scadCommand) . " >> log.txt 2>&1");
+						$time_end = microtime(true);
+						$execution_time = ($time_end - $time_start);
+						$renderType = 1;
+					} else {
+						$renderType = 0;
+					}
 
-				$time_start = microtime(true);
-				exec( "echo '' >> {$generalLogPath}");
-				exec( "date >> {$generalLogPath}");
-				exec( "echo 'Starting Full Assembly: \n Email: {$email} \n Ticket: {$ticketNo}' >> {$generalLogPath};");
-				exec( "echo ' Inventory File: {$inventoryFile}' >> {$generalLogPath}");
-				exec( "echo ' URL: {$urlString}' >> {$generalLogPath}");
-				exec( "echo ' Params: {$requestedPart}{$leftsidevars}{$rightsidevars}{$options}' >> {$generalLogPath}");
-				//exec( "echo '\nStarting: ' >> {$ticketLogPath}");
-				exec( "date >> {$buildLogPath}");
-				exec( "echo 'TicketID: {$ticketNo}' >> {$buildLogPath}");
-				exec( "echo 'Inventory File: {$inventoryFile}' >> {$buildLogPath}");
+					if (is_file($previewFile)){
+						$status = 201;
+						echo '{"imagePath": "' . $imageURL . '", "type":"Preview", "renderType": "'. $renderType .'", "previewID": "'. $previewID .'" ,"status": ' . $status . '}';
+					} else {
+						$renderType = -1;
+						$status = 400;
+						echo '{"description": "There was a problem rendering the image", "renderType": "'. $renderType .'", "previewID": "'.$previewID .'" ,"type":"Preview" ,"status": ' . $status . '}';
+					}
+				break;
+				case "make":
 
-				$exportfile  .= "\n date >> {$generalLogPath}; \n";
+				if (! is_file($myPath . '.zip') && !mkdir($myPath, 0777, true) && $emailInvalid == 0) {
+					//die('Failed to create folder...');
+					//exec( "'Already currently in progress: {$myPath}' >> {$ticketLogPath}");
+					$description = 'In Progress';
+					$status = 200;
+					exec( "echo '\nMarked as already in Progress: \n Email: {$email} \n Ticket: {$ticketNo}' >> {$generalLogPath}");
+					exec( "date >> {$generalLogPath}");
+					$translatedURL = "";
+				//} elseif (! is_file($myPath . '.zip') && $emailInvalid == 0){
+				} elseif ($emailInvalid == 0 && ! is_file($myPath . '.zip')){
+					// add handidness to the human reaale file name
+					$side = "Unknown";
+					$build_side = "UNK";
+					$measurement8 = 0;
+					$timestamp = date('Y-m-d H:i:s');
+					$urlString = $_SERVER['QUERY_STRING'];
 
-				foreach ($vals AS $key){
-					$partname = $key['filename'];
-					$myID = $key['id'];
+					if ($_REQUEST['prostheticHand'] == 0){
+						$side='Left';
+						$build_side = "R";
+						$measurement8 = $_REQUEST['Right8'];
+					} elseif ($_REQUEST['prostheticHand'] == 1){
+						$side='Right';
+						$build_side = "L";
+						$measurement8 = $_REQUEST['Left8'];
+					}
 
-					$partname = str_replace(" ","_",$partname);
+					// Give the file a human readable name, search options
+					$json = file_get_contents (dirname(__FILE__) . '/e-NABLE/' . $inventoryFile);
+					$jsonArray = json_decode($json, true);
+					$vals = $jsonArray['part'];
+					$partname = "UknownType";
 
-					if (($requestedPart == 0 || $requestedPart == $myID ) && $partname){
-						$thisFile	= "{$myPath}/{$side}.{$partname}.stl";
-						if (! is_file($thisFile)){
-							$scadCommand  = "openscad -o {$thisFile} ${urlLabel} {$leftsidevars} {$rightsidevars} -D part={$myID} {$options} {$assemblypath}Assembly.scad";
-							$exportfile  .= "\necho ' ' >> {$buildLogPath};";
-							$exportfile  .= "\necho '{$scadCommand}' >> {$buildLogPath};";
-							$exportfile  .= "\n\ntime nice -n 0 {$scadCommand} >> {$buildLogPath} 2>&1;";
-							//exec( "echo 'NEW: " . escapeshellcmd($exportfile) . "' >> {$buildLogPath}");
-						} else {
-							exec(" echo 'Already found: {$thisFile}' >> {$buildLogPath} 2>&1");
+					$time_start = microtime(true);
+					exec( "echo '' >> {$generalLogPath}");
+					exec( "date >> {$generalLogPath}");
+					exec( "echo 'Starting Full Assembly: \n Email: {$email} \n Ticket: {$ticketNo}' >> {$generalLogPath};");
+					exec( "echo ' Inventory File: {$inventoryFile}' >> {$generalLogPath}");
+					exec( "echo ' URL: {$urlString}' >> {$generalLogPath}");
+					exec( "echo ' Params: {$requestedPart}{$leftsidevars}{$rightsidevars}{$options}' >> {$generalLogPath}");
+					//exec( "echo '\nStarting: ' >> {$ticketLogPath}");
+					exec( "date >> {$buildLogPath}");
+					exec( "echo 'TicketID: {$ticketNo}' >> {$buildLogPath}");
+					exec( "echo 'Inventory File: {$inventoryFile}' >> {$buildLogPath}");
+
+					$exportfile  .= "\n date >> {$generalLogPath}; \n";
+
+					foreach ($vals AS $key){
+						$partname = $key['filename'];
+						$myID = $key['id'];
+
+						$partname = str_replace(" ","_",$partname);
+
+						if (($requestedPart == 0 || $requestedPart == $myID ) && $partname){
+							$thisFile	= "{$myPath}/{$side}.{$partname}.stl";
+							if (! is_file($thisFile)){
+								$scadCommand  = "openscad -o {$thisFile} ${urlLabel} {$leftsidevars} {$rightsidevars} -D part={$myID} {$options} {$assemblypath}Assembly.scad";
+								$exportfile  .= "\necho ' ' >> {$buildLogPath};";
+								$exportfile  .= "\necho '{$scadCommand}' >> {$buildLogPath};";
+								$exportfile  .= "\n\ntime nice -n 0 {$scadCommand} >> {$buildLogPath} 2>&1;";
+								//exec( "echo 'NEW: " . escapeshellcmd($exportfile) . "' >> {$buildLogPath}");
+							} else {
+								exec(" echo 'Already found: {$thisFile}' >> {$buildLogPath} 2>&1");
+							}
 						}
 					}
-				}
-				
-				$exportfile .= "\necho 'Completed: ' `date` >> {$buildLogPath} ;";
-				$exportfile .= "\necho ' ' >> {$generalLogPath};";
-				$exportfile .= "\necho 'Completed {$ticketNo} ({$email}): ' `date` >> {$generalLogPath};";
-				$exportfile .= "\nzip -j -r {$myPath}.zip {$myPath}/ >> {$generalLogPath} 2>&1;";
-				if(!isset($fromEmail)) {
-					$fromEmail = "enablematcher@gmail.com";
-				}
-				$exportfile .= "\nmail  -a 'Content-type: text/html' -a 'CC:enablematcher@gmail.com' -a 'From: ".$fromEmail."' -s 'e-NABLE Model' {$email} < {$myPath}/README.html >> {$generalLogPath} 2>&1;";
-				$exportfile .= "\necho ' [ Stack ]=---------------------------------------------------' >> {$generalLogPath};";
-				$exportfile .= "\ncat {$buildLogPath} >> {$generalLogPath};";
-				$exportfile .= "\necho '[ -------------------------- DONE --------------------------- ]' >> {$generalLogPath};";
-				$exportfile .= "\necho 'Emailed {$ticketNo} ({$email}): ' `date` >> {$generalLogPath};";
-				$exportfile .= "\necho ' ' >> {$generalLogPath};";
-				$exportfile .= "\necho ' ' >> {$generalLogPath};";
-				$exportfile .= "rm -r {$myPath} {$myPath}.sh >> {$generalLogPath} 2>&1;";
-
-				$file = fopen("{$myPath}.sh","x");
-				fwrite($file,$exportfile);
-				fclose($file);
-
-				$fullURL = $leftsidevars . ' ' . $rightsidevars . ' ' . $options ;
-				$fullURL = str_replace("-D","&",$fullURL);
-				$fullURL = str_replace(" ","",$fullURL);
-				$fullURL = 'email=' . str_replace("@","\@",$email) . '&part=' . $requestedPart . $fullURL;
-				//$myDNS =  str_replace("/","\/",$baseDNS);
-				$myURL =  str_replace("/","\/",$translatedURL);
-
-				exec("cp " . dirname(__FILE__) ."/emailTemplate.html {$myPath}/README.html;");
-				//exec("perl -i -pe's/DOMAIN/{$myDNS}/g' {$myPath}/README.html");
-				exec("perl -i -pe's/FULL_URL/{$myURL}/g' {$myPath}/README.html");
-				exec("perl -i -pe's/TICKET_ID/{$ticketNo}/g' {$myPath}/README.html");
-				exec("perl -i -pe's/URL_PARAMS/{$fullURL}/g' {$myPath}/README.html");
-				exec("perl -i -pe's/PROSTHETIC_HAND/{$side}/g' {$myPath}/README.html");
-				exec("perl -i -pe's/BUILD_SIDE/{$build_side}/g' {$myPath}/README.html");
-				exec("perl -i -pe's/MEASUREMENT8/{$measurement8}/g' {$myPath}/README.html");
-				exec("perl -i -pe's/EMAIL/{$email}/g' {$myPath}/README.html");
-
-				$palmStyle 		= $_REQUEST['palmSelect'];
-				$fingerStyle 	= $_REQUEST['fingerSelect'];
-				$gauntletStyle 	= $_REQUEST['gauntletSelect'];
-
-				$palmVars 		= $jsonArray['palm'];
-				$fingerVars 	= $jsonArray['finger'];
-				$gauntletVars 	= $jsonArray['gauntlet'];
-
-				foreach ($palmVars AS $key){
-					$partname = $key['name'];
-					$myID = $key['id'];
-
-					if (($palmStyle == $myID ) && $partname){
-						$palmStyle = $partname;
+						
+					$exportfile .= "\necho 'Completed: ' `date` >> {$buildLogPath} ;";
+					$exportfile .= "\necho ' ' >> {$generalLogPath};";
+					$exportfile .= "\necho 'Completed {$ticketNo} ({$email}): ' `date` >> {$generalLogPath};";
+					$exportfile .= "\nzip -j -r {$myPath}.zip {$myPath}/ >> {$generalLogPath} 2>&1;";
+					if(!isset($fromEmail)) {
+						$fromEmail = "enablematcher@gmail.com";
 					}
-				}
+					$exportfile .= "\nmail  -a 'Content-type: text/html' -a 'CC:enablematcher@gmail.com' -a 'From: ".$fromEmail."' -s 'e-NABLE Model' {$email} < {$myPath}/README.html >> {$generalLogPath} 2>&1;";
+					$exportfile .= "\necho ' [ Stack ]=---------------------------------------------------' >> {$generalLogPath};";
+					$exportfile .= "\ncat {$buildLogPath} >> {$generalLogPath};";
+					$exportfile .= "\necho '[ -------------------------- DONE --------------------------- ]' >> {$generalLogPath};";
+					$exportfile .= "\necho 'Emailed {$ticketNo} ({$email}): ' `date` >> {$generalLogPath};";
+					$exportfile .= "\necho ' ' >> {$generalLogPath};";
+					$exportfile .= "\necho ' ' >> {$generalLogPath};";
+					$exportfile .= "rm -r {$myPath} {$myPath}.sh >> {$generalLogPath} 2>&1;";
 
-				foreach ($fingerVars AS $key){
-					$partname = $key['name'];
-					$myID = $key['id'];
+					$file = fopen("{$myPath}.sh","x");
+					fwrite($file,$exportfile);
+					fclose($file);
 
-					if (($fingerStyle == $myID ) && $partname){
-						$fingerStyle = $partname;
+					$fullURL = $leftsidevars . ' ' . $rightsidevars . ' ' . $options ;
+					$fullURL = str_replace("-D","&",$fullURL);
+					$fullURL = str_replace(" ","",$fullURL);
+					$fullURL = 'email=' . str_replace("@","\@",$email) . '&part=' . $requestedPart . $fullURL;
+					//$myDNS =  str_replace("/","\/",$baseDNS);
+					$myURL =  str_replace("/","\/",$translatedURL);
+
+					exec("cp " . dirname(__FILE__) ."/emailTemplate.html {$myPath}/README.html;");
+					//exec("perl -i -pe's/DOMAIN/{$myDNS}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/FULL_URL/{$myURL}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/TICKET_ID/{$ticketNo}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/URL_PARAMS/{$fullURL}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/PROSTHETIC_HAND/{$side}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/BUILD_SIDE/{$build_side}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/MEASUREMENT8/{$measurement8}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/EMAIL/{$email}/g' {$myPath}/README.html");
+
+					$palmStyle 		= $_REQUEST['palmSelect'];
+					$fingerStyle 	= $_REQUEST['fingerSelect'];
+					$gauntletStyle 	= $_REQUEST['gauntletSelect'];
+
+					$palmVars 		= $jsonArray['palm'];
+					$fingerVars 	= $jsonArray['finger'];
+					$gauntletVars 	= $jsonArray['gauntlet'];
+
+					foreach ($palmVars AS $key){
+						$partname = $key['name'];
+						$myID = $key['id'];
+
+						if (($palmStyle == $myID ) && $partname){
+							$palmStyle = $partname;
+						}
 					}
-				}
 
-				foreach ($gauntletVars AS $key){
-					$partname = $key['name'];
-					$myID = $key['id'];
+					foreach ($fingerVars AS $key){
+						$partname = $key['name'];
+						$myID = $key['id'];
 
-					if (($gauntletStyle == $myID ) && $partname){
-						$gauntletStyle = $partname;
+						if (($fingerStyle == $myID ) && $partname){
+							$fingerStyle = $partname;
+						}
 					}
+
+					foreach ($gauntletVars AS $key){
+						$partname = $key['name'];
+						$myID = $key['id'];
+
+						if (($gauntletStyle == $myID ) && $partname){
+							$gauntletStyle = $partname;
+						}
+					}
+
+					exec("perl -i -pe's/PALM_STYLE/{$palmStyle}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/FINGER_STYLE/{$fingerStyle}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/GAUNTLET_STYLE/{$gauntletStyle}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/PADDING/{$_REQUEST['Padding']}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/TIMESTAMP/{$timestamp}/g' {$myPath}/README.html");
+
+					exec("chmod 755 {$myPath}.sh; {$myPath}.sh > /dev/null &");
+
+					$time_end = microtime(true);
+					$execution_time = ($time_end - $time_start);
+
+					$description = 'Initiated';
+					$status = 206;
+
+					$url = "";
+					$translatedURL = "";
+
+		  		} elseif ($emailInvalid == 0) {
+					//exec( "'Build already completed! -> {$myPath}' >> {$ticketLogPath}");
+
+					$description = 'Completed';
+					$status = 201;
+					exec( "echo '\nMarked as COMPLETED: \n Email: {$email} \n Ticket: {$ticketNo}' >> {$generalLogPath}");
+					exec( "date >> {$generalLogPath}");
+					exec( "echo ' Params: {$requestedPart}{$leftsidevars}{$rightsidevars}{$options}' >> {$generalLogPath}");
+		  		} else {
+					$description = 'Email Error';
+					$status = 400;
+		  		}
+
+				// this prevent us from printing the URL in the response when there isn't one to show
+				$urlOUT = "";
+				if (isset($translatedURL) && $translatedURL != ""){
+					$urlOUT = ', "url": "' . $translatedURL . '"';
 				}
 
-				exec("perl -i -pe's/PALM_STYLE/{$palmStyle}/g' {$myPath}/README.html");
-				exec("perl -i -pe's/FINGER_STYLE/{$fingerStyle}/g' {$myPath}/README.html");
-				exec("perl -i -pe's/GAUNTLET_STYLE/{$gauntletStyle}/g' {$myPath}/README.html");
-				exec("perl -i -pe's/PADDING/{$_REQUEST['Padding']}/g' {$myPath}/README.html");
-				exec("perl -i -pe's/TIMESTAMP/{$timestamp}/g' {$myPath}/README.html");
+				// printing status
+				echo '{"ticket": "' . $ticketNo . '", "description": "' . $description . '", "status": ' . $status . $urlOUT .'}';
 
-				exec("chmod 755 {$myPath}.sh; {$myPath}.sh > /dev/null &");
-
-				$time_end = microtime(true);
-				$execution_time = ($time_end - $time_start);
-
-				$description = 'Initiated';
-				$status = 206;
-
-				$url = "";
-				$translatedURL = "";
-
-  			} elseif ($emailInvalid == 0) {
-				//exec( "'Build already completed! -> {$myPath}' >> {$ticketLogPath}");
-
-				$description = 'Completed';
-				$status = 200;
-				exec( "echo '\nMarked as COMPLETED: \n Email: {$email} \n Ticket: {$ticketNo}' >> {$generalLogPath}");
-				exec( "date >> {$generalLogPath}");
-				exec( "echo ' Params: {$requestedPart}{$leftsidevars}{$rightsidevars}{$options}' >> {$generalLogPath}");
-  			} else {
-				$description = 'Email Error';
-				$status = 400;
-  			}
-
-			// this prevent us from printing the URL in the response when there isn't one to show
-			$urlOUT = "";
-			if (isset($translatedURL) && $translatedURL != ""){
-				$urlOUT = ', "url": "' . $translatedURL . '"';
+				break;
 			}
-
-			// printing status
-			echo '{"ticket": "' . $ticketNo . '", "description": "' . $description . '", "statusCode": ' . $status . $urlOUT .'}';
-
 			break;
 		case "sessionid":
 			echo '{"sessionId": "' .getSessionId() . '"}';
@@ -376,9 +412,24 @@ Web interface for back-end e-NABLE Assembler
 		case "sessionvars":
 			echo printJSONHeaderSessionVariables();
 			break;
+		case "version":
+			$assemblyRepo = '';
+			$webRepo = '';
+			$return_var = '';
+			$assemblypath = dirname(__FILE__)."/e-NABLE/Assembly/";
+			$basePath = dirname(__FILE__);
+			exec("cd $assemblypath; git log -n 1; cd $basePath;", $assemblyRepo, $return_var);
+			$assemblyRepo = $assemblyRepo[0] . '<br/>' . $assemblyRepo[1]  . '<br/>' . $assemblyRepo[2];
+			exec("cd $basePath; git log -n 1;", $webRepo, $return_var);
+			$webRepo = $webRepo[0] . '<br/>' . $webRepo[1]  . '<br/>' . $webRepo[2];
+			#print_r ($output);
+			#echo $output;
+			$status = 500;
+			echo '{"assembly": "'.$assemblyRepo.'","web": "'.$webRepo.'", "status": "200"}';
+			break;
 		default:
 			$status = 500;
-			echo '{"description": "No matching action", "statusCode": 500}';
+			echo '{"description": "No matching action", "status": 500}';
 			break;
 	}
 
