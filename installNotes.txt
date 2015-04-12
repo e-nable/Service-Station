@@ -35,7 +35,6 @@ cd openscad-2014.10.02
 # just hit enter when asked where the lib should install
 sudo ./install.sh
 
-
 # Make directory where our code will live
 sudo mkdir /var/code
 
@@ -56,6 +55,15 @@ cp config_default.php config.php
 
 # this helps when doing git diff / pull / check-ins
 sudo git config core.fileMode false
+
+# edit your config.php file. Change localhost to the publicly accessible
+# hostname that can be used for using the web-enabled service
+# e.g. e-nable.youmagine.com if the service lives at: 
+# http://e-nable.youmagine.com/
+nano config.php
+
+# this will prevent your config.php from blocking future updates
+git update-index --assume-unchanged config.php
 
 # link the open scad / assembler code
 sudo ln -s ../Assembler e-NABLE
