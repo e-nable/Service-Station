@@ -27,6 +27,8 @@ Web interface for back-end e-NABLE Assembler
 	$timeout_ms	= 2500;
 	$status = 400;
 	$debug_file = 'debug.log';
+	$csv_file = 'log.csv';
+	$releaseVersion = '0.00';
 
 	$api_url				= 'http://u.e-nable.me/yourls-api.php';
 	$defaultInventoryFile	= 'options.json';
@@ -66,13 +68,21 @@ Web interface for back-end e-NABLE Assembler
 				//print $a . '='. $_REQUEST[$a] .'; ';
 			}
 
-			$assemblypath = dirname(__FILE__)."/e-NABLE/Assembly/";
+			$assemblypath = dirname(__FILE__) . "/e-NABLE/Assembly/";
+			$servicesPath = dirname(__FILE__) . "/Service/";
+			$basePath = dirname(__FILE__);
 
-            $assemblyHash = '';
+            $assemblyHash = '0';
+            $servicesHash = '0';
+            $uiHash = '0';
+
             $return_var = '';
-            $basePath = dirname(__FILE__);
+
             exec("cd $assemblypath; git log -n 1 --pretty=format:'%h %s' | awk '{print $1}' 2>&1; cd $basePath;", $assemblyHash, $return_var);
             $assemblyHash = $assemblyHash[0];
+
+            exec("cd $basePath; git log -n 1 --pretty=format:'%h %s' | awk '{print $1}' 2>&1; cd $basePath;", $uiHash, $return_var);
+            $uiHash = $uiHash[0];
 
 			$exportfile = "";
 			$leftsidevars =  " -D Left1={$_REQUEST['Left1']} "
@@ -115,7 +125,8 @@ Web interface for back-end e-NABLE Assembler
 			$emailInvalid = 1;
 
 			$previewID = crc32($requestedPart.$leftsidevars.$rightsidevars.$options.$inventoryFile). '-' . $assemblyHash;
-			$ticketNo = crc32($baseDNS) . '-' . crc32($email) . '-' . $previewID;
+			$userHash = crc32($email);
+			$ticketNo = crc32($baseDNS) . '-' . $userHash . '-' . $previewID;
 
 			if (preg_match($pattern, $email) === 1) {
     			// emailaddress is valid
@@ -176,7 +187,7 @@ Web interface for back-end e-NABLE Assembler
 
 			$ticketLogPath = $myPath . '/log.txt';
 			$generalLogPath = dirname(__FILE__) . '/log.txt';
-
+			$csvLogPath = dirname(__FILE__) . '/ticket/'. $csv_file;
 
 			// Start
 			switch($submitType){
@@ -232,14 +243,40 @@ Web interface for back-end e-NABLE Assembler
 					$timestamp = date('Y-m-d H:i:s');
 					$urlString = $_SERVER['QUERY_STRING'];
 
+					$right0 = 0;
+					$right1 = 0;
+					$right2 = 0;
+					$right3 = 0;
+					$right4 = 0;
+					$right5 = 0;
+					$right6 = 0;
+					$right7 = 0;
+					$right8 = 0;
+					$right9 = 0;
+					$right10 = 0;
+
+					$left0 = 0;
+					$left1 = 0;
+					$left2 = 0;
+					$left3 = 0;
+					$left4 = 0;
+					$left5 = 0;
+					$left6 = 0;
+					$left7 = 0;
+					$left8 = 0;
+					$left9 = 0;
+					$left10 = 0;
+
 					if ($_REQUEST['prostheticHand'] == 0){
 						$side='Left';
 						$build_side = "R";
-						$measurement8 = $_REQUEST['Right8'];
+						$right8 = $_REQUEST['Right8'];
+						$measurement8 = $right8;
 					} elseif ($_REQUEST['prostheticHand'] == 1){
 						$side='Right';
 						$build_side = "L";
-						$measurement8 = $_REQUEST['Left8'];
+						$left8 = $_REQUEST['Left8'];
+						$measurement8 = $left8;
 					}
 
 					// Give the file a human readable name, search options
@@ -322,17 +359,22 @@ Web interface for back-end e-NABLE Assembler
 					$palmStyle 		= $_REQUEST['palmSelect'];
 					$fingerStyle 	= $_REQUEST['fingerSelect'];
 					$gauntletStyle 	= $_REQUEST['gauntletSelect'];
+					$paddingValue 	= $_REQUEST['Padding'];
 
 					$palmVars 		= $jsonArray['palm'];
 					$fingerVars 	= $jsonArray['finger'];
 					$gauntletVars 	= $jsonArray['gauntlet'];
+
+					$palmStyleLabel		= '';
+					$fingerStyleLabel	= '';
+					$gauntletStyleLabel	= '';
 
 					foreach ($palmVars AS $key){
 						$partname = $key['name'];
 						$myID = $key['id'];
 
 						if (($palmStyle == $myID ) && $partname){
-							$palmStyle = $partname;
+							$palmStyleLabel = $partname;
 						}
 					}
 
@@ -341,7 +383,7 @@ Web interface for back-end e-NABLE Assembler
 						$myID = $key['id'];
 
 						if (($fingerStyle == $myID ) && $partname){
-							$fingerStyle = $partname;
+							$fingerStyleLabel = $partname;
 						}
 					}
 
@@ -350,15 +392,50 @@ Web interface for back-end e-NABLE Assembler
 						$myID = $key['id'];
 
 						if (($gauntletStyle == $myID ) && $partname){
-							$gauntletStyle = $partname;
+							$gauntletStyleLabel = $partname;
 						}
 					}
 
-					exec("perl -i -pe's/PALM_STYLE/{$palmStyle}/g' {$myPath}/README.html");
-					exec("perl -i -pe's/FINGER_STYLE/{$fingerStyle}/g' {$myPath}/README.html");
-					exec("perl -i -pe's/GAUNTLET_STYLE/{$gauntletStyle}/g' {$myPath}/README.html");
-					exec("perl -i -pe's/PADDING/{$_REQUEST['Padding']}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/PALM_STYLE/{$palmStyleLabel}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/FINGER_STYLE/{$fingerStyleLabel}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/GAUNTLET_STYLE/{$gauntletStyleLabel}/g' {$myPath}/README.html");
+					exec("perl -i -pe's/PADDING/{$paddingValue}/g' {$myPath}/README.html");
 					exec("perl -i -pe's/TIMESTAMP/{$timestamp}/g' {$myPath}/README.html");
+
+					$palmStyleLabel = str_replace(","," -",$palmStyleLabel);
+					$fingerStyleLabel = str_replace(","," -",$fingerStyleLabel);
+					$gauntletStyleLabel = str_replace(","," -",$gauntletStyleLabel);
+
+					$csvValues = "{$releaseVersion},{$uiHash},{$servicesHash},{$assemblyHash}," .
+								 "{$ticketNo},{$userHash},{$timestamp}," .
+								 "{$side},{$build_side}," .
+								 "{$measurement8},{$paddingValue}," .
+								 "{$right0},{$right1},{$right2},{$right3},{$right4},{$right5},{$right6},{$right7},{$right8},{$right9},{$right10}," .
+								 "{$left0},{$left1},{$left2},{$left3},{$left4},{$left5},{$left6},{$left7},{$left8},{$left9},{$left10}," .
+								 "{$palmStyle},{$palmStyleLabel}," .
+								 "{$fingerStyle},{$fingerStyleLabel}," .
+								 "{$gauntletStyle},{$gauntletStyleLabel}";
+
+					// create CSV file if not present
+					if (! is_file($csvLogPath)) {
+						$csvVHeaders = "releaseVersion,uiHash,servicesHash,assemblyHash," .
+								 "ticketNo,userHash,timestamp," .
+								 "side,build_side," .
+								 "measurement8,paddingValue," .
+								 "right0,right1,right2,right3,right4,right5,right6,right7,right8,right9,right10," .
+								 "left0,left1,left2,left3,left4,left5,left6,left7,left8,left9,left10," .
+								 "palmStyle,palmStyleLabel," .
+								 "fingerStyle,fingerStyleLabel," .
+								 "gauntletStyle,gauntletStyleLabel";
+
+						exec("echo '{$csvVHeaders}' > {$csvLogPath};");
+						exec("chmod 777 {$csvLogPath};");
+					}
+
+					// Write parameters to CSV
+					if (is_file($csvLogPath)) {
+						exec("echo '\n{$csvValues} ' >> {$csvLogPath};");
+					}
 
 					exec("chmod 755 {$myPath}.sh; {$myPath}.sh > /dev/null &");
 
