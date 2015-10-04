@@ -406,7 +406,14 @@ Web interface for back-end e-NABLE Assembler
 					$fingerStyleLabel = str_replace(","," -",$fingerStyleLabel);
 					$gauntletStyleLabel = str_replace(","," -",$gauntletStyleLabel);
 
-					$csvValues = "{$releaseVersion},{$uiHash},{$servicesHash},{$assemblyHash}," .
+					$ip = getenv('HTTP_CLIENT_IP') ?:
+						getenv('HTTP_X_FORWARDED_FOR') ?:
+						getenv('HTTP_X_FORWARDED') ?:
+						getenv('HTTP_FORWARDED_FOR') ?:
+						getenv('HTTP_FORWARDED') ?:
+						getenv('REMOTE_ADDR')?:'UNKNOWN';
+
+					$csvValues = "{$ip},{$releaseVersion},{$uiHash},{$servicesHash},{$assemblyHash}," .
 								 "{$ticketNo},{$userHash},{$timestamp}," .
 								 "{$side},{$build_side}," .
 								 "{$measurement8},{$paddingValue}," .
@@ -418,7 +425,7 @@ Web interface for back-end e-NABLE Assembler
 
 					// create CSV file if not present
 					if (! is_file($csvLogPath)) {
-						$csvVHeaders = "releaseVersion,uiHash,servicesHash,assemblyHash," .
+						$csvVHeaders = "IP,releaseVersion,uiHash,servicesHash,assemblyHash," .
 								 "ticketNo,userHash,timestamp," .
 								 "side,build_side," .
 								 "measurement8,paddingValue," .
