@@ -9,7 +9,7 @@ sudo apt-get install xvfb vim git
 # LAMP stack install
 # ONLY run this following line if you don't have an html server / php / etc
 # Agree until you get to password, do not leave password blank
-sudo apt-get install apache2 mysql-server php5 php5-mysql libapache2-mod-php5
+sudo apt-get install apache2 mysql-server php5 php5-mysql libapache2-mod-php5 apache2-utils
 
 # Since there may be personal and medical information communicated through 
 # this server, it's recommended to also install SSL.
@@ -23,6 +23,40 @@ sudo apt-get install apache2 mysql-server php5 php5-mysql libapache2-mod-php5
 # vi /etc/apache2/sites-enabled/default-ssl.conf
 ## restart Apache to make the change effective
 # service apache2 restart
+
+# Allow rewrites from .htaccess to secure log files
+# and allow service calls without extensions
+sudo a2enmod rewrite
+
+cd /var/www/html/.htaccess
+# <Files "*.txt">
+#        #Require all denied
+#        AuthType Basic
+#        AuthName "Members Only"
+#        #AuthUserFile /var/www/html/.htpasswd
+#        Require valid-user 
+# </Files>
+
+# Generate htpasswd
+# Replace KEY for username or meaningful replacement
+# This will ask for a password twice for confirmation
+# purposes
+ htpasswd -c ./.htpasswd KEY
+
+# ############################################
+# We want to make php files accessible without
+# the extension for use of service calls -
+# modify the following file and add the Directory
+# tag inside VirtualHost:
+
+#    <Directory /var/www/html>
+#        Options +FollowSymLinks +MultiViews +Indexes
+#        DirectoryIndex index.php
+#        AddType application/x-httpd-php .php
+#    </Directory>
+
+# vim edit command
+sudo vi /etc/apache2/sites-available/000-default.conf
 
 
 # install openScad latest dev snapshot manually
