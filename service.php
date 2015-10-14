@@ -26,6 +26,7 @@ Web interface for back-end e-NABLE Assembler
 	// -- Yourl Request
 	$timeout_ms	= 2500;
 	$status = 400;
+	$cilog_file = 'ci.log';
 	$debug_file = 'debug.log';
 	$csv_file = 'log.csv';
 	$releaseVersion = '0.00';
@@ -35,6 +36,7 @@ Web interface for back-end e-NABLE Assembler
 
 	start_user_session( $assemblervars);
 
+	$noteValue		=  isset($_GET["note"])? strtolower(trim($_GET["note"])): null;
 	$submitType		=  isset($_GET["type"])? strtolower(trim($_GET["type"])): null;
 	$inventoryFile	=  isset($_GET["inventory"])? strtolower(trim($_GET["inventory"])): $defaultInventoryFile;
 
@@ -499,6 +501,24 @@ Web interface for back-end e-NABLE Assembler
 			#print_r ($output);
 			#echo $output;
 			echo '{"output": "'.$assemblyHash.'", "return": "'.$return_var.'"}';
+			break;
+		case "cilog":
+			$timestamp = date('Y-m-d H:i:s');
+
+			$ciLogPath = dirname(__FILE__) . '/ticket/'. $cilog_file;
+			$newCIFile = false;
+
+			if (! is_file($csvLogPath)) {
+				$newCIFile = true;
+			}
+
+			exec("echo '{$timestamp} {$timestamp}' > {$ciLogPath};");
+
+			if ($newCIFile) {
+				exec("chmod 777 {$csvLogPath};");
+			}
+
+			echo '{"timestamp": "'.$timestamp.'", "note": "'.$noteValue.'"}';
 			break;
 		case "sessionvars":
 			$status = 200;
