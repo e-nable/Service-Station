@@ -512,7 +512,7 @@ Web interface for back-end e-NABLE Assembler
 				$newCIFile = true;
 			}
 
-			exec("echo '{$timestamp} {$timestamp}' > {$ciLogPath};");
+			exec("echo '{$timestamp} {$noteValue}' >> {$ciLogPath};");
 
 			if ($newCIFile) {
 				exec("chmod 777 {$csvLogPath};");
