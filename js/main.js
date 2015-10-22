@@ -314,8 +314,10 @@ var viewModel = function (descriptionData) {
 	self.waitingForResponse = ko.observable(false);
 
 	self.preview = function() {
-		self.waitingForResponse(true);
-		$.get('preview.php?advanced=false&submit=preview&' + $('#generatorForm').serialize(), self.renderPreview);
+		if (self.validateMeasurementsPage()){
+			self.waitingForResponse(true);
+			$.get('preview.php?advanced=false&submit=preview&' + $('#generatorForm').serialize(), self.renderPreview);
+		}
 	};
 	
 	self.renderPreview = function(response) {
