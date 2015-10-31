@@ -90,9 +90,6 @@ $sessionID = getSessionId();
 	</script>
 </head>
 
-<?php
-	$render = render( $assemblervars);
-?>
 <?php printHeaderSessionVariables(); ?>
 	
 
