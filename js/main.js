@@ -314,14 +314,14 @@ var viewModel = function (descriptionData) {
 	self.waitingForResponse = ko.observable(false);
 
 	self.preview = function() {
-		self.waitingForResponse(true);
-		$.get('preview.php?advanced=false&submit=preview&' + $('#generatorForm').serialize(), self.renderPreview);
+		if (self.validateMeasurementsPage()){
+			self.waitingForResponse(true);
+			$.get('service?advanced=false&type=preview&' + $('#generatorForm').serialize(), self.renderPreview);
+		}
 	};
 	
 	self.renderPreview = function(response) {
-		$("#ajaxCaddy").html(response);
-		var image = $("#ajaxCaddy img").attr("src");
-		$("#previewImage").attr("src", image);	// TODO: tie this to Knockout observable
+		$("#previewImage").attr("src", response.imagePath);	// TODO: tie this to Knockout observable
 		self.waitingForResponse(false);
 	};
 	

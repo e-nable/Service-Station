@@ -37,12 +37,12 @@ $sessionID = getSessionId();
 	<!--[if IE]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 	<!-- Latest compiled and minified CSS -->
 
-	<link rel="stylesheet" href="./lib/bootstrap-3.2-minus-responsive.css?_=<?php echo $time ?>">
-	<link rel="stylesheet" href="./lib/bootstrap-3.1.1/css/bootstrap-theme.min.css?_=<?php echo $time ?>">
+	<link rel="stylesheet" href="./lib/bootstrap-3.3.5/css/bootstrap.min.css?_=<?php echo $time ?>">
+	<link rel="stylesheet" href="./lib/bootstrap-3.3.5/css/bootstrap-theme.min.css?_=<?php echo $time ?>">
 	<link rel="stylesheet" href="./lib/font-awesome-4.0.3/css/font-awesome.min.css?_=<?php echo $time ?>">
 	<link rel="stylesheet" href="./css/main.css?_=<?php echo $time ?>">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script src="./lib/bootstrap-3.1.1/js/bootstrap.min.js"></script>
+	<script src="./lib/jquery.1.11.js"></script>
+	<script src="./lib/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 	<script src="./lib/knockout-3.2.0.js"></script>
 	<script src="./lib/sammy-latest.min.js"></script>
 	
@@ -90,9 +90,6 @@ $sessionID = getSessionId();
 	</script>
 </head>
 
-<?php
-	$render = render( $assemblervars);
-?>
 <?php printHeaderSessionVariables(); ?>
 	
 
