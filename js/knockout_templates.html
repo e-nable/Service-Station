@@ -1,0 +1,559 @@
+<!-- Web interface for back-end e-NABLE Assembler
+
+    Copyright (C) 2014, e-NABLE / Rogelio Ortiz, Mike Creuzer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see http://www.gnu.org/licenses/.
+-->
+
+
+<script type="text/html" id="main-interface">
+	<div data-bind="template: { name: 'navbar-top' }"></div>
+
+	<div data-bind="template: { name: 'navbar-bottom' }"></div>
+
+	<div class="container main-container">
+		<div class="row" data-bind="visible: currentStep() == processSteps.welcomePage ">
+			<div data-bind="template: { name: 'left-welcome-pane' }"></div>	
+			<div data-bind="template: { name: 'right-welcome-pane' }"></div>
+		</div>
+
+		<div class="row" data-bind="visible: currentStep() == processSteps.modelTypePage ">
+			<div data-bind="template: { name: 'left-modeltype-pane' }"></div>
+			<div data-bind="template: { name: 'right-modeltype-pane' }"></div>
+		</div>
+
+		<div class="row" data-bind="visible: currentStep() == processSteps.measurementsPage ">
+			<div data-bind="template: { name: 'prosthetic-data-entry' }"></div>	
+			<div data-bind="template: { name: 'reference-pane' }"></div>
+			<div data-bind="template: { name: 'measurement-next-step' }"></div>  			
+		</div>
+
+		<div class="row" data-bind="visible: currentStep() == processSteps.modelPage ">
+                        <div data-bind="template: { name: 'model-selection' }"></div>			
+                        <div data-bind="template: { name: 'model-preview' }"></div>			
+                        <div data-bind="template: { name: 'model-generate' }"></div>			
+                </div>
+
+		<div class="row" data-bind="visible: currentStep() == processSteps.thankyouPage ">
+                        <div data-bind="template: { name: 'thankyou-left' }"></div>			
+                        <div data-bind="template: { name: 'thankyou-right' }"></div>			
+                </div>
+	</div>
+
+</script>
+
+
+<script type="text/html" id="validation-popup">
+<div class="modal fade" id="valueWarningModal" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">Missing Measurements</h4>
+			</div>
+			<div class="modal-body">
+				<p>There seems to be a few missing values from the required measurements. Please set the associated <b>numeric</b> values for those fields <span class="incomplete-span">colored in red</span> before submitting again.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div>
+</script>
+
+
+<!-- Navbar Templates -->
+<script type="text/html" id="navbar-top">
+<div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
+ <div class="container">
+  <div class="navbar-header">
+   <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+    <span class="sr-only">Toggle navigation</span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+   </button>
+   <a href="#" class="navbar-brand">
+	<span id="product-title">e-NABLE Hand-o-matic v1.3.0</span>
+	</a>
+  </div>
+
+  <div class="navbar-collapse collapse">
+   <div class="navbar-form navbar-left">
+    	<span id="help" class="help btn btn-help" value='help' data-toggle="modal" data-target=".help-modal">
+      	<span class="fa fa-question-circle"></span> About</span>
+		
+	<a id="feedback" class="help btn btn-help" value='feedback' target='_blank'
+			href="https://docs.google.com/forms/d/1hqjed1x9NuTdLt5qNfGwx-YoK3H3JSgnu30vaF47mKs/viewform?edit_requested=true#">
+      		<span class="fa fa-comment"></span> Feedback
+	</a>
+      <span id="action_buttons"></span>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+</script>
+<script type="text/html" id="navbar-bottom">
+<div class="navbar  navbar-inverse navbar-fixed-bottom">
+	<div class="container" id="e_footer">
+		<div style="display:inline-block; float:left;">&copy; e-NABLE 2015</div>
+		&nbsp; &nbsp; &nbsp; | &nbsp; &nbsp;
+		<span id="disclaimer" class=" btn-help" value='help' style="cursor: pointer;"
+			data-toggle="modal" data-target=".disclaimer-modal"><span class="fa fa-shield"></span>
+			Terms of Use
+		</span>
+		&nbsp; &nbsp; | &nbsp; &nbsp;
+		<span id="issues" class=" btn-known-issues" value='known-issues' style="cursor: pointer;"
+			data-toggle="modal" data-target=".known-issues-modal"><span class="fa fa-exclamation-triangle"></span>
+			Known Issues
+		</span>
+	</div>
+</div>
+</script>
+
+
+
+<!-- Welcome View Templates -->
+<script type="text/html" id="left-welcome-pane">
+<div class="col-md-8">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Welcome to Hand-o-matic!</h3>
+		</div>
+		
+		<div class="panel-content">
+		      	<h1 style="color:#999; text-align:center; margin-top:0px; margin-bottom:20px;">Welcome to Hand-o-matic!</h1>
+			<div style="float:left; width:53%">
+				<p><b>Hand-o-matic</b> is a web site that lets you create 3D printable prosthetics custom to your measurements and selected options. The prosthetics are intended for use by people with a partial hand.</p>
+
+				<p>The steps are:
+					<ol type="1">
+					<li>Select Model Type</li>
+					<li>Enter Measurements</li>
+					<li>Select options</li>
+					<li>Deliver files that can be printed on a 3D printer. You can print them yourself, or we can help you find someone in your area who can help you.</li>
+					</ol>
+				</p>
+				<p>If you would like an e-NABLE volunteer to work with you through this process, or if your needs are not addressed by Hand-o-matic, please <a target="_blank" href="https://docs.google.com/a/3duniverse.org/forms/d/1fIiFAT8KN1qLPu8V9cxNRUPdifSHnGz0scQh4jykYSw/viewform">fill out the e-NABLE Intake Form</a>.</p>
+			</div>
+			<img src="imgs/peregrineblog.jpg" style="width:40%; float:right;" />
+		</div>
+	</div>
+</div>
+
+</script>
+
+<script type="text/html" id="right-welcome-pane">
+<div class="col-md-4" id="mid-pane">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Next Step: Model Selection</h3>
+		</div>
+		
+		<div class="panel-content">
+			<div class="panel-content-inner">
+				<h2 style="color:#999; text-align:center; margin:0">
+					Are you ready to select your model?
+				</h2>
+				<h4 style="text-align:center; color:#555;">Click the "Start" button after accepting the terms to begin!</h4>
+				<br/><br/><br/><br/><br/>
+				<div data-bind="" style="padding: 15px; border-radius: 4px; background-color: rgb(221, 221, 221);text-align: center !important; font-size:16px !important;">
+				<h4><b>PLEASE CONFIRM</b></h4>
+					<input type="checkbox" data-bind="checked: termsOfUse, click: haveReadTermsOfUse" style="zoom: 1.6 !important;"/>
+					I have read and accept the <br/> <a href="#" onClick="javascript: $('#disclaimerModal').modal()">TERMS OF USE</a>.
+					<br/><br/>
+				</div>
+			</div>
+			<div style="text-align:right;">
+				<a href="#modeltype" data-bind="visible: $root.termsOfUse()" class="btn btn-lg btn-primary">
+					Start <i class="fa fa-arrow-circle-right"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+</script>
+
+
+
+
+<!-- Model Type View Templates -->
+<script type="text/html" id="left-modeltype-pane">
+<div class="col-md-8">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Step 1 - Select Model Type</h3>
+		</div>
+
+		<div class="panel-content">
+			<div style="float:left; width:100%; height: 405px;">
+				<div data-bind="foreach: inventory">
+					<div style="float:left; width:48%; height: 305px;">
+						<a data-bind="click: $parent.selectedInventory" style="cursor: pointer;">
+							<img data-bind="attr: {src: image, title: description }" class="img-rounded" width="90%" height="75%"/>
+						</a>
+						<a data-bind="click: $parent.selectedInventory" style="cursor: pointer;">
+							<div data-bind="attr: { class: 'btn btn-catalog' + (($parent.selectedInventory() == $data)?'-selected':'') }" >
+								<span data-bind="if: $parent.selectedInventory() == $data"><i class="fa fa-check-circle-o"></i></span>
+								<span data-bind="text: title"></span>
+							</div>
+						</a>
+						<div class="e-info-box">
+							<a data-bind="attr: { href: url }" style="text-decoration:none;" target='_blank'>
+								<i class="fa fa-info-circle"></i>
+								<span data-bind="trimText: description" ></span>
+							</a>
+						</div>
+						<br/>
+						<!-- div data-bind="if: $parent.selectedInventory() == $data, attr: { class: 'selected-category-' + ($parent.selectedInventory() == $data) }">
+							<i class="fa fa-check-circle-o"></i> Selected
+						</div -->
+					</div>
+					<!-- div data-bind="with: selectedInventory">
+						Selected
+					</div -->
+				</div>
+			</div>
+			<!-- div style="float:left; width:100%; height: 98px;">
+				<div data-bind="with: selectedInventory">
+					Selected:<h3 data-bind="text: title"></h3>
+					<span data-bind="text: description"></span>
+				</div>
+			</div -->
+			<a href="#welcome" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+			&nbsp;&nbsp;
+			<a href="#modeltype" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#measurement-help"><span class="fa fa-question-circle"></span> Help</a>
+		</div>
+	</div>
+</div>
+
+</script>
+
+<script type="text/html" id="right-modeltype-pane">
+<div class="col-md-4" id="mid-pane">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Next Step: Prosthetic Selection</h3>
+		</div>
+
+		<div class="panel-content">
+			<div class="panel-content-inner">
+				<h2 style="color:#999; text-align:center; margin:0">
+					After you select your model, click "Next" to start entering your measurements.
+				<h2>
+			</div>
+			<div style="text-align:right;">
+				<a href="#measure" data-bind="visible: $root.selectedInventory()" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
+			</div>
+		</div>
+	</div>
+</div>
+</script>
+
+
+
+
+<!-- Measurements View Templates -->
+<script type="text/html" id="prosthetic-data-entry">
+<div class="col-md-4" id="mid-pane">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Step 2 - Prosthetic Selection</h3>
+		</div>
+				
+		<div class="panel-content">
+			<div class="panel-content-inner">
+				<div class="panel-body" id="side-select-body" style="margin-bottom:14px;">
+					<select name="prostheticHand" 
+						class="form-control" 
+						data-bind="options: prostheticHandItems,
+									optionsText: 'name', 
+					                optionsValue: 'id', 
+					                value: selectedProstheticHand">
+					</select>
+				</div>
+		
+				<div data-bind="visible: !noHandSelected()">
+					Enter measurements from the hand that <em>doesn’t</em> need the prosthetic.
+				</div>
+		        <div style="margin-top:28px;" data-bind="template: { name: 'field-template', foreach: selectedFields }">
+		        </div>
+
+				<div data-bind="visible: !noHandSelected()" style="background-color: #DDD; padding: 15px; border-radius: 4px;">
+					<a href="http://e-nable.youmagine.com/measure/" class="btn btn-lg btn-info"
+						target="_blank" style="margin-left: 14px;"><span class="fa fa-camera"></span>
+						Beta: Web Measuring Tool
+					</a>
+					<br/><br/>
+					YouMagine provides an excellent web only solution to help measure directly from images. Don't worry, we don't store the images!
+				</div>
+
+		        <div data-bind="visible: noHandSelected()">
+			        <h2 style="color:#999; text-align:center;">Select which hand needs a prosthetic and we will gather your measurements</h2>
+		        </div>
+
+			</div>
+			<a href="#modeltype" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+			&nbsp;&nbsp;
+			<a href="#measure" class="btn btn-lg btn-warning" data-toggle="modal"
+				data-target="#measurement-help"><span class="fa fa-question-circle"></span> Help
+			</a>
+		</div>
+	</div>
+</div>
+</script>
+
+<script type="text/html" id="description-template">
+	<li data-bind="text: label"></li>
+</script>
+
+<script type="text/html" id="field-template">
+<div data-bind="visible: isVisible" style="margin-bottom:36px;">
+  	<div class="input-group" style="margin-bottom:5px;" data-bind="css: { incomplete: showValidation }">
+		<span class="input-group-addon" data-bind="text: id"></span>
+		<input type="number" step="any" min="0" class="form-control"
+			data-bind="attr: { id: 'v_' + id.toLowerCase(), name: name, placeholder: description}, value: dataEntry"/>
+		<span class="input-group-addon">mm</span>
+	</div>
+	
+	<div style="color:#666;">
+    		<div data-bind="text: description,attr: { id: 'v_' + id.toLowerCase() + '_desc'}"
+	  		style="font-size:13px; font-weight:bold;"></div>
+	</div>
+</div>
+</script>
+
+<script type="text/html" id="other-template">
+	<li data-bind="text: label"></li>
+</script>
+
+<script type="text/html" id="reference-pane">
+<div class="col-md-4" id="third-pane" data-bind="visible: !noHandSelected()">
+	<div class="panel panel-warning" id="side-se $('#generatorForm').serialize()lect">
+		<div class="panel-heading">
+			<h3 class="panel-title">Visual</h3>
+		</div>
+		<div id="image" class="panel-content">
+		        <div class="thumbnail" data-bind="visible: !noHandSelected()">
+			        <img src="./imgs/referece_rP.png" data-bind="visible: rightHandSelected" />
+			        <img src="./imgs/referece_lP.png" data-bind="visible: leftHandSelected" />
+		        </div>
+		</div>
+	</div>	
+</div>
+</script>
+<script type="text/html" id="measurement-next-step">
+<div class="col-md-4" id="right-pane-step1"  data-bind="visible: !noHandSelected()">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Next Step: Part Selection</h3>
+		</div>
+		
+		<div class="panel-content">
+			<div class="panel-content-inner">
+				<h2 style="color:#999; text-align:center; margin:0px;">
+					After you enter your measurements, click "Next" below.
+				</h2>
+				
+				<div style="margin-top:20px;" data-bind="visible: !measurementPageValid()">
+					<p>There seems to be a few missing values from the required measurements.
+						Please set the associated <b>numeric</b> values for those fields
+						<span class="incomplete-span">colored in red</span> before submitting again.
+					</p>
+				</div>
+			</div>
+			<div style="text-align:right;">
+				<a href="#model" class="btn btn-lg btn-primary">Next <i class="fa fa-arrow-circle-right"></i></a>
+			</div>
+		</div>
+	</div>
+</div>
+</script>
+
+
+
+<!-- Model Selection View Templates -->
+<script type="text/html" id="model-selection">
+<div class="col-md-4 config-col">
+	<div class="panel panel-warning">
+		<div class="panel-heading">
+			<h3 class="panel-title">Step 3 - Part Selection</h3>
+		</div>
+		
+		<div class="panel-content">
+                        <div class="panel-content-inner">
+				<p>For more information about the different designs and options that are available, see 
+					<a target="_blank" href="http://enablingthefuture.org/upper-limb-prosthetics/">e-NABLE Upper Limb Prosthetics</a>. Note the link will take you to the e-NABLE web site.</p>
+				
+	                      	<div class="panel-body" id="option-select-body">                                        
+			                  <label for='palmSelect'>Palm Style</label>
+			                  <select name='palmSelect' class="form-control"
+				                data-bind="options: palmItems,
+							optionsText: 'name',
+							event: { change: preview },
+							optionsValue: 'id',
+							value: selectedPalm">
+			                  </select>
+                                          <div style="height:20px;"></div>
+
+			                  <label for='fingerSelect'>Finger Style</label>
+			                  <select name='fingerSelect' class="form-control"
+				                data-bind="options: fingerSelectItems,
+							optionsText: 'name',
+							optionsValue: 'id',
+							event: { change: preview },
+							value: selectedFingerSelect">
+			                  </select>
+                                          <div style="height:20px;"></div>
+
+			                  <label for='gauntletSelect'>Gauntlet Style</label>
+			                  <select name='gauntletSelect' class="form-control"
+				                data-bind="options: gauntletSelectItems,
+							optionsText: 'name',
+							optionsValue: 'id',
+							event: { change: preview },
+							value: selectedGauntletSelect">
+			                  </select>
+                                          <div style="height:20px;"></div>
+
+			                  <label>Padding Thickness</label>
+			                  <div class="input-group" data-bind="css: { incomplete: !paddingValueValid() }">
+						<span class="input-group-addon">Padding &nbsp;&nbsp;&nbsp;</span>
+				                <input type="number" step="any" min="0" name="Padding" 
+							data-bind="value: paddingValue"" 
+							class="form-control" />
+				                <span class="input-group-addon">mm</span>
+			                  </div>
+                                          <div style="height:20px;"></div>
+
+		                </div>
+	                </div>
+                        
+                        <!-- BACK BUTTON -->
+                        <a href="#measure" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+			&nbsp;&nbsp;
+                       <a href="#measure" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#model-help"><span class="fa fa-question-circle"></span> Help</a>
+                </div>
+	</div>
+</div>
+</script>
+<script type="text/html" id="model-preview">
+<div class="col-md-5" id="right-pane-step1">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Preview Window</h3>
+		</div>
+		
+		<div class="panel-content" style="padding-left:14px; padding-right:14px;">
+			<label for='part'>What would you like to view in the Preview Window?</label>
+			<select name='part' class="form-control" id="generateSelect"
+				data-bind="	options: partItems,
+						optionsText: 'name',
+						optionsValue: 'id',
+						event: { change: preview },
+						value: selectedPart">
+			</select>
+			
+			<div style="height:20px;"></div>
+			
+			<div id="pleaseWaitForImage" style="color:#999; text-align:center;" data-bind="visible: waitingForResponse()">
+				<h4>Please wait while a preview is generated...</h4>
+				
+				<img src="imgs/spinner.gif" style="width:80%;" />
+			</div>
+			<img id="previewImage" src="" style="width:100%;" data-bind="visible: !waitingForResponse()"  />
+		</div>
+		<div id="ajaxCaddy" style="display:none;">
+		</div>
+	</div>
+</div>
+</script>
+<script type="text/html" id="model-generate">
+<div class="col-md-3" id="right-pane-step1">
+	<div class="panel panel-warning" id="side-select">
+		<div class="panel-heading">
+			<h3 class="panel-title">Generate Model</h3>
+		</div>
+		
+		<div class="panel-content">
+                        <div class="panel-content-inner">
+			        <h3 style="color:#999; text-align:center; margin:0px;">
+                                        Select your model style and select the parts to generate. Next, enter your email address and hit "Send"</h3>
+				                                
+                                <div style="height:60px;"></div>
+				
+		                <label for='part' style="color:#555;">To have a set of printable files sent to you, enter your email address and click the generate button.</label>
+				
+		                <div class="input-group" id="email" data-bind="css: { incomplete: !emailValid() }"><span class="input-group-addon">
+
+			                <span class="fa fa-cogs"></span>&nbsp;&nbsp; Email </span>
+			                <input type="" step="any" min="0" name="email" 
+						data-bind="value: email" placeholder="Your email here"
+						class="form-control">
+		                </div>
+                        </div>
+                        <div style="text-align:right;">
+                                <a href="#sendemail"  class="btn btn-lg btn-danger">Send <i class="fa fa-bolt"></i></a>
+                        </div>
+		</div>
+	</div>
+</div>
+</script>
+
+
+
+
+
+<!-- Thank You Page View Templates -->
+<script type="text/html" id="thankyou-left">
+<div class="col-md-6">
+	<div class="panel panel-warning">
+		<div class="panel-heading">
+			<h3 class="panel-title">Step 3 - Get Email from Hand-o-matic</h3>
+		</div>
+
+		<div class="panel-content">
+			<div class="panel-content-inner">
+				<h1 style="color:#999; margin:0px 0px 40px 0px;">Thank you for using<br /> the e-NABLE Hand-o-matic!</h1>
+				<p>You will shortly see a button appear below that allows you to download the files. You can print them yourself, or send the email to a friend with a 3D printer to print for you.</p>
+				<p>If you need help locating someone in your area to help you, please fill out the [e-NABLE intake form].</p>
+				<p>For more information about e-NABLE, see <a href="http://www.enablingthefuture.org" target="_blank">http://www.enablingthefuture.org</a>.</p>
+				<div class="download-files-panel"></div>
+
+			</div>
+				
+                        <a href="#model" class="btn btn-lg btn-primary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+		</div>
+	</div>
+</div>
+<div class="col-md-6">
+	<div class="panel panel-warning">
+		<div class="panel-heading">
+			<h3 class="panel-title">Thank You!</h3>
+		</div>
+		<div class="panel-content">
+			<div class="panel-content-inner">
+				<img src="imgs/ThankYou.jpg" style="width:100%;" />
+			</div>
+		</div>
+	</div>
+</div>
+</script>
+
+<script type="text/html" id="thankyou-right">
+</script>
+
+

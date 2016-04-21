@@ -9,7 +9,7 @@ sudo apt-get install xvfb vim git
 # LAMP stack install
 # ONLY run this following line if you don't have an html server / php / etc
 # Agree until you get to password, do not leave password blank
-sudo apt-get install apache2 mysql-server php5 php5-mysql libapache2-mod-php5
+sudo apt-get install apache2 mysql-server php5 php5-mysql libapache2-mod-php5 apache2-utils
 
 # Since there may be personal and medical information communicated through 
 # this server, it's recommended to also install SSL.
@@ -24,17 +24,50 @@ sudo apt-get install apache2 mysql-server php5 php5-mysql libapache2-mod-php5
 ## restart Apache to make the change effective
 # service apache2 restart
 
+# Allow rewrites from .htaccess to secure log files
+# and allow service calls without extensions
+sudo a2enmod rewrite
+
+cd /var/www/html/.htaccess
+# <Files "*.txt">
+#        #Require all denied
+#        AuthType Basic
+#        AuthName "Members Only"
+#        #AuthUserFile /var/www/html/.htpasswd
+#        Require valid-user 
+# </Files>
+
+# Generate htpasswd
+# Replace KEY for username or meaningful replacement
+# This will ask for a password twice for confirmation
+# purposes
+ htpasswd -c ./.htpasswd KEY
+
+# ############################################
+# We want to make php files accessible without
+# the extension for use of service calls -
+# modify the following file and add the Directory
+# tag inside VirtualHost:
+
+#    <Directory /var/www/html>
+#        Options +FollowSymLinks +MultiViews +Indexes
+#        DirectoryIndex index.php
+#        AddType application/x-httpd-php .php
+#    </Directory>
+
+# vim edit command
+sudo vi /etc/apache2/sites-available/000-default.conf
+
 
 # install openScad latest dev snapshot manually
 # source: http://www.openscad.org/downloads.html
 cd /var/tmp/
-wget http://files.openscad.org/snapshots/openscad-2014.05.31.x86-64.tar.gz
-tar xvf openscad-2014.05.31.x86-64.tar.gz
-cd openscad-2014.05.31
+wget http://files.openscad.org/snapshots/openscad-2014.10.02.x86-64.tar.gz
+tar xvf openscad-2014.10.02.x86-64.tar.gz
+cd openscad-2014.10.02
 
 # just hit enter when asked where the lib should install
 sudo ./install.sh
-
 
 # Make directory where our code will live
 sudo mkdir /var/code
@@ -44,16 +77,30 @@ sudo chmod 777 /var/code
 cd /var/code
 
 # Clone the individual repos from git
-sudo git clone https://github.com/e-nable/e-NABLE-Assembler.git
+sudo git clone https://github.com/e-nable/Assembler.git
 sudo git clone https://github.com/e-nable/Service-Station.git
 
 cd Service-Station
+cp config_default.php config.php
+# make sure and edit the config.php
+# set enable_camera to TRUE
+# set baseDNS to the full URL where the app is reached
+# this value is used for webMail
 
 # this helps when doing git diff / pull / check-ins
 sudo git config core.fileMode false
 
+# edit your config.php file. Change localhost to the publicly accessible
+# hostname that can be used for using the web-enabled service
+# e.g. e-nable.youmagine.com if the service lives at: 
+# http://e-nable.youmagine.com/
+nano config.php
+
+# this will prevent your config.php from blocking future updates
+git update-index --assume-unchanged config.php
+
 # link the open scad / assembler code
-sudo ln -s ../e-NABLE-Assembler e-NABLE
+sudo ln -s ../Assembler e-NABLE
 
 cd e-NABLE
 # this helps when doing git diff / pull / check-ins
@@ -67,6 +114,7 @@ sudo chmod 755 * -R
 # create image cache directory and log file
 sudo mkdir Service-Station/imagecache; sudo chmod 777 Service-Station/imagecache;
 sudo touch Service-Station/log.txt; sudo chmod 777 Service-Station/log.txt;
+sudo chmod 777 Service-Station/ticket;
 
 # assumes apache2 - we're about to use the default html directory
 cd /var/www
@@ -95,4 +143,171 @@ sudo service apache2 restart
 # following line gives you the address > inet addr:AAA.BBB.CC.DDD
 
 # Go to http://AAA.BBB.CC.DDD/
+
+# --------------------------------------------------------------------
+# Continue with below instructions 
+# --------------------------------------------------------------------
+#
+# By this point we should have received the update.sh file
+# move it to user's root directory and make it executable
+mv /var/code/Service-Station/update.sh ~/updateProd.sh
+vim ~/updateProd.sh
+
+# line 14 contains the following:
+# webDir=/var/www/html
+# we want it to point to the location where our Service-Station is hosted
+# edit or confirm the directory
+
+# once completed, execute it with -s flag
+# this should update both Service-Station and Assembler backend portions
+chmod 555 ~/updateProd.sh
+~/updateProd.sh -s
+
+# After this, all hand-o-matic code would be updated 
+# and the permissions would be set as needed
+
+# Configure the Web URL where the app is hosted, includng port
+cd /var/code/Service-Station
+vim config.php
+
+# Change variable "baseDNS" to reflect the information
+# this is critical as it'll be used to build the URLs for all email
+# based on generated ticketing information. Leave as localhost
+# for local implementations
+
+# --------------------------------------------
+# Mail configuration
+# --------------------------------------------
+
+# First, install all necessary packages:
+
+sudo apt-get install php5-curl zip postfix mailutils libsasl2-2 ca-certificates libsasl2-modules
+
+# If you do not have postfix installed before, postfix configuration wizard
+# will ask you some questions. Select your server as 'Internet Site' 
+# and for FQDN use something like mail.example.com
+#
+# Then open your postfix config file:
+
+vim /etc/postfix/main.cf
+
+# configure it as below:
+
+relayhost = [smtp.gmail.com]:587
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noanonymous
+smtp_tls_CAfile = /etc/postfix/cacert.pem
+smtp_use_tls = yes
+
+# save and move on
+
+vim /etc/postfix/sasl_passwd
+
+# And add following line:
+
+[smtp.gmail.com]:587    USERNAME@gmail.com:PASSWORD
+
+# Fix permission and update postfix config to use sasl_passwd file:
+
+sudo chmod 400 /etc/postfix/sasl_passwd
+sudo postmap /etc/postfix/sasl_passwd
+
+# Next, validate certificates to avoid running into error.
+# Just run following command:
+
+cat /etc/ssl/certs/Thawte_Premium_Server_CA.pem | sudo tee -a /etc/postfix/cacert.pem
+
+# Finally, reload postfix config for changes to take effect:
+
+sudo /etc/init.d/postfix reload
+
+# Testing
+# Check if mails are sent via Gmail SMTP server
+# change the you@example.com address below per your test account
+
+echo "Test mail from postfix" | mail -s "Test Postfix" you@example.com
+
+
+# --------------------------------------------
+# Testing / Debugging
+# --------------------------------------------
+
+# Walk through the app, enter a working email
+# If the email is received and the URL works, we're done.
+
+# The following is in case there are problems...
+
+# NOTE THAT NO NEW EMAIL NOR WORK WILL BE DONE FOR TICKETS ALREADY COMPLETED
+# Ticket IDs are unique by [server hash]-[user email hash]-[parameters hash]
+# Next dev cycle will allow retreival of previously generated content
+# through the use of the ticket number 
+# If subsequent tests with the same parameters needs to be built for testing, 
+# [ticket number].sh, [ticket number] directory, [ticket number].zip need to
+# be removed if present. 
+
+# Generate and check the log.txt in the root of the app
+# An entry such as the following should be seen:
+
+# SAMPLE:
+# ---------------------------------------------------
+#   Starting Full Assembly: 
+#    Email: user@domain.com 
+#    Ticket: 7412225538-3017136727-39654222
+#
+#    Params: 0 -D Left1=0 -D Left2=0 -D Left3=0 -D Left4=0 -D Left5=0 -D Left6=0 -D Left7=0 -D Left8=87 -D Left9=97 -D Left10=0 -D Right1=0 -D Right2=0 -D Right3=0 -D Right4=0 -D Right5=0 -D Right6=0 -D Right7=0 -D Right8=0 -D Right9=0 -D Right10=0-D prostheticHand=1 -D gauntletSelect=3 -D fingerSelect=4 -D palmSelect=5 -D Padding=5 -D WristBolt=0 -D KnuckleBolt=0 -D JointBolt=0 -D ThumbBolt=0 
+#
+#   Completed (user@domain.com):  Fri Oct 3 02:17:42 EDT 2014
+# ---------------------------------------------------
+
+# ./ticket should contain a .zip file after completion
+# If not, permissions for ticket directory should be read write exectute 
+# for www-data or equivalent apache user service
+
+# If the Complete message is logged and tickets directory
+# contains the associated ticket directory and or sh file 
+# (same as noted ticket) then there might have been a problem executing
+# either all or part of the script.
+
+# General workflow for each ticket is:
+# - Directory created
+# - Script created with all openscad commands for each part
+# - Script is execture
+#   + Each command executes
+#   + Logging information is added
+#   + Email template is used, data is seeded, html file is created 
+#   + Directory is zipped
+#   + Email is sent
+#   + sh script is removed
+
+# If a directory is left, it should contain on completion:
+# - log.txt
+# - README.html
+# - STL files
+
+# -------------------------------------------------
+# To check that the service is working:
+# -------------------------------------------------
+# change the below YOUR_EMAIL@DOMAIN.COM 
+# and WEB_URL
+# ... use the following in your browser
+
+http://WEB_URL/service.php?email=YOUR_EMAIL@DOMAIN.COM&part=1&type=make&gauntletSelect=3&fingerSelect=4&palmSelect=5&Padding=5&prostheticHand=0&Right1=62.67&Right2=65.62&Right3=59.14&Right4=48.78&Right5=51.85&Right6=16.4&Right7=0&Right8=72.52&Right9=72.23&Right10=230.6&Left1=66.47&Left2=64.04&Left3=46.95&Left4=35.14&Left5=35.97&Left6=27.27&Left7=31.80&Left8=40.97&Left9=31.06&Left10=147.5
+
+# There will be four states which can be matched by the description for each status update:
+
+# - "Initiated" returned when a new item is requested
+
+# After the directory is made:
+# - "In Progress": when the ticket is in the process of being executed
+# It is possible that it may never complete - check the associated directory
+# to see how far it progressed
+
+# Once it's completed:
+# - "Completed" ... which should contain the url: "http://domain.com/ticket/3153980626.zip"
+
+# And the error state which is only returned if there are validation issues:
+# -  "Email Error", url: ""}
+
+
 

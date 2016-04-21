@@ -1,0 +1,93 @@
+[ Hand-o-matic Webapp Release notes ]==========================================
+
+--------------------------------------------------------
+ Version 1.3.0
+--------------------------------------------------------
+
+User Interface:
+ - New catalog page inserted after welcome page.
+   + Consumption of master-options.json to define catelog items within
+     context of page.
+   + Individual inventory file content defined in master-options
+     (currently raptor-options.json / cyborg-options.json) dynamically
+     requested to populate following pages and content.
+ - Corrected language in headers to lead user through augmented workflow
+ - Added Hand-o-matic TERMS of Use to welcome page. "Next" button will
+   only show when user agrees.
+ - Added container and link to measurement page detailing YouMagine's web
+   measurement tool
+ - Ticket polling via service on Thank you page. When completed, download
+   link appears.
+ - Added link to known issues google doc on app footer.
+ - Updated (c) year.
+
+Service:
+ - Added consumption of selected catalog parameter from selected Category
+   in UI, related Inventory parameters used during product generation
+ - Now accepting inventory file name via URL parameters
+ - Corrected bugs during inventory lookups
+ - Added Hand-o-matic TERMS of Use to email template
+ - Corrected JSON status response types in Service
+ - URL shortening introduced:
+   + Consumed from u.e-nable.me
+   + Implementation of PHP Yourls.
+   + Requires added parameter to config.php with partner ID for use.
+   + Short URL used passed to OpenSCAD generator to be printed on parts for
+     reference.
+   + Logic added to default to regular URL when service not reachable.
+
+Deployment Scripts / Documentation:
+   TBA
+
+Core Models / Assembler:
+ - Added Cyborg Beast, with options (hand thumb/no thumb, fingers smooth/bumps)
+ - Updated Raptor files (version 2.2.2 with no tie-bars, shifted wrist hinge
+   for stronger grip, etc.).
+ - Added error messages displayed in the GUI (e.g. try to view thumb proximal
+   for Cyborg Beast with no thumb). This sets us up for more user feedback.
+ - Master options file (so we can add more designs easily)
+ - File names indicate number of copies to print
+   (e.g. "CyborgBeast-FingerProximal-4")
+ - Improved previews (though not 100% fixed).
+ - Embed URLs into Cyborg Beast and Raptor palms (for easy re-printing)
+
+** Additional bug fixes
+
+--------------------------------------------------------
+ Version 1.2.1
+--------------------------------------------------------
+
+ User Interface:
+ - Google Analytics deployed. Uses path binding, added configuration
+   tweaks to track pages. Cross-domain tracking.
+ - Hiding L/R 9 per new requirements
+ - Added Google Display analytics initializer
+ - Changing camera perspective on Exploded and New Assembly View
+ - Fixed model page language, changed validation to allow decimal values input
+
+ Service:
+ - Added logging for debugging / referencing, correcting JS cache centric
+   issue for live servers
+ - Introducing assembly git repo hash to ticketID, augmented logging   
+ - Correcting logic issue in naming convention for files (Left / Right)
+ - Handling issues when expected config is not available. Configurable
+   scad angles for exploded and assembly views to help builds with old
+   openscad versions
+ - Enhanced email to include text for measurements and params
+
+Deployment Scripts / Documentation:
+ - Config: Updated documentation to include latest opescad dev release
+ - Config: Added dev environment setup scripts
+
+System:
+ - System: Upgraded openscad to development v2014.10.02
+
+Core Models  / Assembler:
+ - Added support to Raptor fingers and proximal
+ - Added label to palm
+ - Scale pins even larger on large hands so joints are less loose
+ - Color coding of parts in preview
+ - Scale length and width the same (simplify UI/UX)
+ - Tons of debugging of combinations
+ - Added RIT arm (experimental)
+ - Better logging
