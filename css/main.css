@@ -15,6 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 .main-container {
 	padding: 70px 15px 0;
 	}
@@ -28,7 +29,8 @@
 	height: 405px; 
 	}
 
-.nav-tabs li a, .tab-content div {
+.nav-tabs li a,
+.tab-content div {
 	background-color: #DDD;
 	}
 
@@ -80,7 +82,8 @@ legend {
 	float: right;
 	}
 
-.help:hover, .help:focus {
+.help:hover,
+.help:focus {
 	color: white;
 	border: 1px solid #555;
 	}
@@ -110,16 +113,19 @@ legend {
 	float: left;
 	}
 
-.disclaimer span, .pro_novice span {
+.disclaimer span,
+.pro_novice span {
 	font-size: 18px;
 	}
 
-.disclaimer:hover, .pro_novice:hover {
+.disclaimer:hover,
+.pro_novice:hover {
 	color: white;
 	background-image: linear-gradient(to bottom, #aaa 0px, #444 100%);
 	}
 	
-.download, .preview {
+.download,
+.preview {
 	float: right;
 	margin-left: 14px;
 	}
@@ -166,7 +172,8 @@ div#preview p.download_stl {
 	background-color: #DDD;
 	}
 
-.config-col select, .config-col input {
+.config-col select,
+.config-col input {
 	height: 32px;
 	}
 
@@ -183,7 +190,8 @@ div#preview p.download_stl {
 	/*margin-bottom: 8px;*/
 	}
 
-#left-tab span, #right-tab span {
+#left-tab span,
+#right-tab span {
 	font-size: 1.1em;
 	margin-right: 2px;
 	}
@@ -345,7 +353,8 @@ div#preview p.download_stl {
 	background-color: yellow;
 	}
 	
-.incomplete .input-group-addon, .incomplete {
+.incomplete .input-group-addon,
+.incomplete {
 	color: white;
 	border-color: #b92c28;
 	background-image: linear-gradient(to bottom,#d9534f 0,#c12e2a 100%);
@@ -410,7 +419,9 @@ div#preview p.download_stl {
 	margin-top: 17px !important;
 	}
 
-.no-border, .no-border li, .no-border a {
+.no-border,
+.no-border li,
+.no-border a {
 	/*border: 0px !important;*/
 	border-color: #faebcc !important;
 	color: #8a6d3b !important;
@@ -425,7 +436,11 @@ div#preview p.download_stl {
 	line-height: 32px;
 	}
 
-#product-title a:link, #product-title a:visited, #product-title a:hover, #product-title a:active, #product-title a:focus {
+#product-title a:link,
+#product-title a:visited,
+#product-title a:hover,
+#product-title a:active,
+#product-title a:focus {
 	color: #EEE !important;
 	}
 
