@@ -20,17 +20,17 @@
 	}
 
 	.panel-content {
-		height:490px; 
-		padding:14px;
+		height: 490px; 
+		padding: 14px;
 	}
 	.panel-content-inner {
-		height:405px; 
+		height: 405px; 
 	}
 
 	.nav-tabs li a, .tab-content div {
 		background-color: #DDD;
 	}
-	.nav-tabs li.active a{
+	.nav-tabs li.active a {
 		background-color: white;
 	}
 	.tab-content div.active {
@@ -55,59 +55,59 @@
 		text-size: 20px;
 		font-size: 1.8em;
 	}
-	.navbar-brand span{
+	.navbar-brand span {
 		color: #ECECEC !important;
 	}
 	.navbar-brand img {
 		vertical-align: baseline;
 	}
-	.help span{
+	.help span {
 		font-size: 20px;
 	}
 	.help {
-		margin-left: 14px ;
-		color:white;
-		float:right;
+		margin-left: 14px;
+		color: white;
+		float: right;
 	}
 	.help:hover, .help:focus {
-		color:white;
+		color: white;
 		border: 1px solid #555;
 	}
 	.pro_novice {
-		margin-left: 14px ;
+		margin-left: 14px;
 		margin-top: -5px;
-		color:white;
+		color: white;
 		background-image: linear-gradient(to bottom, #666666 0px, #222222 100%);
     		background-color: #666666;
 		border-color: #666666;
-		float:right;
-		margin-top:5px;
-		margin-left:8px;
+		float: right;
+		margin-top: 5px;
+		margin-left: 8px;
 		padding: 2px 10px;
 	}
 	.disclaimer {
-		margin-left: 14px ;
+		margin-left: 14px;
 		margin-top: -5px;
-		color:white;
+		color: white;
 		background-image: linear-gradient(to bottom, #666666 0px, #222222 100%);
     		background-color: #666666;
 		border-color: #666666;
-		float:left;
+		float: left;
 	}
-	.disclaimer span, .pro_novice span{
+	.disclaimer span, .pro_novice span {
 		font-size: 18px;
 	}
-	.disclaimer:hover, .pro_novice:hover  {
-		color:white;
+	.disclaimer:hover, .pro_novice:hover {
+		color: white;
 		background-image: linear-gradient(to bottom, #aaa 0px, #444 100%);
 	}
-	.download, .preview  {
-		float:right;
-		margin-left: 14px ;
+	.download, .preview {
+		float: right;
+		margin-left: 14px;
 	}
 	.navbar-fixed-bottom .container {
-		margin-top:12px;
-		font-size:17px;
+		margin-top: 12px;
+		font-size: 17px;
 		color: #ECECEC;
 	}
 	.loading-modal .modal-dialog {
@@ -116,14 +116,14 @@
 	.loading-modal .modal-content {
 		border-radius: 80px;
 		margin: 90px auto;
-		background-color:transparent;
+		background-color: transparent;
 	}
-	.loading-modal .modal-content div{
+	.loading-modal .modal-content div {
 		border-radius: 70px;
-		margin:12px 16px;;
-		background-color:white;
-		color:#A00;
-		font-size:1.2em;
+		margin: 12px 16px;;
+		background-color: white;
+		color: #A00;
+		font-size: 1.2em;
 	}
 	.modal-footer {
 		margin-top: 0;
@@ -139,22 +139,22 @@
 		text-align: center;
 		background-color: #DDD;
 	}
-	.config-col select, .config-col input{
-		height:32px;
+	.config-col select, .config-col input {
+		height: 32px;
 	}
-	.config-col label{
-		margin-top:3px;
-		margin-bottom:0px;
-	}
-	.config-col legend{
+	.config-col label {
+		margin-top: 3px;
 		margin-bottom: 0px;
 	}
-	.config-col fieldset fieldset :last-child{
+	.config-col legend {
+		margin-bottom: 0px;
+	}
+	.config-col fieldset fieldset :last-child {
 		/*margin-bottom: 8px;*/
 	}
 	#left-tab span, #right-tab span {
 		font-size: 1.1em;
-		margin-right:2px;
+		margin-right: 2px;
 	}
 	.hover-arrow {
 		background-repeat: no-repeat;
@@ -163,64 +163,64 @@
 		position: absolute;
 	}
 	#l1 {
-		background:url("../imgs/arrows.png") repeat scroll -10px -315px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -10px -315px rgba(0, 0, 0, 0) !important;
 		width: 90px;
 		margin-left: 10px;
 		top: 389px;
 	}
 	#l2 {
-		background:url("../imgs/arrows.png") repeat scroll -10px -280px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -10px -280px rgba(0, 0, 0, 0) !important;
 		width: 88px;
 		margin-left: 11px;
 		top: 356px;
 	}
 	#l3 {
-		background:url("../imgs/arrows.png") repeat scroll -20px -245px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -20px -245px rgba(0, 0, 0, 0) !important;
 		width: 70px;
 		margin-left: 20px;
 		top: 307px;
 	}
 	#l4 {
-		background:url("../imgs/arrows.png") repeat scroll -26px -210px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -26px -210px rgba(0, 0, 0, 0) !important;
 		width: 58px;
 		margin-left: 26px;
 		top: 272px;
 	}
 	#l5 {
-		background:url("../imgs/arrows.png") repeat scroll -34px -175px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -34px -175px rgba(0, 0, 0, 0) !important;
 		width: 58px;
 		margin-left: 34px;
 		top: 239px;
 	}
 	#l6 {
-		background:url("../imgs/arrows.png") repeat scroll -74px -85px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -74px -85px rgba(0, 0, 0, 0) !important;
 		height: 42px;
 		width: 32px;
 		margin-left: 88px;
 		top: 216px;
 	}
 	#l7 {
-		background:url("../imgs/arrows.png") repeat scroll -44px -85px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -44px -85px rgba(0, 0, 0, 0) !important;
 		height: 42px;
 		width: 27px;
 		margin-left: 58px;
 		top: 213px;
 	}
 	#l8 {
-		background:url("../imgs/arrows.png") repeat scroll -44px -140px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -44px -140px rgba(0, 0, 0, 0) !important;
 		width: 52px;
 		margin-left: 44px;
 		top: 162px;
 	}
 	#l9 {
-		background:url("../imgs/arrows.png") repeat scroll -3px -85px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -3px -85px rgba(0, 0, 0, 0) !important;
 		height: 42px;
 		width: 32px;
 		margin-left: 22px;
 		top: 213px;
 	}
 	#l10 {
-		background:url("../imgs/arrows.png") repeat scroll -127px -185px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -127px -185px rgba(0, 0, 0, 0) !important;
 		height: 164px;
 		width: 37px;
 		margin-left: 102px;
@@ -233,25 +233,25 @@
     		width: 90px;
 	}
 	#r2 {
-		background:url("../imgs/arrows.png") repeat scroll -185px -278px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -185px -278px rgba(0, 0, 0, 0) !important;
 		width: 90px;
 		margin-left: 185px;
 		top: 347px;
 	}
 	#r3 {
-		background:url("../imgs/arrows.png") repeat scroll -185px -242px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -185px -242px rgba(0, 0, 0, 0) !important;
 		width: 90px;
 		margin-left: 185px;
 		top: 292px;
 	}
 	#r4 {
-		background:url("../imgs/arrows.png") repeat scroll -185px -210px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -185px -210px rgba(0, 0, 0, 0) !important;
 		width: 90px;
 		margin-left: 185px;
 		top: 243px;
 	}
 	#r5 {
-		background:url("../imgs/arrows.png") repeat scroll -174px -175px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -174px -175px rgba(0, 0, 0, 0) !important;
 		width: 90px;
 		margin-left: 174px;
 		top: 170px;
@@ -264,7 +264,7 @@
 		width: 47px;
 	}
 	#r8 {
-		background:url("../imgs/arrows.png") repeat scroll -171px -140px rgba(0, 0, 0, 0) !important;
+		background: url("../imgs/arrows.png") repeat scroll -171px -140px rgba(0, 0, 0, 0) !important;
 		width: 90px;
 		margin-left: 171px;
 		top: 112px;
@@ -291,14 +291,14 @@
 	.focus .input-group-addon {
 		background-color: yellow;
 	}
-	.incomplete .input-group-addon, .incomplete{
-		color:white;
+	.incomplete .input-group-addon, .incomplete {
+		color: white;
 		border-color: #b92c28;
 		background-image: linear-gradient(to bottom,#d9534f 0,#c12e2a 100%);
 		border-radius: 4px;
 	}
 	.incomplete-span {
-		color:white !important;
+		color: white !important;
 		border-color: #b92c28;
 		background-image: linear-gradient(to bottom,#d9534f 0,#c12e2a 100%);
 		padding: 3px 5px;
