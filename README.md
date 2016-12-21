@@ -11,7 +11,7 @@ The overall control flow is:
 
 This repository contains the web UI.
 
-NOTE: Currently in alpha development. Minimal security is currently implimented.
+NOTE: Currently in alpha development. Minimal security is currently implemented.
 
 More information regarding e-NABLE can be found at http://enablingthefuture.org 
 
