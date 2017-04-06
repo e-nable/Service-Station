@@ -11,7 +11,7 @@ The overall control flow is:
 
 This repository contains the web UI.
 
-NOTE: Currently in alpha development. Minimal security is currently implimented.
+NOTE: Currently in alpha development. Minimal security is currently implemented.
 
 More information regarding e-NABLE can be found at http://enablingthefuture.org 
 
@@ -32,6 +32,6 @@ Service-Station acts as the root or base directory for the web directory being s
 
 Resources
 ========
-OpenScad Development Snaphots (do a hand install): http://www.openscad.org/downloads.html
+OpenScad Development Snapshots (do a hand install): http://www.openscad.org/downloads.html
 
 To retrieve current dev snapshot (July 10, 2014): wget http://files.openscad.org/snapshots/openscad-2014.05.31.x86-64.tar.gz
